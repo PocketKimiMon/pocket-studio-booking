@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pocket Studio — book with MyKey</title>
+  <meta name="description" content="Book cuts and color directly with MyKey Pocket, Seattle hair artist. Former Rudy's clients welcome.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --lime:   #8ACE00;
+      --void:   #120E17;
+      --flush:  #FF5A5F;
+      --violet: #9B5CFF;
+      --bone:   #F3ECDE;
+      --ash:    #8B8693;
+      --ink:    #120E17;
+      --serif:  'Bricolage Grotesque', sans-serif;
+      --sans:   'Inter', sans-serif;
+      --mono:   'IBM Plex Mono', monospace;
+      --hand:   'Caveat', cursive;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--bone);
+      color:var(--ink);
+      font-family:var(--sans);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{color:var(--violet);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--ash);padding:18px 0 8px;
+    }
+    .topbar .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);margin-right:8px}
+
+    .hero{padding:34px 0 46px}
+    .hero-mark{width:72px;height:72px;margin-bottom:16px}
+    .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--flush);margin-bottom:10px}
+    .wordmark{
+      font-family:var(--serif);font-weight:800;line-height:.88;letter-spacing:-.02em;
+      font-size:clamp(48px,11vw,118px);color:var(--void)
+    }
+    .wordmark em{font-style:normal;background:var(--lime);padding:0 .06em;border-radius:5px;color:var(--void);box-shadow:0 0 0 2.5px var(--void), 5px 5px 0 var(--void)}
+    .tagline{
+      font-family:var(--serif);font-weight:400;font-size:clamp(20px,3vw,28px);
+      max-width:620px;margin-top:22px;color:var(--void);line-height:1.25
+    }
+    .tagline b{font-weight:700}
+
+    .house-call{
+      margin-top:18px;padding:16px 18px;border:2px solid var(--void);border-radius:12px;
+      background:var(--flush);color:var(--void);max-width:620px;font-size:15px;
+      box-shadow:4px 4px 0 var(--void);
+    }
+    .house-call strong{font-family:var(--serif);font-weight:700}
+
+    .promo{
+      margin-top:26px;padding:20px 22px;border:2px solid var(--void);border-radius:14px;
+      background:var(--lime);color:var(--void);max-width:620px;position:relative;
+      box-shadow:6px 6px 0 var(--void);
+    }
+    .promo .promo-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+    .promo .promo-title{font-family:var(--serif);font-weight:800;font-size:clamp(24px,4vw,34px);line-height:1.05;letter-spacing:-.02em;margin-bottom:8px}
+    .promo p{font-size:15px;max-width:48ch}
+    .promo .hand{position:absolute;top:14px;right:18px;font-size:34px;transform:rotate(6deg);color:var(--void)}
+
+    .notice{
+      margin-top:22px;padding:16px 18px;border:2px solid var(--void);border-radius:12px;
+      background:rgba(155,92,255,.08);max-width:620px;font-size:15px;
+    }
+    .notice strong{font-family:var(--serif);font-weight:700}
+
+    section{padding:54px 0;border-top:2px solid var(--void)}
+    .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:26px;flex-wrap:wrap}
+    .sec-num{font-family:var(--mono);font-size:12px;color:var(--flush);letter-spacing:.1em}
+    .sec-title{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4.5vw,40px);letter-spacing:-.02em}
+    .sec-note{font-family:var(--mono);font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-left:auto}
+
+    .about-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:32px;align-items:start}
+    @media(max-width:760px){.about-grid{grid-template-columns:1fr}}
+    .about-text p{font-size:16px;color:#2c2536;margin-bottom:14px;max-width:54ch}
+    .about-text p.lede{font-family:var(--serif);font-weight:500;font-size:19px;color:var(--void);line-height:1.35}
+    .about-card{
+      border:2px solid var(--void);border-radius:14px;padding:22px;background:var(--void);color:var(--bone);
+      position:relative;overflow:hidden
+    }
+    .about-card h3{font-family:var(--serif);font-weight:800;font-size:22px;margin-bottom:10px}
+    .about-card ul{list-style:none;display:flex;flex-direction:column;gap:8px;font-size:14px}
+    .about-card li{padding-left:18px;position:relative}
+    .about-card li::before{content:'✦';position:absolute;left:0;color:var(--lime)}
+    .about-card .hand{position:absolute;bottom:12px;right:16px;font-size:30px;color:var(--flush);transform:rotate(-4deg)}
+
+    .services{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .service{
+      border:2px solid var(--void);border-radius:14px;padding:22px;background:var(--bone);
+      cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;
+      display:flex;flex-direction:column;gap:8px;position:relative;
+    }
+    .service:hover{transform:translateY(-4px);box-shadow:6px 6px 0 var(--void)}
+    .service .name{font-family:var(--serif);font-weight:700;font-size:22px;letter-spacing:-.01em}
+    .service .time{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ash)}
+    .service .desc{font-size:14.5px;color:#2c2536;line-height:1.45}
+    .service .tag{
+      align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+      text-transform:uppercase;padding:4px 10px;border-radius:100px;border:1.5px solid var(--void);margin-top:auto
+    }
+    .service.selected{outline:3px solid var(--violet);outline-offset:3px;background:rgba(155,92,255,.06)}
+    .service[data-accent="lime"] .tag{background:var(--lime)}
+    .service[data-accent="flush"] .tag{background:var(--flush);color:var(--bone)}
+    .service[data-accent="violet"] .tag{background:var(--violet);color:var(--bone)}
+
+    .policies{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+    .policy{
+      border:2px solid var(--void);border-radius:14px;padding:20px;background:var(--bone);
+      display:flex;flex-direction:column;gap:8px;
+    }
+    .policy .num{font-family:var(--mono);font-size:12px;color:var(--flush);letter-spacing:.1em}
+    .policy h4{font-family:var(--serif);font-weight:700;font-size:18px}
+    .policy p{font-size:14px;color:#2c2536;line-height:1.45}
+
+    .blog{list-style:none;display:flex;flex-direction:column;gap:18px}
+    .post{
+      border:2px solid var(--void);border-radius:14px;padding:22px;background:var(--bone);
+      position:relative;
+    }
+    .post-date{font-family:var(--mono);font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+    .post h3{font-family:var(--serif);font-weight:700;font-size:22px;margin-bottom:10px;letter-spacing:-.01em}
+    .post p{font-size:15px;color:#2c2536;line-height:1.55;margin-bottom:10px}
+    .post p:last-child{margin-bottom:0}
+    .post .hand{font-size:24px;margin-top:8px}
+
+    .cal-frame{
+      border:2px solid var(--void);border-radius:14px;overflow:hidden;
+      background:#fff;box-shadow:6px 6px 0 var(--void);min-height:660px;
+    }
+    .cal-frame > div{min-height:660px}
+
+    .fine{font-family:var(--mono);font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.06em;margin-top:12px}
+
+    footer{border-top:2px solid var(--void);padding:36px 0 60px}
+    .footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    @media(max-width:640px){.footer-grid{grid-template-columns:1fr}}
+    .footer-col h4{font-family:var(--serif);font-weight:700;font-size:18px;margin-bottom:10px}
+    .footer-col p,.footer-col a{font-size:14px;color:#2c2536;line-height:1.6}
+    .footer-col a{display:block}
+    .hand{font-family:var(--hand);font-size:26px;color:var(--flush);transform:rotate(-2deg);display:inline-block;margin-top:10px}
+    .legal{font-family:var(--mono);font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.06em;margin-top:22px}
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div><span class="dot"></span>pocket studio · seattle</div>
+    <div>booking open</div>
+  </div>
+
+  <header class="hero">
+    <svg class="hero-mark" viewBox="0 0 100 100" fill="none" aria-label="mykey pocket mark">
+      <path d="M14 40 C14 34 18 30 24 30 L76 30 C82 30 86 34 86 40 L86 74 C86 80 82 84 76 84 L24 84 C18 84 14 80 14 74 Z" fill="#120E17"/>
+      <path d="M14 40 C14 34 18 30 24 30 L50 30 L50 52 C50 52 34 52 14 52 Z" fill="#8ACE00"/>
+      <circle cx="50" cy="50" r="9" fill="none" stroke="#F3ECDE" stroke-width="4"/>
+      <path d="M50 59 L50 72 M50 66 L57 66" stroke="#F3ECDE" stroke-width="4" stroke-linecap="round"/>
+    </svg>
+
+    <div class="kicker">your chair moved</div>
+    <h1 class="wordmark">my<em>key</em> pocket</h1>
+
+    <p class="tagline">
+      <b>book cuts + color directly.</b> no front desk, no phone tag, no wondering if the message went through.
+    </p>
+
+    <div class="promo">
+      <span class="hand">spill the tea ☕</span>
+      <div class="promo-kicker">current deal</div>
+      <div class="promo-title">rebook ahead, get the tea.</div>
+      <p>book your next appointment at least 2 days out and i'll spill all the salon tea — product recs, styling tricks, the honest truth about your ends. consider it a loyalty bribe.</p>
+    </div>
+
+    <div class="notice">
+      <strong>former Rudy's clients:</strong> MyKey is no longer at Rudy's Barbershop. this is the new spot to book. same chair energy, fewer hoops.
+    </div>
+
+    <div class="house-call">
+      <strong>house calls only right now.</strong> i'm coming to you — no travel fee at the moment, but that'll change once i land a new chair. bear with me while i figure out where to set up shop, and thank you for riding this out with me. i know i'm shaking up your routine, and i'm sorry. especially if you're neurodivergent and routine changes are rough — we'll get back to something steady soon.
+    </div>
+  </header>
+
+  <section id="about">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">about the artist</h2>
+      <span class="sec-note">the human behind the chair</span>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="lede">i'm MyKey — a Seattle hair artist who just left Rudy's Barbershop and is taking clients directly.</p>
+        <p>i cut and color all textures, but i especially love the transformations: the grow-out rescue, the "i need a change" moment, the color correction that takes six hours and a lot of trust.</p>
+        <p>my chair is a low-judgment zone. come with reference pics, come with bedhead, come with a vague idea and a willingness to talk it through. i'll be blunt about what works, kind about what doesn't, and precise with the scissors.</p>
+        <p>pronouns: they/them. location: seattle, wa. contact: <a href="tel:+14259182029">425-918-2029</a> or <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a>.</p>
+      </div>
+      <div class="about-card">
+        <h3>why book direct?</h3>
+        <ul>
+          <li>no front-desk telephone game</li>
+          <li>you know exactly who you're getting</li>
+          <li>rebooking reminders that actually make sense</li>
+          <li>your notes stay with me, not a rotating receptionist</li>
+        </ul>
+        <span class="hand">see you in the chair</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="updates">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">what's going on</h2>
+      <span class="sec-note">updates from the chair</span>
+    </div>
+
+    <ul class="blog" role="list">
+      <!-- copy the <li class="post"> block below to add a new update -->
+      <li class="post">
+        <div class="post-date">july 14, 2026</div>
+        <h3>house calls + the hunt for a new chair</h3>
+        <p>right now i'm doing house calls only. i'll come to you, set up wherever works, and get you sorted. no travel fee for now — consider it a thank-you for sticking with me while i find a new permanent spot.</p>
+        <p>things are a little chaotic and i know that's hard, especially if you rely on a routine. i feel that deeply. i'm working on getting a chair locked down so we can get back to something steady. appreciate you more than i can say.</p>
+        <span class="hand">— mykey</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="services">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">pick a service</h2>
+      <span class="sec-note">tap one, then book below</span>
+    </div>
+
+    <ul class="services" role="list">
+      <li class="service" data-service="Buzz Cut" data-cal-link="buzz-cut" data-accent="lime" tabindex="0">
+        <span class="name">Buzz Cut</span>
+        <span class="time">30 min</span>
+        <span class="desc">clippers all over, clean edges, back to your day.</span>
+        <span class="tag">quick</span>
+      </li>
+      <li class="service" data-service="Short Cut" data-cal-link="short-cut" data-accent="flush" tabindex="0">
+        <span class="name">Short Cut</span>
+        <span class="time">45 min</span>
+        <span class="desc">scissor or clipper-over-comb, shaped to your head.</span>
+        <span class="tag">classic</span>
+      </li>
+      <li class="service" data-service="Long Cut" data-cal-link="long-cut" data-accent="violet" tabindex="0">
+        <span class="name">Long Cut</span>
+        <span class="time">60 min</span>
+        <span class="desc">layers, texture, cleanup — keep the length, lose the dead ends.</span>
+        <span class="tag">detail</span>
+      </li>
+      <li class="service" data-service="New-Client Color Consult" data-cal-link="color-consult" data-accent="flush" tabindex="0">
+        <span class="name">New-Client Color Consult</span>
+        <span class="time">45 min</span>
+        <span class="desc">first time coloring with me? we plan the lift, the tone, and the maintenance before anything touches your head.</span>
+        <span class="tag">required for new color</span>
+      </li>
+      <li class="service" data-service="Existing-Client Color Appointment" data-cal-link="color-appointment" data-accent="lime" tabindex="0">
+        <span class="name">Existing-Client Color Appointment</span>
+        <span class="time">3–5 hr</span>
+        <span class="desc">roots, refresh, full transformation — we already know the vibe. previous color clients: block the afternoon.</span>
+        <span class="tag">color</span>
+      </li>
+    </ul>
+  </section>
+
+  <section id="policies">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">the fine print</h2>
+      <span class="sec-note">so nobody gets surprised</span>
+    </div>
+
+    <ul class="policies" role="list">
+      <li class="policy">
+        <span class="num">01</span>
+        <h4>one month at a time</h4>
+        <p>the calendar opens one month at a time, first come first serve. on the 1st of each month, the next full month becomes available.</p>
+      </li>
+      <li class="policy">
+        <span class="num">02</span>
+        <h4>2-day advance notice</h4>
+        <p>the booking system won't let you grab a slot sooner than 2 days out. it gives me time to prep, and it makes the "spill the tea" deal possible.</p>
+      </li>
+      <li class="policy">
+        <span class="num">03</span>
+        <h4>24-hour cancellation</h4>
+        <p>need to cancel or reschedule? 24 hours notice, unless it's an actual emergency. just talk to me — i'm reasonable, but my time is how i pay rent.</p>
+      </li>
+      <li class="policy">
+        <span class="num">04</span>
+        <h4>no-call-no-show = charged</h4>
+        <p>if you ghost the appointment without a heads-up, the full service amount will be charged. fairness goes both ways.</p>
+      </li>
+      <li class="policy">
+        <span class="num">05</span>
+        <h4>2-hour verification</h4>
+        <p>you'll get a text or email 2 hours before your appointment to confirm. if i don't hear back, i may release the slot.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section id="book">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">book it</h2>
+      <span class="sec-note" id="hours-note">thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm</span>
+    </div>
+
+    <p id="cal-pick" class="notice" style="margin-bottom:16px;display:none"><strong id="cal-pick-name"></strong> selected — showing that calendar below. <a href="#" id="cal-reset">show all services</a></p>
+
+    <div class="cal-frame">
+      <div style="width:100%;height:100%;overflow:auto" id="cal-embed"></div>
+    </div>
+    <p class="fine">booking runs on Cal.com — pick a service and time, and the appointment goes straight onto MyKey's calendar. you'll get an instant confirmation.</p>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>hit me up</h4>
+        <a href="tel:+14259182029">425-918-2029</a>
+        <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a>
+        <a href="https://linqapp.com/4g61re6_k3xc?source=vcard" target="_blank" rel="noopener">linq profile</a>
+      </div>
+      <div class="footer-col">
+        <h4>the small print</h4>
+        <p>pronouns: they/them<br>location: seattle, wa<br>hours: thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm</p>
+        <span class="hand">built by one brain, on purpose</span>
+      </div>
+    </div>
+    <p class="legal"><a href="privacy.html">privacy policy</a> · <a href="terms.html">terms of service</a> · © pocket studio / mykey pocket · not affiliated with Rudy's Barbershop</p>
+  </footer>
+
+</div>
+
+<script>
+  const serviceCards = document.querySelectorAll('.service');
+  const calContainer = document.getElementById('cal-embed');
+  const calPick = document.getElementById('cal-pick');
+  const calPickName = document.getElementById('cal-pick-name');
+  const calReset = document.getElementById('cal-reset');
+
+  function loadCal(calLink) {
+    calContainer.innerHTML = '';
+    Cal("inline", {
+      elementOrSelector: "#cal-embed",
+      calLink: calLink,
+      layout: "month_view"
+    });
+  }
+
+  function selectService(card) {
+    serviceCards.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const slug = card.dataset.calLink;
+    const name = card.dataset.service;
+    if (slug) {
+      loadCal("maneautoimation/" + slug);
+      calPickName.textContent = name;
+      calPick.style.display = "block";
+    }
+    document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  serviceCards.forEach(card => {
+    card.addEventListener('click', () => selectService(card));
+    card.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectService(card); } });
+  });
+
+  calReset.addEventListener('click', e => {
+    e.preventDefault();
+    serviceCards.forEach(c => c.classList.remove('selected'));
+    calPick.style.display = "none";
+    loadCal("maneautoimation");
+  });
+</script>
+
+<!-- Cal.com official inline embed -->
+<script type="text/javascript">
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  Cal("init", {origin:"https://cal.com"});
+
+  Cal("inline", {
+    elementOrSelector: "#cal-embed",
+    calLink: "maneautoimation",
+    layout: "month_view"
+  });
+
+  Cal("ui", {
+    "styles": {"branding": {"brandColor": "#8ACE00"}},
+    "hideEventTypeDetails": false,
+    "layout": "month_view"
+  });
+</script>
+
+</body>
+</html>
