@@ -9,21 +9,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --lime:#8ACE00;--void:#120E17;--flush:#FF5A5F;--violet:#9B5CFF;--bone:#F3ECDE;--ash:#8B8693;
+      --lime:#8ACE00;--void:#120E17;--flush:#FF5A5F;--violet:#9B5CFF;--bone:#F3ECDE;--ash:#6F6878;--mist:#5A5460;--border:rgba(18,14,23,.12);
       --serif:'Bricolage Grotesque',sans-serif;--sans:'Inter',sans-serif;--mono:'IBM Plex Mono',monospace;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    body{background:var(--bone);color:var(--void);font-family:var(--sans);line-height:1.65}
+    body{background:var(--bone);color:var(--void);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
     .wrap{max-width:720px;margin:0 auto;padding:48px 24px}
-    a{color:var(--violet)}
-    .back{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:24px;display:inline-block}
-    h1{font-family:var(--serif);font-size:clamp(36px,7vw,56px);letter-spacing:-.02em;line-height:1;margin-bottom:12px}
-    .updated{font-family:var(--mono);font-size:12px;color:var(--ash);margin-bottom:36px}
-    h2{font-family:var(--serif);font-size:24px;margin:36px 0 12px}
-    p{margin-bottom:14px;font-size:15.5px}
-    ul{margin:12px 0 18px 22px;font-size:15.5px}
+    a{color:var(--violet);text-decoration:none;transition:opacity .15s ease}
+    a:hover{opacity:.75;text-decoration:underline}
+    .back{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:24px;display:inline-block;color:var(--ash)}
+    .back:hover{color:var(--violet)}
+    h1{font-family:var(--serif);font-size:clamp(36px,7vw,56px);letter-spacing:-.02em;line-height:1;margin-bottom:12px;color:var(--void)}
+    .updated{font-family:var(--mono);font-size:11px;color:var(--ash);margin-bottom:36px}
+    h2{font-family:var(--serif);font-size:22px;margin:36px 0 12px;color:var(--void)}
+    p{margin-bottom:14px;font-size:15px;color:var(--mist)}
+    ul{margin:12px 0 18px 22px;font-size:15px;color:var(--mist)}
     li{margin-bottom:6px}
-    footer{margin-top:48px;padding-top:24px;border-top:2px solid var(--void);font-family:var(--mono);font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.06em}
+    footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.06em}
   </style>
 </head>
 <body>

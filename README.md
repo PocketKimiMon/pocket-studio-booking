@@ -34,6 +34,12 @@ To change hours, edit the `SCHEDULE` object at the top of the `<script>` in `ind
 - Set availability, notice periods, and cancellation rules inside your Cal.com event types.
 - Existing-client color appointments are listed as 3–5 hours on the page.
 - See `CAL_SETUP.md` for the exact Cal.com event slugs and settings.
+- See `OPERATIONS.md` for which site promises are automated by Cal.com vs. manual.
+
+## Daily operations
+
+- `daily-prep.py` reads `bookings.csv` and prints/emails a summary of tomorrow's appointments.
+- A cron job runs it every morning at 8am. Export your Cal.com bookings to `bookings.csv` to use it.
 
 ## Test locally
 
