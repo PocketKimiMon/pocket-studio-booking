@@ -15,8 +15,11 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{background:var(--bone);color:var(--void);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
     .wrap{max-width:720px;margin:0 auto;padding:48px 24px}
+    @media(max-width:480px){.wrap{padding:36px 18px}}
+    @media(max-width:360px){.wrap{padding:28px 14px}}
     a{color:var(--violet);text-decoration:none;transition:opacity .15s ease}
     a:hover{opacity:.75;text-decoration:underline}
+    p,a,li{overflow-wrap:break-word;word-wrap:break-word}
     .back{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:24px;display:inline-block;color:var(--ash)}
     .back:hover{color:var(--violet)}
     h1{font-family:var(--serif);font-size:clamp(36px,7vw,56px);letter-spacing:-.02em;line-height:1;margin-bottom:12px;color:var(--void)}
@@ -32,46 +35,80 @@
   <div class="wrap">
     <a href="index.html" class="back">← back to booking</a>
     <h1>privacy policy</h1>
-    <p class="updated">Last updated: July 14, 2026</p>
+    <p class="updated">Last updated: July 17, 2026</p>
 
-    <p>This Privacy Policy describes how Pocket Studio / MyKey Pocket ("we", "us", or "our") collects, uses, and protects your personal information when you use our booking website.</p>
+    <p>This Privacy Policy describes how Pocket Studio / MyKey Pocket (“we”, “us”, or “our”), operating in Seattle, Washington, collects, uses, and protects personal information when you use our booking website and related services.</p>
 
-    <h2>1. Information we collect</h2>
-    <p>When you submit a booking request, we collect:</p>
+    <h2>1. Who we are</h2>
+    <p>Pocket Studio / MyKey Pocket is a sole-proprietorship personal-care business providing haircutting and coloring services, currently offered as house calls in the Seattle, WA area. Contact: <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a> · <a href="tel:+14259182029">425-918-2029</a>.</p>
+
+    <h2>2. Information we collect</h2>
+    <p>When you book or contact us, we may collect:</p>
     <ul>
-      <li>Your name</li>
+      <li>Name</li>
       <li>Phone number</li>
-      <li>Email address (if provided)</li>
-      <li>Preferred appointment date and time</li>
-      <li>Service selection and any notes you choose to include</li>
+      <li>Email address</li>
+      <li>Service address / location for house calls</li>
+      <li>Preferred appointment date, time, and service type</li>
+      <li>Notes you provide (allergies, hair history, parking, pets, accessibility needs, color goals)</li>
+      <li>Booking status, confirmations, cancellations, and related service records</li>
+      <li>Payment-related information if you choose to pay or leave a card on file through our payment processor (we do not store full card numbers on this website)</li>
     </ul>
+    <p>We also receive limited technical data needed to run the site (for example, browser type and approximate device info via standard hosting and third-party service logs).</p>
 
-    <h2>2. How we use your information</h2>
-    <p>We use the information you provide solely to:</p>
+    <h2>3. How we use your information</h2>
+    <p>We use your information to:</p>
     <ul>
-      <li>Schedule and confirm appointments</li>
-      <li>Send appointment reminders and verification messages</li>
-      <li>Communicate with you about your service</li>
-      <li>Maintain internal booking records</li>
+      <li>Schedule, confirm, reschedule, and fulfill appointments</li>
+      <li>Send appointment confirmations, reminders, and 2-hour verification messages by email and/or SMS</li>
+      <li>Communicate about services, policies, invoices, and no-show/cancellation matters</li>
+      <li>Maintain business records for operations, taxes, and legal compliance</li>
+      <li>Improve safety and service quality (for example, allergy or chemical-history notes you share)</li>
     </ul>
+    <p>We do not sell, rent, or share your personal information for third-party marketing.</p>
 
-    <h2>3. Third-party services</h2>
-    <p>Booking requests are submitted through <a href="https://formsubmit.co" target="_blank" rel="noopener">formsubmit.co</a>, which temporarily processes the form data to deliver it to our email inbox. We do not sell, rent, or share your personal information with third parties for marketing purposes.</p>
+    <h2>4. Legal bases / why we process</h2>
+    <p>We process personal information because it is necessary to provide the booking and hair services you request, to communicate with you about those services, and to operate our business in a lawful, safe way. Where required for marketing texts or optional promotional messages, we will ask for separate consent.</p>
 
-    <h2>4. Data retention</h2>
-    <p>We keep booking records for as long as necessary to provide services and meet legal or tax obligations. You may request deletion of your personal information by contacting us.</p>
+    <h2>5. Third-party services</h2>
+    <p>We use trusted processors to run booking and communications. They process data only to provide their services to us:</p>
+    <ul>
+      <li><strong>Cal.com</strong> — online scheduling, calendar availability, booking forms, confirmations, and related workflows. See Cal.com’s privacy policy for how they handle booking data.</li>
+      <li><strong>Email / SMS providers</strong> used by Cal.com or by us (for example Twilio or similar) to deliver reminders and verification messages.</li>
+      <li><strong>Calendar providers</strong> you or we connect (Google, Apple iCloud, Microsoft Outlook, etc.) so bookings can sync and avoid double-booking.</li>
+      <li><strong>Payment processors</strong> (for example Stripe), if payment or card-on-file is enabled for deposits or no-show protection.</li>
+      <li><strong>Google Fonts</strong> — font files loaded from Google’s servers when you view this site.</li>
+      <li><strong>Hosting / CDN</strong> — whatever host serves this static site may process basic server logs.</li>
+    </ul>
+    <p>Your booking is completed on Cal.com’s systems when you select a time and submit the booking form. Do not submit sensitive medical details beyond what is needed for safe hair service.</p>
 
-    <h2>5. Your choices</h2>
-    <p>You are not required to provide an email address to submit a booking request, though it helps with confirmations. You can request to update or delete your information at any time by texting or emailing us.</p>
+    <h2>6. SMS and email communications</h2>
+    <p>By providing a phone number or email when booking, you agree we (and our processors) may send transactional messages about your appointment: confirmations, reminders, verification checks, reschedule notices, and service follow-ups. Message frequency varies with your bookings. Message and data rates may apply. Reply STOP to opt out of SMS where that option is supported; you can also email or text us to update contact preferences. Opting out of transactional reminders may affect our ability to hold your appointment under the 2-hour verification policy.</p>
 
-    <h2>6. Security</h2>
-    <p>We take reasonable steps to protect your information. However, no internet transmission is completely secure. By submitting a booking request, you acknowledge this risk.</p>
+    <h2>7. Cookies and tracking</h2>
+    <p>This website itself is a simple static site and does not set its own advertising cookies. Third-party services embedded or linked from the site (Cal.com, Google Fonts, payment tools if enabled) may set their own cookies or local storage as described in their policies. We do not run third-party ad trackers on this site.</p>
 
-    <h2>7. Contact us</h2>
-    <p>If you have questions about this Privacy Policy, contact:<br>
-    MyKey Pocket<br>
+    <h2>8. Data retention</h2>
+    <p>We keep booking and client records only as long as needed to provide services, handle disputes, and meet legal, tax, or bookkeeping obligations. You may request deletion of personal information that we are not required to keep.</p>
+
+    <h2>9. Your choices and rights</h2>
+    <p>You may request to access, correct, or delete personal information we hold about you, or ask questions about this policy, by emailing or texting us. Washington residents and other applicable state residents may have additional rights under state privacy laws; we will honor valid requests as required by law. We will not discriminate against you for exercising privacy rights.</p>
+
+    <h2>10. Security</h2>
+    <p>We and our processors take reasonable administrative and technical steps to protect personal information. No internet transmission or storage system is completely secure. By booking, you acknowledge that residual risk.</p>
+
+    <h2>11. Children</h2>
+    <p>This site is intended for adults booking personal-care services. We do not knowingly collect personal information online from children under 13. Bookings for minors should be made by a parent or legal guardian; see our Terms of Service.</p>
+
+    <h2>12. Changes</h2>
+    <p>We may update this Privacy Policy from time to time. The “Last updated” date at the top will change when we do. Continued use of the site after an update means you accept the revised policy.</p>
+
+    <h2>13. Contact</h2>
+    <p>Questions about privacy:<br>
+    MyKey Pocket / Pocket Studio<br>
     Email: <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a><br>
-    Phone: <a href="tel:+14259182029">425-918-2029</a></p>
+    Phone / text: <a href="tel:+14259182029">425-918-2029</a><br>
+    Service area: Seattle, WA</p>
 
     <footer>© pocket studio / mykey pocket · seattle, wa</footer>
   </div>

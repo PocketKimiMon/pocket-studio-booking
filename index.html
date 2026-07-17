@@ -40,6 +40,8 @@
     a:hover{opacity:.75;text-decoration:underline}
 
     .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+    img,svg{max-width:100%;height:auto}
+    p,a,li,button{overflow-wrap:break-word;word-wrap:break-word}
 
     .topbar{
       display:flex;justify-content:space-between;align-items:center;
@@ -55,9 +57,10 @@
     .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mist);margin-bottom:14px}
     .wordmark{
       font-family:var(--serif);font-weight:750;line-height:.95;letter-spacing:-.02em;
-      font-size:clamp(42px,9vw,92px);color:var(--void)
+      font-size:clamp(40px,8.6vw,92px);color:var(--void);
+      display:flex;flex-wrap:wrap;gap:.12em .14em;align-items:baseline;
     }
-    .wordmark span{display:inline-block;margin-right:.04em}
+    .wordmark span{display:inline-block}
     .wordmark .hi{color:var(--lime)}
     .tagline{
       font-family:var(--serif);font-weight:400;font-size:clamp(18px,2.6vw,24px);
@@ -90,9 +93,19 @@
 
     section{padding:72px 0;border-top:1px solid var(--border)}
     .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:34px;flex-wrap:wrap}
+    @media(max-width:760px){
+      section{padding:52px 0}
+      .sec-head{margin-bottom:28px}
+    }
+    @media(max-width:380px){
+      section{padding:44px 0}
+    }
     .sec-num{font-family:var(--mono);font-size:11px;color:var(--flush);letter-spacing:.12em}
     .sec-title{font-family:var(--serif);font-weight:750;font-size:clamp(26px,4vw,36px);letter-spacing:-.02em;color:var(--void)}
-    .sec-note{font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-left:auto}
+    .sec-note{font-family:var(--mono);font-size:10px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-left:auto;max-width:100%}
+    @media(max-width:560px){
+      .sec-note{margin-left:0;flex-basis:100%}
+    }
 
     .about-grid{display:grid;grid-template-columns:1.2fr .85fr;gap:42px;align-items:start}
     @media(max-width:760px){.about-grid{grid-template-columns:1fr}}
@@ -108,11 +121,14 @@
     .about-card li::before{content:'✦';position:absolute;left:0;color:var(--lime)}
     .about-card .hand{position:absolute;bottom:14px;right:18px;font-size:26px;color:var(--flush);transform:rotate(-4deg)}
 
-    .services{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    .services{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;align-items:stretch}
     .service{
       border-radius:16px;padding:24px;background:var(--card);border:1px solid var(--border);
       cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
-      display:flex;flex-direction:column;gap:8px;position:relative;
+      display:flex;flex-direction:column;gap:8px;position:relative;min-height:100%;
+    }
+    @media(max-width:480px){
+      .service{padding:20px}
     }
     .service:hover{transform:translateY(-3px);border-color:var(--void);box-shadow:6px 6px 0 var(--void)}
     .service .name{font-family:var(--serif);font-weight:750;font-size:20px;letter-spacing:-.01em;color:var(--void)}
@@ -127,10 +143,10 @@
     .service[data-accent="flush"] .tag{background:var(--flush);color:var(--bone)}
     .service[data-accent="violet"] .tag{background:var(--violet);color:var(--bone)}
 
-    .policies{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .policies{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;align-items:stretch}
     .policy{
       border-radius:16px;padding:22px;background:var(--card);border:1px solid var(--border);
-      display:flex;flex-direction:column;gap:8px;
+      display:flex;flex-direction:column;gap:8px;min-height:100%;
     }
     .policy .num{font-family:var(--mono);font-size:11px;color:var(--flush);letter-spacing:.1em}
     .policy h4{font-family:var(--serif);font-weight:750;font-size:17px;color:var(--void)}
@@ -328,12 +344,22 @@
       <li class="policy">
         <span class="num">04</span>
         <h4>no-call-no-show = charged</h4>
-        <p>if you ghost the appointment without a heads-up, the full service amount will be charged. fairness goes both ways.</p>
+        <p>miss a confirmed appointment without timely notice and you may be charged up to the full quoted/estimated service amount (invoiced if no card on file). fairness goes both ways — full terms on the terms page.</p>
       </li>
       <li class="policy">
         <span class="num">05</span>
         <h4>2-hour verification</h4>
         <p>you'll get a text or email 2 hours before your appointment to confirm. if i don't hear back, i may release the slot.</p>
+      </li>
+      <li class="policy">
+        <span class="num">06</span>
+        <h4>pricing &amp; payment</h4>
+        <p>prices are quoted before or at service (they can vary by hair/complexity). payment is due at the appointment unless we agree otherwise.</p>
+      </li>
+      <li class="policy">
+        <span class="num">07</span>
+        <h4>house-call space</h4>
+        <p>provide a safe, ready spot and an accurate address. i may decline or end a visit if the location isn't workable. disclose allergies &amp; prior chemical work.</p>
       </li>
     </ul>
   </section>
@@ -347,19 +373,26 @@
 
     <style>
       /* booking CTA */
-      .book-cta{border:2px solid var(--void);border-radius:16px;padding:34px 28px;background:var(--lime);box-shadow:6px 6px 0 var(--void);text-align:center}
+      .book-cta{border:2px solid var(--void);border-radius:16px;padding:34px 28px;background:var(--lime);box-shadow:6px 6px 0 var(--void);text-align:center;max-width:100%}
       .book-cta-lede{font-family:var(--serif);font-weight:600;font-size:clamp(18px,2.5vw,23px);line-height:1.28;color:var(--void);max-width:44ch;margin:0 auto 24px}
-      .book-cta-btn{border:2px solid var(--void);border-radius:100px;padding:15px 36px;background:var(--void);color:var(--lime);font-family:var(--serif);font-weight:800;font-size:19px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+      .book-cta-btn{border:2px solid var(--void);border-radius:100px;padding:15px 36px;background:var(--void);color:var(--lime);font-family:var(--serif);font-weight:800;font-size:19px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;max-width:100%}
       .book-cta-btn:hover{transform:translateY(-3px);box-shadow:5px 5px 0 var(--lime)}
       .book-cta .fine{margin-top:18px;margin-bottom:0}
+      @media(max-width:480px){
+        .book-cta{padding:28px 20px;box-shadow:5px 5px 0 var(--void)}
+        .book-cta-btn{padding:14px 28px;font-size:17px;width:100%}
+      }
+      @media(max-width:360px){
+        .book-cta{padding:24px 16px;box-shadow:4px 4px 0 var(--void)}
+      }
 
       /* corner booking popup */
-      #bp-fab{position:fixed;right:22px;bottom:22px;z-index:9001;border:2px solid var(--void);border-radius:100px;padding:13px 22px;background:var(--lime);color:var(--void);font-family:var(--serif);font-weight:800;font-size:16px;cursor:pointer;box-shadow:5px 5px 0 var(--void);transition:transform .15s ease,box-shadow .15s ease}
+      #bp-fab{position:fixed;right:22px;bottom:22px;z-index:9001;border:2px solid var(--void);border-radius:100px;padding:13px 22px;background:var(--lime);color:var(--void);font-family:var(--serif);font-weight:800;font-size:16px;cursor:pointer;box-shadow:5px 5px 0 var(--void);transition:transform .15s ease,box-shadow .15s ease;max-width:calc(100vw - 28px)}
       #bp-fab:hover{transform:translateY(-2px);box-shadow:6px 6px 0 var(--void)}
       #bp-fab .scis{margin-right:8px}
       .bp-overlay{position:fixed;inset:0;z-index:9000;background:rgba(18,14,23,.45);display:none}
       .bp-overlay.open{display:block}
-      .bp-panel{position:fixed;right:18px;bottom:18px;z-index:9002;width:min(388px,calc(100vw - 32px));border:2px solid var(--void);border-radius:18px;background:var(--bone);box-shadow:8px 8px 0 var(--void);overflow:hidden;display:none}
+      .bp-panel{position:fixed;right:18px;bottom:18px;z-index:9002;width:min(388px,calc(100vw - 24px));max-height:calc(100vh - 36px);overflow:auto;border:2px solid var(--void);border-radius:18px;background:var(--bone);box-shadow:8px 8px 0 var(--void);display:none;-webkit-overflow-scrolling:touch}
       .bp-panel.open{display:block;animation:bpIn .18s ease}
       @keyframes bpIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
       .bp-head{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;background:var(--void);color:var(--bone)}
@@ -385,13 +418,24 @@
       .bp-go:hover{transform:translateY(-2px);box-shadow:5px 5px 0 var(--lime)}
       .bp-note{font-family:var(--mono);font-size:11px;color:var(--ash);text-align:center;margin-top:13px;line-height:1.55}
       .bp-note a{color:var(--violet)}
-      @media(max-width:560px){ #bp-fab{right:14px;bottom:14px;padding:12px 18px} }
+      @media(max-width:560px){
+        #bp-fab{right:14px;bottom:14px;padding:12px 18px}
+      }
+      @media(max-width:420px){
+        .bp-panel{left:8px;right:8px;bottom:8px;width:auto;max-height:calc(100vh - 16px);border-radius:14px}
+        #bp-fab{font-size:15px;padding:11px 16px}
+      }
+      @media(max-width:340px){
+        #bp-fab .scis{margin-right:5px}
+        #bp-fab{font-size:14px;padding:10px 14px}
+      }
     </style>
 
     <div class="book-cta">
       <p class="book-cta-lede">answer a couple quick questions and i’ll point you straight to the right appointment — no guesswork, no wrong slot.</p>
       <button type="button" id="open-quiz" class="book-cta-btn">start booking →</button>
       <p class="fine">availability is live on the calendar — real time, instant confirmation. house calls only right now.</p>
+      <p class="fine" style="margin-top:8px;text-transform:none;letter-spacing:.02em;line-height:1.55">by booking you agree to the <a href="terms.html">terms of service</a> and <a href="privacy.html">privacy policy</a>, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.</p>
     </div>
   </section>
 
@@ -498,17 +542,45 @@
     opts(function(el){ showResult(el.dataset.slug); });
   }
 
-  function showResult(slug){
+  var chosen=new Set();
+  function showResult(slug, add){
     var s=SV[slug]; if(!s) return;
+    if(add) chosen.add(slug); else chosen=new Set([slug]);
     render(
       '<p class="bp-hint">nice — you’re set up for</p>'+
       '<div class="bp-result"><div class="r-name">'+s.name+'</div><div class="r-meta">'+s.dur+' · house call · seattle</div></div>'+
       '<button type="button" class="bp-go" id="bp-go">book my appointment →</button>'+
-      '<p class="bp-note">opens the live calendar to pick a day & time. text <a href="tel:+14259182029">425-918-2029</a> if nothing fits.</p>'+
+      '<p class="bp-note">opens the live calendar to pick a day & time. by booking you accept the <a href="terms.html" target="_blank" rel="noopener">terms</a> & <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>. text <a href="tel:+14259182029">425-918-2029</a> if nothing fits.</p>'+
       '<div class="bp-row"><button type="button" class="bp-back" data-back>← start over</button></div>'
     );
     bindBack(startQuiz);
-    document.getElementById('bp-go').addEventListener('click',function(){ window.open(CAL+slug,'_blank','noopener'); });
+    document.getElementById('bp-go').addEventListener('click',function(){ window.open(CAL+slug,'_blank','noopener'); showWhatElse(); });
+  }
+
+  function showWhatElse(){
+    var others=Object.keys(SV).filter(function(k){ return !chosen.has(k); });
+    if(!others.length){
+      render(
+        '<p class="bp-q">that’s the whole menu ✂️</p>'+
+        '<p class="bp-hint">you’ve lined up everything mykey offers</p>'+
+        '<p class="bp-note">want something custom? text <a href="tel:+14259182029">425-918-2029</a> and we’ll figure it out.</p>'+
+        '<div class="bp-row"><button type="button" class="bp-back" data-back>← start over</button></div>'
+      );
+      bindBack(startQuiz);
+      return;
+    }
+    var optsHtml=others.map(function(k){
+      var o=SV[k];
+      return '<button type="button" class="bp-opt" data-slug="'+k+'"><span class="o-t">'+o.name+'</span><span class="o-d">'+o.dur+' · book this next →</span></button>';
+    }).join('');
+    render(
+      '<p class="bp-q">now that you’re sorted…</p>'+
+      '<p class="bp-hint">interested in what else mykey does? add another while you’re here.</p>'+
+      '<div class="bp-opts">'+optsHtml+'</div>'+
+      '<div class="bp-row"><button type="button" class="bp-back" id="bp-done">i’m good, thanks — close</button></div>'
+    );
+    Array.prototype.forEach.call(body.querySelectorAll('.bp-opt'),function(el){ el.addEventListener('click',function(){ showResult(el.dataset.slug,true); }); });
+    var done=document.getElementById('bp-done'); if(done) done.addEventListener('click',shut);
   }
 
   // service cards open the popup pre-routed to that service
