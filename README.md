@@ -64,4 +64,4 @@ Upload the folder to any static host:
 
 - The contact email is set to `mykeypocket@icloud.com`.
 - The phone number shown is `425-918-2029`.
-- Replace the Linq profile link in the footer if it changes.
+- Replace the Popl card link in the footer if it changes.

@@ -23,12 +23,32 @@ These must stay in sync with the `data-book` attributes in `index.html`:
 - **Monday / Tuesday / Wednesday:** unavailable
 - Time zone: `America/Los_Angeles`
 
-## Booking limits (apply to every event type)
+## Booking limits
 
-- **Minimum notice:** 2 days / 48 hours
+- **Minimum notice (APPLIED in Cal.com):**
+  - Buzz Cut / Short Cut / Long Cut: **2 days**
+  - New-Client Color Consult (`hair-consultation`): **3 days**
+  - Existing-Client Color Appointment: **7 days (1 week)**
 - **Booking window / date range:** 1 month (or "rolling 30 days") — this makes the "one month at a time" promise automatic
-- **Slot interval:** use default (usually matches duration)
-- **Buffer time:** none needed unless you want travel padding
+- **Slot interval:** use default (matches event duration — 180 min color appt, 45 min consult)
+- People who need something sooner use the site's **🚨 emergency request form** (FormSubmit → itspocketmykey@gmail.com)
+
+### Buffer time (IMPORTANT — haircuts only)
+
+For **Buzz Cut / Short Cut / Long Cut** event types ONLY:
+- **Before event:** 90 min buffer
+- **After event:** 90 min buffer
+
+This gives you travel time between house-call appointments. Do NOT add buffer to color event types (they already block large chunks).
+
+### Per-day booking limits (IMPORTANT — color)
+
+For **Existing-Client Color Appointment** (3 hr) and **New-Client Color Consult** (45 min):
+- **Maximum bookings per day:** do NOT set a limit
+- **Slot interval:** match duration (180 min for color appt, 45 min for consult)
+- **Allow overlapping:** NO (prevent double-booking)
+
+This ensures the full day's availability is open for color — clients can pick any slot that fits the duration, not just 2 pre-assigned "color slots" per day.
 
 ## Workflows / reminders (apply to every event type)
 
