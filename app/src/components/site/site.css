@@ -1,0 +1,1156 @@
+/* MyKey Booking: bespoke theme layer (see app/design-brief.md).
+   Palette: bone ground, void ink, ONE lime accent. Radius rule: content
+   surfaces are 16px soft; interactive CTAs may go fully round (pill/ticket).
+   No site-wide button utility classes: every CTA is styled in its own
+   component block below. */
+
+:root {
+  --mk-bone: #f3ecde;
+  --mk-bone-2: #ece2cd;
+  --mk-card: #faf6ec;
+  --mk-void: #120e17;
+  --mk-void-2: #241d2e;
+  --mk-lime: #8ace00;
+  --mk-lime-deep: #6fa400;
+  --mk-ash: #6f6878;
+  --mk-line: rgba(18, 14, 23, 0.16);
+  --mk-display: "Bricolage Grotesque", "Inter", sans-serif;
+  --mk-body: "Inter", system-ui, sans-serif;
+  --mk-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.mk-root {
+  background: var(--mk-bone);
+  color: var(--mk-void);
+  font-family: var(--mk-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+.mk-root ::selection {
+  background: var(--mk-lime);
+  color: var(--mk-void);
+}
+
+.mk-root a {
+  color: inherit;
+}
+
+.mk-root :focus-visible {
+  outline: 3px solid var(--mk-lime-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.mk-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.mk-mono-label {
+  font-family: var(--mk-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--mk-ash);
+}
+
+/* ---------------- nav ---------------- */
+
+.mk-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--mk-bone) 82%, transparent);
+  border-bottom: 1px solid var(--mk-line);
+}
+
+.mk-nav-inner {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.mk-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+.mk-brand-mark {
+  width: 34px;
+  height: 34px;
+  flex: none;
+}
+
+.mk-nav-links {
+  display: none;
+  gap: 26px;
+}
+
+@media (min-width: 820px) {
+  .mk-nav-links {
+    display: flex;
+  }
+}
+
+.mk-nav-link {
+  position: relative;
+  text-decoration: none;
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mk-void);
+  padding: 4px 0;
+}
+
+.mk-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: var(--mk-lime-deep);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.mk-nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Nav CTA garment: ticket with a perforation that shifts on hover. */
+.mk-ticket-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--mk-void);
+  color: var(--mk-lime);
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  padding: 10px 18px 10px 14px;
+  border-radius: 999px;
+  border: 2px solid var(--mk-void);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+  white-space: nowrap;
+}
+
+.mk-ticket-cta svg {
+  flex: none;
+}
+
+.mk-ticket-cta .mk-ticket-perf {
+  width: 0;
+  height: 18px;
+  border-left: 2px dashed rgba(138, 206, 0, 0.55);
+  transition: transform 0.15s ease;
+}
+
+.mk-ticket-cta:hover {
+  background: var(--mk-void-2);
+  transform: translateY(-2px);
+}
+
+.mk-ticket-cta:hover .mk-ticket-perf {
+  transform: translateX(2px);
+}
+
+.mk-ticket-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ---------------- hero ---------------- */
+
+.mk-hero {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-end;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.mk-hero-media,
+.mk-chapter-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.mk-scene-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.mk-hero::after,
+.mk-chapter::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(18, 14, 23, 0.72) 0%,
+    rgba(18, 14, 23, 0.28) 38%,
+    rgba(18, 14, 23, 0) 65%
+  );
+}
+
+.mk-hero-content {
+  width: 100%;
+  padding-bottom: clamp(48px, 9vh, 96px);
+  padding-top: 120px;
+  color: var(--mk-bone);
+}
+
+.mk-hero-stop {
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--mk-lime);
+  margin-bottom: 18px;
+}
+
+.mk-hero-title {
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(44px, 8.5vw, 104px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  max-width: 12ch;
+  margin: 0 0 22px;
+  text-wrap: balance;
+}
+
+.mk-hero-title .mk-line-mask {
+  display: block;
+  overflow: hidden;
+}
+
+.mk-hero-title .mk-line-inner {
+  display: block;
+  will-change: transform;
+}
+
+.mk-hero-sub {
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.55;
+  max-width: 46ch;
+  color: rgba(243, 236, 222, 0.88);
+  margin: 0 0 34px;
+}
+
+.mk-hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+/* Hero CTA garment: the only pill on the page. The arrow slides out of the
+   label and the lime fill deepens, like a route being taken. */
+.mk-hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--mk-lime);
+  color: var(--mk-void);
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(17px, 1.8vw, 20px);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  padding: 16px 30px;
+  border-radius: 999px;
+  border: 2px solid var(--mk-void);
+  box-shadow: 5px 5px 0 rgba(18, 14, 23, 0.9);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.mk-hero-cta svg {
+  transition: transform 0.2s ease;
+}
+
+.mk-hero-cta:hover {
+  background: #9be112;
+  transform: translateY(-3px);
+  box-shadow: 8px 8px 0 rgba(18, 14, 23, 0.9);
+}
+
+.mk-hero-cta:hover svg {
+  transform: translateX(5px);
+}
+
+.mk-hero-cta:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 3px 3px 0 rgba(18, 14, 23, 0.9);
+}
+
+/* Hero secondary: plain anchor with a growing hairline. */
+.mk-hero-secondary {
+  font-family: var(--mk-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--mk-bone);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(243, 236, 222, 0.5);
+  padding-bottom: 4px;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.mk-hero-secondary:hover {
+  color: var(--mk-lime);
+  border-color: var(--mk-lime);
+}
+
+/* ---------------- route marquee ---------------- */
+
+.mk-marquee {
+  background: var(--mk-void);
+  color: var(--mk-bone);
+  overflow: clip;
+  padding: 14px 0;
+  border-block: 2px solid var(--mk-void);
+}
+
+.mk-marquee-track {
+  display: flex;
+  gap: 0;
+  width: max-content;
+  animation: mk-marquee 26s linear infinite;
+}
+
+.mk-marquee:hover .mk-marquee-track {
+  animation-play-state: paused;
+}
+
+.mk-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 26px;
+  padding-right: 26px;
+  font-family: var(--mk-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.mk-marquee-item svg {
+  color: var(--mk-lime);
+  flex: none;
+}
+
+@keyframes mk-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------- sections (shared rhythm) ---------------- */
+
+.mk-section {
+  padding: clamp(72px, 11vw, 132px) 0;
+  scroll-margin-top: 80px;
+}
+
+.mk-section-head {
+  margin-bottom: clamp(36px, 5vw, 60px);
+}
+
+.mk-eyebrow {
+  font-family: var(--mk-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--mk-lime-deep);
+  margin-bottom: 14px;
+}
+
+.mk-h2 {
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 0;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.mk-section-sub {
+  margin-top: 16px;
+  max-width: 58ch;
+  color: var(--mk-ash);
+  font-size: 16px;
+}
+
+/* ---------------- services: hover-accordion rows ---------------- */
+
+.mk-services {
+  border-top: 2px solid var(--mk-void);
+}
+
+.mk-service-row {
+  border-bottom: 2px solid var(--mk-void);
+}
+
+.mk-service-btn {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  padding: 26px 10px;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+@media (min-width: 760px) {
+  .mk-service-btn {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 2fr) minmax(0, 2fr) auto;
+    align-items: baseline;
+    gap: 24px;
+  }
+}
+
+.mk-service-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--mk-lime);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.22s ease;
+  z-index: 0;
+}
+
+.mk-service-row:hover .mk-service-btn::before,
+.mk-service-btn:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.mk-service-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
+.mk-service-name {
+  font-family: var(--mk-display);
+  font-weight: 700;
+  font-size: clamp(22px, 3vw, 32px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.mk-service-meta {
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mk-ash);
+}
+
+.mk-service-row:hover .mk-service-meta,
+.mk-service-btn:focus-visible .mk-service-meta {
+  color: var(--mk-void);
+}
+
+.mk-service-price {
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: -0.02em;
+}
+
+.mk-service-plus {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--mk-void);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mk-mono);
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.25s ease;
+  justify-self: start;
+}
+
+.mk-service-row.mk-open .mk-service-plus {
+  transform: rotate(45deg);
+}
+
+.mk-service-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.mk-service-row.mk-open .mk-service-detail {
+  grid-template-rows: 1fr;
+}
+
+.mk-service-detail-inner {
+  overflow: hidden;
+}
+
+.mk-service-detail-pad {
+  padding: 0 10px 26px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 28px;
+}
+
+.mk-service-desc {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--mk-void);
+  font-size: 15.5px;
+}
+
+/* Service-row CTA garment: a material chip that flips lime to void. */
+.mk-chip-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: var(--mk-void);
+  background: var(--mk-lime);
+  border: 2px solid var(--mk-void);
+  border-radius: 999px;
+  padding: 9px 16px;
+  box-shadow: 3px 3px 0 var(--mk-void);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.mk-chip-cta:hover {
+  background: var(--mk-void);
+  color: var(--mk-lime);
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 rgba(18, 14, 23, 0.35);
+}
+
+.mk-chip-cta:active {
+  transform: scale(0.97);
+}
+
+.mk-services-note {
+  margin-top: 26px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  max-width: 64ch;
+  color: var(--mk-ash);
+  font-size: 14.5px;
+}
+
+.mk-services-note svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--mk-lime-deep);
+}
+
+/* ---------------- scene chapters (stops on the route) ---------------- */
+
+.mk-chapter {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-end;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.mk-chapter-tall {
+  min-height: 160dvh;
+}
+
+.mk-chapter-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100dvh;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  isolation: isolate;
+  overflow: clip;
+}
+
+.mk-chapter-content {
+  width: 100%;
+  padding-bottom: clamp(48px, 9vh, 88px);
+  color: var(--mk-bone);
+}
+
+/* Waypoint tag: corner route marker (journey chrome, not an eyebrow). */
+.mk-waypoint {
+  position: absolute;
+  top: 88px;
+  right: 24px;
+  margin: 0;
+  padding: 8px 14px;
+  border: 1.5px solid rgba(243, 236, 222, 0.55);
+  border-radius: 999px;
+  font-family: var(--mk-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--mk-bone);
+  background: rgba(18, 14, 23, 0.35);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.mk-chapter-title {
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(34px, 6vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0 0 26px;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+/* Chapter CTA garment: mono route link whose underline draws like a thread. */
+.mk-route-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mk-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--mk-bone);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 6px;
+}
+
+.mk-route-cta::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    var(--mk-lime) 0 8px,
+    transparent 8px 13px
+  );
+  background-size: 200% 100%;
+  transition: background-position 0.4s linear;
+}
+
+.mk-route-cta:hover::after {
+  background-position: 60% 0;
+}
+
+.mk-route-cta svg {
+  transition: transform 0.2s ease;
+}
+
+.mk-route-cta:hover svg {
+  transform: translateX(5px);
+}
+
+/* ---------------- about ---------------- */
+
+.mk-about-grid {
+  display: grid;
+  gap: 48px;
+}
+
+@media (min-width: 900px) {
+  .mk-about-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 72px;
+    align-items: start;
+  }
+}
+
+.mk-about-body p {
+  max-width: 60ch;
+  margin: 0 0 18px;
+  font-size: 16.5px;
+}
+
+.mk-about-facts {
+  margin: 26px 0 34px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  font-family: var(--mk-mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mk-ash);
+}
+
+.mk-why-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--mk-line);
+}
+
+.mk-why-list li {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--mk-line);
+  font-size: 15.5px;
+}
+
+.mk-why-list svg {
+  flex: none;
+  color: var(--mk-lime-deep);
+  transform: translateY(2px);
+}
+
+/* Layered crop frame: plate offset against a lime mat and a void frame. */
+.mk-crop-frame {
+  position: relative;
+  margin: 8px 0 0;
+}
+
+.mk-crop-frame::before {
+  content: "";
+  position: absolute;
+  inset: 18px -14px -14px 18px;
+  background: var(--mk-lime);
+  border: 2px solid var(--mk-void);
+  border-radius: 16px;
+  z-index: 0;
+}
+
+.mk-crop-frame img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  border: 2px solid var(--mk-void);
+  border-radius: 16px;
+  aspect-ratio: 4 / 3.4;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.mk-crop-caption {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  font-family: var(--mk-mono);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mk-ash);
+}
+
+/* Second-read moment: the narrow vertical side-rail note. */
+.mk-about-rail {
+  position: relative;
+}
+
+@media (min-width: 1240px) {
+  .mk-about-rail::after {
+    content: "silent cuts + AuDHD first-times, always. mention it in the booking notes.";
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translate(100%, -50%) rotate(180deg);
+    writing-mode: vertical-rl;
+    font-family: var(--mk-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--mk-ash);
+    white-space: nowrap;
+  }
+}
+
+.mk-quiet-note {
+  margin-top: 30px;
+  border: 2px dashed var(--mk-void);
+  border-radius: 16px;
+  padding: 18px 20px;
+  font-size: 15px;
+  max-width: 60ch;
+  background: var(--mk-card);
+}
+
+.mk-quiet-note strong {
+  font-family: var(--mk-display);
+  letter-spacing: -0.01em;
+}
+
+/* ---------------- policies: numbered Swiss grid ---------------- */
+
+.mk-policy-grid {
+  display: grid;
+  gap: 0;
+  border-top: 2px solid var(--mk-void);
+}
+
+@media (min-width: 820px) {
+  .mk-policy-grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 56px;
+  }
+}
+
+.mk-policy {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--mk-line);
+  align-items: start;
+}
+
+.mk-policy-num {
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  color: var(--mk-lime-deep);
+  letter-spacing: 0.06em;
+  padding-top: 5px;
+}
+
+.mk-policy-title {
+  font-family: var(--mk-display);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  margin: 0 0 6px;
+}
+
+.mk-policy-body {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--mk-ash);
+  max-width: 52ch;
+}
+
+/* Emergency CTA garment: dashed stamp chip that presses flat on hover. */
+.mk-emg-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 34px;
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  color: var(--mk-void);
+  text-decoration: none;
+  border: 2px dashed var(--mk-void);
+  border-radius: 999px;
+  padding: 12px 22px;
+  transition:
+    background 0.15s ease,
+    border-style 0.15s ease,
+    transform 0.15s ease;
+}
+
+.mk-emg-cta:hover {
+  background: var(--mk-lime);
+  border-style: solid;
+  transform: rotate(-1deg);
+}
+
+.mk-emg-cta:active {
+  transform: scale(0.97);
+}
+
+/* ---------------- book ---------------- */
+
+.mk-book {
+  background: var(--mk-bone-2);
+  border-block: 2px solid var(--mk-void);
+}
+
+.mk-book-grid {
+  display: grid;
+  gap: 44px;
+}
+
+@media (min-width: 960px) {
+  .mk-book-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 56px;
+    align-items: start;
+  }
+}
+
+/* Hours: oversized metrics strip. */
+.mk-hours {
+  display: grid;
+  gap: 0;
+  border-top: 2px solid var(--mk-void);
+  margin-top: 34px;
+}
+
+.mk-hours-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--mk-line);
+}
+
+.mk-hours-days {
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--mk-ash);
+}
+
+.mk-hours-time {
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(24px, 3vw, 34px);
+  letter-spacing: -0.02em;
+}
+
+.mk-contact-rows {
+  margin-top: 30px;
+  display: grid;
+  gap: 12px;
+}
+
+.mk-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 15.5px;
+  text-decoration: none;
+}
+
+.mk-contact-row svg {
+  color: var(--mk-lime-deep);
+  flex: none;
+}
+
+/* Contact CTA garment: hairline link whose underline grows from center. */
+.mk-contact-row .mk-contact-label {
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.mk-contact-row .mk-contact-label::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--mk-void);
+  transform: translateX(-50%) scaleX(0);
+  transition: transform 0.22s ease;
+}
+
+.mk-contact-row:hover .mk-contact-label::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.mk-cal-frame {
+  border: 2px solid var(--mk-void);
+  border-radius: 16px;
+  background: var(--mk-card);
+  box-shadow: 8px 8px 0 var(--mk-void);
+  overflow: hidden;
+}
+
+.mk-cal-frame iframe {
+  display: block;
+  width: 100%;
+  height: 720px;
+  border: 0;
+  background: var(--mk-card);
+}
+
+@media (max-width: 640px) {
+  .mk-cal-frame iframe {
+    height: 640px;
+  }
+}
+
+.mk-cal-fallback {
+  padding: 18px 22px 22px;
+}
+
+/* Book CTA garment: full-width lime banner that shears on hover. */
+.mk-banner-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  background: var(--mk-lime);
+  color: var(--mk-void);
+  border-top: 2px solid var(--mk-void);
+  padding: 18px 24px;
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: clamp(19px, 2.2vw, 24px);
+  letter-spacing: -0.015em;
+  text-decoration: none;
+  transition:
+    letter-spacing 0.2s ease,
+    background 0.2s ease;
+}
+
+.mk-banner-cta svg {
+  flex: none;
+  transition: transform 0.2s ease;
+}
+
+.mk-banner-cta:hover {
+  background: #9be112;
+  letter-spacing: 0;
+}
+
+.mk-banner-cta:hover svg {
+  transform: translateX(8px) skewX(-8deg);
+}
+
+.mk-banner-cta:active {
+  transform: scale(0.995);
+}
+
+.mk-book-fine {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--mk-ash);
+  max-width: 56ch;
+}
+
+/* ---------------- footer ---------------- */
+
+.mk-footer {
+  background: var(--mk-void);
+  color: var(--mk-bone);
+  padding: 56px 0 40px;
+}
+
+.mk-footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(243, 236, 222, 0.18);
+}
+
+.mk-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mk-display);
+  font-weight: 800;
+  font-size: 18px;
+  text-decoration: none;
+}
+
+.mk-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  font-family: var(--mk-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.mk-footer-links a {
+  color: var(--mk-bone);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.mk-footer-links a:hover {
+  color: var(--mk-lime);
+  border-color: var(--mk-lime);
+}
+
+.mk-footer-legal {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  font-size: 13px;
+  color: rgba(243, 236, 222, 0.62);
+}
+
+/* ---------------- reduced motion ---------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  .mk-root *,
+  .mk-root *::before,
+  .mk-root *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

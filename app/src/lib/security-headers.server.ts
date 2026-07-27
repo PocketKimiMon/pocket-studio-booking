@@ -20,6 +20,8 @@ export function applySecurityHeaders(response: Response): Response {
       "font-src 'self' https://fonts.gstatic.com; " +
       "img-src 'self' data: https:; media-src 'self' https:; " +
       "connect-src 'self' https:; " +
+      // The booking section embeds the live Cal.com calendar in an iframe.
+      "frame-src 'self' https://cal.com https://*.cal.com; " +
       "base-uri 'self'; form-action 'self'",
   );
   headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');

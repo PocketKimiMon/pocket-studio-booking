@@ -161,14 +161,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-theme="default-dark" style={{ colorScheme: "dark" }}>
-      {/* Marketplace apps are permanently dark: data-theme is pinned on <html>
-          above. Do not add quanta's bootstrapScript/ThemeController, a theme
-          toggle, or a light mode. */}
+    <html lang="en" style={{ colorScheme: "light" }}>
+      {/* MyKey Booking is a light (bone) independent brand site: no dark pin,
+          no theme controller. The booking brand owns the whole page. */}
       <head>
         <HeadContent />
       </head>
-      <body className="bg-q-background-primary text-q-text-primary">
+      <body style={{ margin: 0, background: "#F3ECDE", color: "#120E17" }}>
         {children}
         <Scripts />
       </body>

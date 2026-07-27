@@ -32,7 +32,8 @@ dark-glow family. (User's explicit brand colors override the default bans.)
 - Mono labels/meta: **IBM Plex Mono** (existing brand mono).
 No serif. Caveat (hand) reserved for at most one tiny annotation, matching brand.
 
-## Animation mode: animated-website
+Animation mode: animated-website
+
 Intake: user unreachable, proceeded on the skill default (Animated) as instructed.
 
 ### Journey (4 scenes = 4 route stops)

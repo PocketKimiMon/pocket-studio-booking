@@ -1,28 +1,54 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { scenes } from "../lib/site";
+import {
+  About,
+  Book,
+  Footer,
+  Hero,
+  Nav,
+  Policies,
+  RouteMarquee,
+  Services,
+} from "../components/site/sections";
+import { ScrollScrubJourney } from "../components/scroll-scrub/scroll-scrub";
+import { MotionRuntime } from "../components/site/motion";
+import "../components/site/site.css";
+
 export const Route = createFileRoute("/")({
-  // No title/description here on purpose: the home page inherits the app's
-  // editable page metadata from the root route (set via the marketplace meta
-  // API — title/favicon/og), so a shared link to "/" shows the owner's values.
-  // Add a `head` here only to give a SPECIFIC page its own title/description
-  // (a deeper route's head overrides the root's for that page).
+  head: () => ({
+    meta: [{ name: "theme-color", content: "#F3ECDE" }],
+    links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
+      },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/assets/favicon-32.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+    ],
+  }),
   component: Index,
 });
 
-// Replace this placeholder. Routes are server-rendered — keep render SSR-safe
-// (no window/document at module top level or during render). See ./README.md.
 function Index() {
   return (
-    <div
-      data-higgsfield-blank-page-placeholder="REMOVE_THIS"
-      className="flex min-h-screen flex-col items-center justify-center gap-3 px-6 text-center"
-    >
-      <h1 className="text-2xl font-semibold tracking-tight">
-        Your website will live here.
-      </h1>
-      <p className="text-base text-gray-500">
-        Ask Higgsfield Supercomputer to build it.
-      </p>
+    <div className="mk-root">
+      <Nav />
+      <main>
+        <Hero />
+        <RouteMarquee />
+        <Services />
+        <ScrollScrubJourney sceneId="cut" />
+        <About />
+        <Policies />
+        <ScrollScrubJourney sceneId="housecall" />
+        <Book />
+      </main>
+      <Footer />
+      <MotionRuntime />
     </div>
   );
 }
