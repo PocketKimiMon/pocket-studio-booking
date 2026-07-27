@@ -1,22 +1,18 @@
 // Guided multiple-choice booking chat (design-brief.md, brand revision 2).
 // The primary booking path: three chip questions, a changeable summary, then
 // the calendar. Every question's last chip drops to free text, which composes
-// a real sms:/mailto: message to MyKey. No backend, no AI, no timers beyond a
-// 400ms typing beat. All state is React state and browser globals only appear
-// in handlers and effects, so SSR renders the greeting and the first question.
+// a real sms:/mailto: message to MyKey. No backend, no AI; the guide "types"
+// each reply on a 420-700ms beat so multi-bubble replies land in sequence
+// like a real conversation (instant under prefers-reduced-motion). All state
+// is React state and browser globals only appear in handlers and effects, so
+// SSR renders the greeting and the first question.
 import { useEffect, useRef, useState } from "react";
 import { calEventUrl, contact, services, travel, travelFeeRange } from "../../lib/site";
 import { IconArrow, IconMail, IconPhone } from "./icons";
+import "./chat.css";
 
 type Step =
-  | "service"
-  | "serviceHelp"
-  | "where"
-  | "travel"
-  | "when"
-  | "summary"
-  | "freetext"
-  | "sendoff";
+  "service" | "serviceHelp" | "where" | "travel" | "when" | "summary" | "freetext" | "sendoff";
 
 type Msg = {
   id: number;
@@ -59,11 +55,7 @@ const QUESTIONS = {
     "Got it. Pick how to send it and a human (hi, MyKey) replies. Text is fastest. No bots past this guide.",
 } as const;
 
-const WHERE_CHIPS = [
-  "Yes, within 30 miles",
-  "Outside 30 miles",
-  "Not sure yet",
-];
+const WHERE_CHIPS = ["Yes, within 30 miles", "Outside 30 miles", "Not sure yet"];
 
 const HOUSE_CALL = WHERE_CHIPS[0];
 
@@ -79,21 +71,22 @@ const HELP_PICKS = [
 ] as const;
 
 const reduceMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function ChatCard() {
   const nextId = useRef(1);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const queue = useRef<Omit<Msg, "id">[]>([]);
+  const pendingStep = useRef<Step>("service");
   const prevStep = useRef<Step>("service");
   const interacted = useRef(false);
   const logRef = useRef<HTMLDivElement>(null);
   const chipsRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sendoffRef = useRef<HTMLDivElement>(null);
 
-  const [msgs, setMsgs] = useState<Msg[]>([
-    { id: 0, role: "guide", text: GREETING },
-  ]);
+  const [msgs, setMsgs] = useState<Msg[]>([{ id: 0, role: "guide", text: GREETING }]);
   const [answers, setAnswers] = useState<Answers>({});
   const [step, setStep] = useState<Step>("service");
   const [typing, setTyping] = useState(false);
@@ -103,14 +96,20 @@ export function ChatCard() {
   useEffect(
     () => () => {
       if (timer.current) clearTimeout(timer.current);
+      if (focusTimer.current) clearTimeout(focusTimer.current);
     },
     [],
   );
 
-  // Keep the log scrolled to the newest bubble.
+  // Keep the log scrolled to the newest bubble. The container scrolls, never
+  // the window; motion is smooth unless the visitor asked for less of it.
   useEffect(() => {
     const el = logRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (!el) return;
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: reduceMotion() ? "auto" : "smooth",
+    });
   }, [msgs, typing]);
 
   // Focus the first chip of a freshly asked question, but only after the
@@ -121,28 +120,79 @@ export function ChatCard() {
       inputRef.current?.focus({ preventScroll: true });
       return;
     }
+    if (step === "sendoff") {
+      // The input row just unmounted; hand focus to the first hand-off link,
+      // but only when it would otherwise fall back to <body>.
+      if (
+        typeof document !== "undefined" &&
+        (document.activeElement === null || document.activeElement === document.body)
+      ) {
+        sendoffRef.current?.querySelector("a")?.focus({ preventScroll: true });
+      }
+      return;
+    }
     const first = chipsRef.current?.querySelector("button");
     first?.focus({ preventScroll: true });
   }, [step, typing, msgs]);
 
+  // Mobile keyboard: when the visual viewport shrinks (on-screen keyboard
+  // opening), keep the input and the latest bubble in view.
+  useEffect(() => {
+    if (step !== "freetext") return;
+    if (typeof window === "undefined" || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    const onResize = () => {
+      if (vv.height >= window.innerHeight - 120) return; // not the keyboard
+      inputRef.current?.scrollIntoView({
+        block: "end",
+        behavior: reduceMotion() ? "auto" : "smooth",
+      });
+      const el = logRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+    };
+    vv.addEventListener("resize", onResize);
+    return () => vv.removeEventListener("resize", onResize);
+  }, [step]);
+
   const push = (m: Omit<Msg, "id">): Msg => ({ ...m, id: nextId.current++ });
 
-  // Append the guide's next message(s) after a 400ms typing beat (skipped
-  // entirely under prefers-reduced-motion).
-  const askNext = (guideMsgs: Omit<Msg, "id">[], next: Step) => {
-    const go = () => {
-      setMsgs((cur) => [...cur, ...guideMsgs.map(push)]);
-      setStep(next);
-    };
-    if (reduceMotion()) {
-      go();
+  // The typing beat scales with message length, so a short ack feels snappy
+  // and a long question takes a breath (always inside ~420-700ms).
+  const beatFor = (text: string) => Math.min(420 + text.length * 4, 700);
+
+  // Append the guide's next message(s) one bubble at a time, with the typing
+  // indicator up between beats, so replies land in sequence like a real
+  // conversation. Skipped entirely under prefers-reduced-motion.
+  const deliverNext = () => {
+    const [head, ...rest] = queue.current;
+    if (!head) {
+      setTyping(false);
       return;
     }
-    setTyping(true);
-    timer.current = setTimeout(() => {
+    queue.current = rest;
+    setMsgs((cur) => [...cur, push(head)]);
+    if (rest.length === 0) {
       setTyping(false);
-      go();
-    }, 400);
+      setStep(pendingStep.current);
+      return;
+    }
+    timer.current = setTimeout(deliverNext, beatFor(rest[0].text));
+  };
+
+  const askNext = (guideMsgs: Omit<Msg, "id">[], next: Step) => {
+    if (guideMsgs.length === 0) {
+      setStep(next);
+      return;
+    }
+    if (reduceMotion()) {
+      setMsgs((cur) => [...cur, ...guideMsgs.map(push)]);
+      setStep(next);
+      return;
+    }
+    queue.current = guideMsgs;
+    pendingStep.current = next;
+    setTyping(true);
+    timer.current = setTimeout(deliverNext, beatFor(guideMsgs[0].text));
   };
 
   const answer = (
@@ -265,6 +315,7 @@ export function ChatCard() {
       clearTimeout(timer.current);
       setTyping(false);
     }
+    queue.current = [];
     setMsgs((cur) => {
       let idx = -1;
       for (let i = cur.length - 1; i >= 0; i--) {
@@ -413,12 +464,7 @@ export function ChatCard() {
             ))}
           </div>
           <span className="mk-chat-step-label">{stepLabel}</span>
-          <button
-            type="button"
-            className="mk-chat-back"
-            onClick={back}
-            disabled={!canBack}
-          >
+          <button type="button" className="mk-chat-back" onClick={back} disabled={!canBack}>
             <IconArrow size={14} style={{ transform: "scaleX(-1)" }} />
             Back
           </button>
@@ -426,71 +472,96 @@ export function ChatCard() {
       </div>
 
       <div className="mk-chat-log" role="log" aria-live="polite" ref={logRef}>
-        {msgs.map((m) => (
-          <div key={m.id} className={`mk-msg ${m.role === "guide" ? "mk-msg-guide" : "mk-msg-user"}`}>
-            {m.text}
-            {m.fee && (
-              <span className="mk-fee">
-                <span className="mk-fee-kicker">{"// not charged yet"}</span>
-                <span className="mk-fee-amount">{m.fee.range}</span>
-                <span className="mk-fee-note">
-                  for {m.fee.phrase}, at ${travel.flat} flat + ${travel.perMile} a
-                  mile. Free for now.
+        {msgs.map((m, i) => {
+          // Consecutive bubbles from the same side group visually, like a
+          // real messaging app (no timestamps: nothing to time-stamp against
+          // without faking a clock, and it would clutter the guided flow).
+          const grouped = i > 0 && msgs[i - 1].role === m.role;
+          return (
+            <div
+              key={m.id}
+              className={`mk-msg ${m.role === "guide" ? "mk-msg-guide" : "mk-msg-user"}${grouped ? " mk-grouped" : ""}`}
+            >
+              {m.text}
+              {m.fee && (
+                <span className="mk-fee">
+                  <span className="mk-fee-kicker">{"// not charged yet"}</span>
+                  <span className="mk-fee-amount">{m.fee.range}</span>
+                  <span className="mk-fee-note">
+                    for {m.fee.phrase}, at ${travel.flat} flat + ${travel.perMile} a mile. Free for
+                    now.
+                  </span>
                 </span>
-              </span>
-            )}
-            {m.summary && (
-              <dl className="mk-msg-rows">
-                <div className="mk-msg-row">
-                  <dt>service</dt>
-                  <dd>
-                    {answers.service ?? "not picked"}
-                    <button type="button" className="mk-change-btn" onClick={() => rewindTo("service")}>
-                      change
-                    </button>
-                  </dd>
-                </div>
-                {pickedService && (
+              )}
+              {m.summary && (
+                <dl className="mk-msg-rows">
                   <div className="mk-msg-row">
-                    <dt>lead time</dt>
-                    <dd>{pickedService.lead}</dd>
-                  </div>
-                )}
-                <div className="mk-msg-row">
-                  <dt>where</dt>
-                  <dd>
-                    {answers.where ?? "not picked"}
-                    <button type="button" className="mk-change-btn" onClick={() => rewindTo("where")}>
-                      change
-                    </button>
-                  </dd>
-                </div>
-                {answers.travel && (
-                  <div className="mk-msg-row">
-                    <dt>travel fee</dt>
+                    <dt>service</dt>
                     <dd>
-                      {answers.travelFee
-                        ? `${answers.travelFee}, free for now`
-                        : "outside the zone, let's talk"}
-                      <button type="button" className="mk-change-btn" onClick={() => rewindTo("travel")}>
+                      {answers.service ?? "not picked"}
+                      <button
+                        type="button"
+                        className="mk-change-btn"
+                        onClick={() => rewindTo("service")}
+                      >
                         change
                       </button>
                     </dd>
                   </div>
-                )}
-                <div className="mk-msg-row">
-                  <dt>when</dt>
-                  <dd>
-                    {answers.when ?? "not picked"}
-                    <button type="button" className="mk-change-btn" onClick={() => rewindTo("when")}>
-                      change
-                    </button>
-                  </dd>
-                </div>
-              </dl>
-            )}
-          </div>
-        ))}
+                  {pickedService && (
+                    <div className="mk-msg-row">
+                      <dt>lead time</dt>
+                      <dd>{pickedService.lead}</dd>
+                    </div>
+                  )}
+                  <div className="mk-msg-row">
+                    <dt>where</dt>
+                    <dd>
+                      {answers.where ?? "not picked"}
+                      <button
+                        type="button"
+                        className="mk-change-btn"
+                        onClick={() => rewindTo("where")}
+                      >
+                        change
+                      </button>
+                    </dd>
+                  </div>
+                  {answers.travel && (
+                    <div className="mk-msg-row">
+                      <dt>travel fee</dt>
+                      <dd>
+                        {answers.travelFee
+                          ? `${answers.travelFee}, free for now`
+                          : "outside the zone, let's talk"}
+                        <button
+                          type="button"
+                          className="mk-change-btn"
+                          onClick={() => rewindTo("travel")}
+                        >
+                          change
+                        </button>
+                      </dd>
+                    </div>
+                  )}
+                  <div className="mk-msg-row">
+                    <dt>when</dt>
+                    <dd>
+                      {answers.when ?? "not picked"}
+                      <button
+                        type="button"
+                        className="mk-change-btn"
+                        onClick={() => rewindTo("when")}
+                      >
+                        change
+                      </button>
+                    </dd>
+                  </div>
+                </dl>
+              )}
+            </div>
+          );
+        })}
         {typing && (
           <span className="mk-typing" aria-label="The guide is typing">
             <span />
@@ -555,6 +626,18 @@ export function ChatCard() {
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Type it like a text to a friend"
             autoComplete="off"
+            enterKeyHint="send"
+            onFocus={() => {
+              // Once the on-screen keyboard finishes opening, nudge the log
+              // so the input and the latest bubble stay in view.
+              if (focusTimer.current) clearTimeout(focusTimer.current);
+              focusTimer.current = setTimeout(() => {
+                inputRef.current?.scrollIntoView({
+                  block: "nearest",
+                  behavior: reduceMotion() ? "auto" : "smooth",
+                });
+              }, 350);
+            }}
           />
           <button type="submit" className="mk-chat-send" disabled={!draft.trim()}>
             Send
@@ -565,7 +648,7 @@ export function ChatCard() {
 
       {!typing && step === "sendoff" && (
         <>
-          <div className="mk-chat-sendoff">
+          <div className="mk-chat-sendoff" ref={sendoffRef}>
             <a className="mk-chat-send" href={smsHref}>
               <IconPhone size={16} />
               Text it to MyKey
@@ -576,8 +659,7 @@ export function ChatCard() {
             </a>
           </div>
           <p className="mk-chat-note">
-            Opens your text or mail app with everything pre-filled. You press
-            send, a human replies.
+            Opens your text or mail app with everything pre-filled. You press send, a human replies.
           </p>
         </>
       )}
@@ -595,8 +677,8 @@ export function ChatSection({ level = "h2" }: { level?: "h1" | "h2" }) {
         <div className="mk-section-head">
           <H className="mk-h2">The easy way to book.</H>
           <p className="mk-tldr">
-            <strong>TL;DR</strong> Four quick picks and you are booked. Every
-            question also lets you skip the picks and just type to me.
+            <strong>TL;DR</strong> Four quick picks and you are booked. Every question also lets you
+            skip the picks and just type to me.
           </p>
         </div>
         <ChatCard />
