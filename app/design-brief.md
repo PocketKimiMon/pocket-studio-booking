@@ -3,6 +3,42 @@
 One site that merges every MyKey booking page (Pocket Studio, Rudy's Fremont chair,
 mobile barber, "Book with Me") into a single branded booking destination.
 
+## Brand revision 3 (follow-up edit, 2026-07-27, owner feedback)
+Owner's verdict on revision 2's light flip: "ew no — undo change, then review
+improve and make multipage website, not a 1 page." So:
+
+- REVERTED the warm-paper flip. The site is back on the dark PocketStudio
+  system exactly as revision 1 shipped it (charcoal ink `#0B0B0F`, oxblood
+  lead, hazard lime, signal cyan focus, grain 0.14): site.css, color-scheme,
+  body colors, manifest/theme-color restored from git (commit 5634b1d), not
+  rewritten by hand. Revision 2's palette block below is historical record.
+- KEPT the guided chat booking flow (the owner asked for it explicitly; the
+  rejection was about the light theme, not the bot). Chat styles re-skinned to
+  the dark tokens: ink-800 card, ink-700 guide bubbles, oxblood user bubbles
+  with cream text, cyan links/escape chip, lime send button.
+- RESTRUCTURED one page → five routes (TanStack Start file-based routing):
+  - `/` home: hero, route marquee, both scroll-scrub journey chapters, "The
+    short version." closing band with CTA to /book.
+  - `/services`: the full menu with prices, lead times, per-service Cal.com
+    deep links, closing CTA to /book.
+  - `/book`: the chat flow as the star (h1 "The easy way to book."), then the
+    Cal.com embed as the fallback path ("Straight to the calendar.").
+  - `/about`: the artist, the quiet chair (Silent Cuts, AuDHD first-time),
+    house calls, Rudy's Fremont.
+  - `/policies`: the 7 policies + emergency request, then hours and contact.
+- Shared chrome on every page via __root: fixed nav (brand + Services/About/
+  Policies + reading-mode toggle + Book-a-cut ticket CTA), footer. Mobile nav
+  drops to a second thumb-reachable row under the bar; active link gets the
+  cyan underline. All former #anchor CTAs are now real route links.
+- Review pass improvements: route-aware motion runtime (re-inits on pathname
+  change, since Link navigation swaps pages without reload), focus reset on
+  route change (scroll to top, focus the page h1), one h1 per page, per-route
+  titles/descriptions, sitemap lists all five routes, fonts/manifest links
+  moved to the root head so every route gets them.
+- Unchanged: dyslexia reading mode ON by default + persisted toggle on every
+  page, reduced-motion collapse, screenshot-safe reveals, bespoke CTA
+  garments, Cal.com embed + CSP, credits still 0 (no new generation).
+
 ## Brand revision 2 (follow-up edit, 2026-07-27, owner feedback)
 Owner's verdict on revision 1: "I kinda hate it." The dark hazard-on-charcoal
 look fights the product's actual promise (quiet, trauma-informed,

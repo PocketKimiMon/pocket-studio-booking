@@ -1,34 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { scenes } from "../lib/site";
 import {
-  About,
-  Book,
-  Footer,
   Hero,
-  Nav,
-  Policies,
+  HomeClose,
   RouteMarquee,
-  Services,
 } from "../components/site/sections";
-import { ChatSection } from "../components/site/chat";
 import { ScrollScrubJourney } from "../components/scroll-scrub/scroll-scrub";
-import { MotionRuntime } from "../components/site/motion";
-import "../components/site/site.css";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [{ name: "theme-color", content: "#F7F2E9" }],
-    links: [
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+    meta: [
+      { title: "MyKey Booking · cuts and color, booked direct in Seattle" },
       {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400..900;1,400..900&family=Hanken+Grotesk:ital,wght@0,300..900;1,300..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+        name: "description",
+        content:
+          "Cuts and color with MyKey Pocket, Seattle hair artist. The chair in Fremont or house calls within 30 miles. Book direct, no front desk.",
       },
-      { rel: "icon", type: "image/png", sizes: "32x32", href: "/assets/favicon-32.png" },
-      { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/apple-touch-icon.png" },
-      { rel: "manifest", href: "/site.webmanifest" },
+      { name: "theme-color", content: "#0B0B0F" },
     ],
   }),
   component: Index,
@@ -36,21 +24,12 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <div className="mk-root">
-      <Nav />
-      <main>
-        <Hero />
-        <RouteMarquee />
-        <Services />
-        <ChatSection />
-        <ScrollScrubJourney sceneId="cut" />
-        <About />
-        <Policies />
-        <ScrollScrubJourney sceneId="housecall" />
-        <Book />
-      </main>
-      <Footer />
-      <MotionRuntime />
-    </div>
+    <>
+      <Hero />
+      <RouteMarquee />
+      <ScrollScrubJourney sceneId="cut" />
+      <ScrollScrubJourney sceneId="housecall" />
+      <HomeClose />
+    </>
   );
 }

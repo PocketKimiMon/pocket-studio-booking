@@ -391,7 +391,7 @@ export function ChatCard() {
 
       {!typing && step === "summary" && (
         <div className="mk-chat-ctas">
-          <a className="mk-chat-primary" href="#book">
+          <a className="mk-chat-primary" href="#calendar">
             Pick a time on the calendar
             <IconArrow size={18} />
           </a>
@@ -463,12 +463,13 @@ export function ChatCard() {
 
 /* ---------- chat section: the guided booking path ---------- */
 
-export function ChatSection() {
+export function ChatSection({ level = "h2" }: { level?: "h1" | "h2" }) {
+  const H = level;
   return (
-    <section className="mk-section" id="chat">
+    <section className="mk-section">
       <div className="mk-wrap">
         <div className="mk-section-head">
-          <h2 className="mk-h2">The easy way to book.</h2>
+          <H className="mk-h2">The easy way to book.</H>
           <p className="mk-tldr">
             <strong>TL;DR</strong> Four quick picks and you are booked. Every
             question also lets you skip the picks and just type to me.

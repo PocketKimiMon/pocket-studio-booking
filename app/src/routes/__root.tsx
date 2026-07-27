@@ -17,6 +17,9 @@ import { reportHiggsfieldError } from "../lib/higgsfield-error-reporting";
 // repo by the marketplace meta API and read at BUILD time — no runtime fetch.
 // Editing it via the app settings UI rewrites this file and redeploys the app.
 import appMetaJson from "../app-meta.json";
+import { Footer, Nav } from "../components/site/sections";
+import { MotionRuntime, RouteFocusReset } from "../components/site/motion";
+import "../components/site/site.css";
 
 declare const __HF_DESIGN_INSPECTOR__: boolean;
 
@@ -95,6 +98,15 @@ function buildHead(meta: AppMeta) {
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400..900;1,400..900&family=Hanken+Grotesk:ital,wght@0,300..900;1,300..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap",
+      },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/assets/favicon-32.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
       ...(favicon ? [{ rel: "icon", href: favicon }] : []),
     ],
   };
@@ -161,12 +173,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" data-reading-mode="dyslexic" style={{ colorScheme: "light" }}>
-      {/* PocketStudio design system, brand revision 2: warm paper canvas,
-          permanently light. The data-reading-mode attribute ships ON by
-          default; the inline bootstrap below removes it before paint only for
-          users who opted out (persisted in localStorage). Reading-mode state
-          lives on <html>, never in React render, so SSR stays safe. */}
+    <html lang="en" data-reading-mode="dyslexic" style={{ colorScheme: "dark" }}>
+      {/* PocketStudio design system: ink canvas, permanently dark. The
+          data-reading-mode attribute ships ON by default; the inline bootstrap
+          below removes it before paint only for users who opted out (persisted
+          in localStorage). Reading-mode state lives on <html>, never in React
+          render, so SSR stays safe. */}
       <head>
         {/* Reading-mode bootstrap: runs before first paint. Default is ON;
             only an explicit 'off' preference removes the attribute. */}
@@ -178,7 +190,7 @@ function RootShell({ children }: { children: ReactNode }) {
         />
         <HeadContent />
       </head>
-      <body style={{ margin: 0, background: "#F7F2E9", color: "#181426" }}>
+      <body style={{ margin: 0, background: "#0B0B0F", color: "#F4EFE6" }}>
         {children}
         <Scripts />
       </body>
@@ -210,8 +222,18 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      {/* Shared site chrome on every page: fixed nav, routed page, footer,
+          plus the route-aware motion runtime and focus reset. */}
+      <div className="mk-root">
+        <Nav />
+        <main>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </main>
+        <Footer />
+        <MotionRuntime />
+        <RouteFocusReset />
+      </div>
     </QueryClientProvider>
   );
 }

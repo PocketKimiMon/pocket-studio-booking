@@ -1,10 +1,15 @@
 // Client-only motion runtime for MyKey Booking (cinema tier).
 // Everything here lives inside useEffect: SSR renders the full static page,
 // this layer adds the scroll journey on top. Under prefers-reduced-motion it
-// does nothing at all and the page stays completely usable.
-import { useEffect } from "react";
+// does nothing at all and the page stays completely usable. The runtime is
+// route-aware: it re-initializes whenever the pathname changes, because
+// TanStack Link navigation swaps pages without a reload.
+import { useEffect, useRef } from "react";
+import { useRouterState } from "@tanstack/react-router";
 
 export function MotionRuntime() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -139,7 +144,30 @@ export function MotionRuntime() {
       // If the dynamic imports never resolved, accordion handlers still unbind.
       unbind.forEach((u) => u());
     };
-  }, []);
+  }, [pathname]);
+
+  return null;
+}
+
+// Route-change focus management: on client-side navigation, scroll to the top
+// and move focus to the page's h1 so keyboard and screen-reader users land on
+// the new page's heading instead of keeping focus on a removed nav link.
+export function RouteFocusReset() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const first = useRef(true);
+
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    window.scrollTo(0, 0);
+    const h1 = document.querySelector<HTMLElement>("main h1");
+    if (h1) {
+      h1.setAttribute("tabindex", "-1");
+      h1.focus({ preventScroll: true });
+    }
+  }, [pathname]);
 
   return null;
 }

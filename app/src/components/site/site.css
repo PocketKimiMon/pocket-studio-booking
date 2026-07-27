@@ -1,8 +1,7 @@
-/* MyKey Booking: PocketStudio design system, PAPER surface (brand revision 2,
-   owner feedback: warm, calm, welcoming — a neighborhood studio's front desk,
-   not a nightclub flyer). Warm cream canvas, soft ink text, oxblood/lime/cyan
-   as SPOT accents. Film grain very subtle, hard accent edges, hairlines,
-   springy 130/220/380ms, press = scale(.97), double focus ring, 44px targets.
+/* MyKey Booking: theme layer on the owner-supplied PocketStudio design system
+   (~/Downloads/pocketstudio-design-system/, see app/design-brief.md "Brand
+   revision"). Charcoal ink canvas, oxblood + hazard lime leads, signal cyan
+   for links/focus, film grain, hard accent edges, springy 130/220/380ms.
    Radius rule: content surfaces 10-16px; CTAs/tags/toggles may go pill.
    No site-wide button utility classes: every CTA is styled in its own block. */
 
@@ -52,30 +51,28 @@
 }
 
 :root {
-  /* warm paper canvas + soft ink text (theme-paper values from the system) */
-  --mk-ink-950: #eae1cd; /* deepest band (footer / book strip) */
-  --mk-ink-900: #f7f2e9; /* page canvas */
-  --mk-ink-850: #f1eada; /* hover surface */
-  --mk-ink-800: #fbf8f1; /* cards / raised */
-  --mk-ink-700: #f0e8d6; /* guide bubbles / fills */
-  --mk-ink-600: #e6dcc4; /* hover fill / toggle track */
-  --mk-fg1: #181426;
-  --mk-fg2: #4a4360;
-  --mk-fg3: #756b85;
-  --mk-hairline: rgba(24, 20, 38, 0.12);
-  --mk-border: #d9cdb2;
-  --mk-cream: #f4efe6; /* text ON oxblood fills */
+  /* ink + text */
+  --mk-ink-950: #070709;
+  --mk-ink-900: #0b0b0f;
+  --mk-ink-850: #101015;
+  --mk-ink-800: #16161d;
+  --mk-ink-700: #1f1f28;
+  --mk-ink-600: #2b2b36;
+  --mk-fg1: #f4efe6;
+  --mk-fg2: #adb0bd;
+  --mk-fg3: #797c8a;
+  --mk-hairline: rgba(244, 239, 230, 0.08);
+  --mk-border: #3a3a48;
 
-  /* tactical accents (spot roles on paper) */
+  /* tactical accents */
   --mk-oxblood: #c53b38;
-  --mk-oxblood-bright: #d94f4b;
+  --mk-oxblood-bright: #e25c57;
   --mk-oxblood-deep: #7e211f;
-  --mk-lime: #b6f23a; /* fill only, always with ink text */
+  --mk-lime: #b6f23a;
   --mk-lime-bright: #cdff6e;
-  --mk-lime-deep: #82b500; /* lime TEXT on paper (AA) */
+  --mk-lime-deep: #82b500;
   --mk-cyan: #33cbd2;
   --mk-cyan-bright: #6fe6eb;
-  --mk-cyan-deep: #128a93; /* cyan TEXT/links on paper (AA) */
   --mk-on-neon: #0b0b0f;
 
   /* type */
@@ -85,15 +82,15 @@
   --mk-font-dyslexic: "OpenDyslexic", "Comic Sans MS", "Atkinson Hyperlegible", sans-serif;
   --mk-font-dyslexic-mono: "OpenDyslexicMono", "OpenDyslexic", ui-monospace, monospace;
 
-  /* edges + elevation (warm, soft on paper) */
-  --mk-shadow-md: 0 4px 16px rgba(24, 20, 38, 0.1);
+  /* edges + elevation */
+  --mk-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
   --mk-glow-oxblood:
-    0 0 0 1.5px rgba(197, 59, 56, 0.9), 0 0 14px -6px rgba(197, 59, 56, 0.4);
+    0 0 0 1.5px rgba(197, 59, 56, 0.9), 0 0 14px -6px rgba(197, 59, 56, 0.5);
   --mk-glow-cyan:
-    0 0 0 1.5px rgba(18, 138, 147, 0.85), 0 0 12px -6px rgba(18, 138, 147, 0.4);
+    0 0 0 1.5px rgba(51, 203, 210, 0.85), 0 0 12px -6px rgba(51, 203, 210, 0.45);
   --mk-glow-lime:
-    0 0 0 1.5px rgba(130, 181, 0, 0.9), 0 0 12px -6px rgba(130, 181, 0, 0.4);
-  --mk-focus-ring: 0 0 0 3px #f7f2e9, 0 0 0 6px #128a93;
+    0 0 0 1.5px rgba(182, 242, 58, 0.9), 0 0 12px -6px rgba(182, 242, 58, 0.45);
+  --mk-focus-ring: 0 0 0 3px #0b0b0f, 0 0 0 6px #6fe6eb;
 
   /* motion */
   --mk-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -111,18 +108,6 @@
   --rm-leading-bump: 0.18;
 }
 
-.mk-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 /* ---------- base ---------- */
 
 .mk-root {
@@ -136,7 +121,7 @@
   position: relative;
 }
 
-/* film grain, very subtle on paper */
+/* film grain over every dark surface */
 .mk-root::after {
   content: "";
   position: fixed;
@@ -144,7 +129,7 @@
   z-index: 90;
   pointer-events: none;
   background-image: var(--mk-grain);
-  opacity: 0.08;
+  opacity: 0.14;
 }
 
 .mk-root ::selection {
@@ -175,8 +160,8 @@ html[data-reading-mode="dyslexic"] {
   --mk-display: var(--mk-font-dyslexic);
   --mk-body: var(--mk-font-dyslexic);
   --mk-mono: var(--mk-font-dyslexic-mono);
-  --mk-fg2: #36304a;
-  --mk-fg3: #574f6b;
+  --mk-fg2: #d6cfe2;
+  --mk-fg3: #a79dba;
 }
 
 html[data-reading-mode="dyslexic"] body {
@@ -208,9 +193,9 @@ html[data-reading-mode="dyslexic"] .mk-chapter-title {
   letter-spacing: -0.01em;
 }
 
-/* thinner grain while reading; structural accents untouched */
+/* thinner grain while reading; structural neon untouched */
 html[data-reading-mode="dyslexic"] .mk-root::after {
-  opacity: 0.06;
+  opacity: 0.1;
 }
 
 /* mono kickers keep legibility without the wide tracking */
@@ -219,13 +204,13 @@ html[data-reading-mode="dyslexic"]
   letter-spacing: 0.02em;
 }
 
-/* ---------- nav (floating bar: translucent paper + blur allowed) ---------- */
+/* ---------- nav (floating bar: translucent ink + blur allowed) ---------- */
 
 .mk-nav {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 50;
-  background: rgba(247, 242, 233, 0.82);
+  background: rgba(11, 11, 15, 0.78);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--mk-hairline);
@@ -302,14 +287,14 @@ html[data-reading-mode="dyslexic"]
   bottom: 6px;
   height: 2px;
   width: 100%;
-  background: var(--mk-cyan-deep);
+  background: var(--mk-cyan);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--mk-dur-base) var(--mk-ease-spring);
 }
 
 .mk-nav-link:hover {
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan-bright);
 }
 
 .mk-nav-link:hover::after {
@@ -323,7 +308,7 @@ html[data-reading-mode="dyslexic"]
   gap: 9px;
   min-height: 44px;
   background: var(--mk-oxblood);
-  color: var(--mk-cream);
+  color: var(--mk-fg1);
   font-family: var(--mk-body);
   font-weight: 700;
   font-size: 15px;
@@ -406,7 +391,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-rmt.mk-on .mk-rmt-icon {
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan-bright);
 }
 
 .mk-rmt-track {
@@ -470,8 +455,8 @@ html[data-reading-mode="dyslexic"]
   overflow: hidden;
 }
 
-/* the warm plates, re-graded lighter for the paper world: gentle desaturate,
-   a touch of sepia. No new generation (credits: 0), pure CSS treatment. */
+/* the warm plates, graded into the charcoal world: desaturated, darkened,
+   high-contrast 35mm. No new generation (credits: 0), pure CSS treatment. */
 .mk-scene-img {
   width: 100%;
   height: 100%;
@@ -479,7 +464,7 @@ html[data-reading-mode="dyslexic"]
   object-position: center;
   transform-origin: center;
   will-change: transform;
-  filter: saturate(0.82) contrast(1.02) sepia(0.1);
+  filter: saturate(0.5) contrast(1.08) brightness(0.66);
 }
 
 .mk-hero::after,
@@ -489,12 +474,12 @@ html[data-reading-mode="dyslexic"]
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60% 45% at 30% 84%, rgba(197, 59, 56, 0.08), transparent 70%),
+    radial-gradient(60% 45% at 30% 82%, rgba(197, 59, 56, 0.16), transparent 70%),
     linear-gradient(
       to top,
-      rgba(247, 242, 233, 0.97) 0%,
-      rgba(247, 242, 233, 0.6) 45%,
-      rgba(247, 242, 233, 0.08) 72%
+      rgba(11, 11, 15, 0.92) 0%,
+      rgba(11, 11, 15, 0.45) 42%,
+      rgba(11, 11, 15, 0.12) 68%
     );
 }
 
@@ -508,6 +493,7 @@ html[data-reading-mode="dyslexic"]
 .mk-hero-title {
   font-family: var(--mk-display);
   font-weight: 900;
+  text-transform: uppercase;
   font-size: clamp(44px, 8.5vw, 110px);
   line-height: 1.04;
   letter-spacing: -0.035em;
@@ -517,7 +503,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-hero-title .mk-em {
-  color: var(--mk-oxblood);
+  color: var(--mk-lime);
 }
 
 .mk-hero-title .mk-line-mask {
@@ -546,14 +532,14 @@ html[data-reading-mode="dyslexic"]
   flex-wrap: wrap;
 }
 
-/* Hero CTA garment: the warm oxblood pill; the arrow chambers on hover. */
+/* Hero CTA garment: the armed oxblood pill; the arrow chambers on hover. */
 .mk-hero-cta {
   display: inline-flex;
   align-items: center;
   gap: 12px;
   min-height: 44px;
   background: var(--mk-oxblood);
-  color: var(--mk-cream);
+  color: var(--mk-fg1);
   font-family: var(--mk-body);
   font-weight: 700;
   font-size: clamp(16px, 1.7vw, 19px);
@@ -609,7 +595,7 @@ html[data-reading-mode="dyslexic"]
 .mk-hero-secondary:hover {
   border-color: transparent;
   box-shadow: var(--mk-glow-cyan);
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan-bright);
 }
 
 .mk-hero-secondary:active {
@@ -651,7 +637,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-marquee-item svg {
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
   flex: none;
 }
 
@@ -679,13 +665,14 @@ html[data-reading-mode="dyslexic"]
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan);
   margin-bottom: 16px;
 }
 
 .mk-h2 {
   font-family: var(--mk-display);
   font-weight: 900;
+  text-transform: uppercase;
   font-size: clamp(30px, 4.6vw, 52px);
   line-height: 1.18;
   letter-spacing: -0.025em;
@@ -705,7 +692,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-tldr strong {
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
   font-weight: 700;
   font-family: var(--mk-mono);
   font-size: 0.85em;
@@ -791,7 +778,7 @@ html[data-reading-mode="dyslexic"]
   font-weight: 900;
   font-size: clamp(20px, 2.4vw, 28px);
   letter-spacing: -0.02em;
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
 }
 
 .mk-service-plus {
@@ -811,7 +798,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-service-row:hover .mk-service-plus {
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
   border-color: var(--mk-lime-deep);
 }
 
@@ -858,7 +845,7 @@ html[data-reading-mode="dyslexic"]
   font-weight: 700;
   font-size: 14px;
   text-decoration: none;
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
   background: transparent;
   border: 1px solid var(--mk-lime-deep);
   border-radius: 999px;
@@ -873,6 +860,7 @@ html[data-reading-mode="dyslexic"]
 .mk-chip-cta:hover {
   box-shadow: var(--mk-glow-lime);
   border-color: transparent;
+  color: var(--mk-lime-bright);
 }
 
 .mk-chip-cta:active {
@@ -892,7 +880,7 @@ html[data-reading-mode="dyslexic"]
 .mk-services-note svg {
   flex: none;
   margin-top: 2px;
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan);
 }
 
 /* ---------- scene chapters (stops on the route) ---------- */
@@ -930,6 +918,7 @@ html[data-reading-mode="dyslexic"]
 .mk-chapter-title {
   font-family: var(--mk-display);
   font-weight: 900;
+  text-transform: uppercase;
   font-size: clamp(32px, 5.6vw, 68px);
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -946,15 +935,15 @@ html[data-reading-mode="dyslexic"]
   z-index: 2;
   margin: 0;
   padding: 8px 14px;
-  border: 1px solid var(--mk-hairline);
+  border: 1px solid var(--mk-border);
   border-radius: 999px;
   font-family: var(--mk-mono);
   font-weight: 700;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-fg1);
-  background: rgba(251, 248, 241, 0.78);
+  color: var(--mk-fg2);
+  background: rgba(11, 11, 15, 0.55);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -970,7 +959,7 @@ html[data-reading-mode="dyslexic"]
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan-bright);
   text-decoration: none;
   position: relative;
   padding-bottom: 6px;
@@ -985,7 +974,7 @@ html[data-reading-mode="dyslexic"]
   height: 2px;
   background: repeating-linear-gradient(
     to right,
-    var(--mk-cyan-deep) 0 8px,
+    var(--mk-cyan) 0 8px,
     transparent 8px 13px
   );
   background-size: 200% 100%;
@@ -1063,7 +1052,7 @@ html[data-reading-mode="dyslexic"]
 
 .mk-why-list svg {
   flex: none;
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
   transform: translateY(2px);
 }
 
@@ -1092,7 +1081,7 @@ html[data-reading-mode="dyslexic"]
   aspect-ratio: 4 / 3.4;
   object-fit: cover;
   object-position: center 30%;
-  filter: saturate(0.85) sepia(0.08);
+  filter: saturate(0.55) contrast(1.06) brightness(0.82);
 }
 
 .mk-crop-caption {
@@ -1130,7 +1119,7 @@ html[data-reading-mode="dyslexic"]
 
 .mk-quiet-note {
   margin-top: 30px;
-  border: 1.5px dashed var(--mk-cyan-deep);
+  border: 1.5px dashed var(--mk-cyan-deep, #128a93);
   border-radius: 16px;
   padding: 18px 20px;
   font-size: 16px;
@@ -1172,7 +1161,7 @@ html[data-reading-mode="dyslexic"]
   font-family: var(--mk-mono);
   font-weight: 700;
   font-size: 12px;
-  color: var(--mk-lime-deep);
+  color: var(--mk-lime);
   letter-spacing: 0.06em;
   padding-top: 5px;
 }
@@ -1205,20 +1194,18 @@ html[data-reading-mode="dyslexic"]
   font-size: 16px;
   color: var(--mk-fg1);
   text-decoration: none;
-  border: 1.5px dashed var(--mk-oxblood);
+  border: 1.5px dashed var(--mk-oxblood-bright);
   border-radius: 999px;
   padding: 12px 22px;
   transition:
     background var(--mk-dur-fast) var(--mk-ease-out),
     border-style var(--mk-dur-fast) var(--mk-ease-out),
     transform var(--mk-dur-fast) var(--mk-ease-spring),
-    box-shadow var(--mk-dur-base) var(--mk-ease-out),
-    color var(--mk-dur-fast) var(--mk-ease-out);
+    box-shadow var(--mk-dur-base) var(--mk-ease-out);
 }
 
 .mk-emg-cta:hover {
   background: var(--mk-oxblood);
-  color: var(--mk-cream);
   border-style: solid;
   border-color: transparent;
   box-shadow: var(--mk-glow-oxblood);
@@ -1228,7 +1215,282 @@ html[data-reading-mode="dyslexic"]
   transform: scale(0.97);
 }
 
-/* ---------- chat: the front desk (primary booking path) ---------- */
+/* ---------- book ---------- */
+
+.mk-book {
+  background: var(--mk-ink-950);
+  border-block: 1px solid var(--mk-hairline);
+}
+
+.mk-book-grid {
+  display: grid;
+  gap: 44px;
+}
+
+@media (min-width: 960px) {
+  .mk-book-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 56px;
+    align-items: start;
+  }
+}
+
+/* Hours: oversized metrics strip. */
+.mk-hours {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--mk-hairline);
+  margin-top: 34px;
+}
+
+.mk-hours-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--mk-hairline);
+}
+
+.mk-hours-days {
+  font-family: var(--mk-mono);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mk-fg3);
+}
+
+.mk-hours-time {
+  font-family: var(--mk-display);
+  font-weight: 900;
+  font-size: clamp(24px, 3vw, 34px);
+  letter-spacing: -0.02em;
+  color: var(--mk-fg1);
+}
+
+.mk-contact-rows {
+  margin-top: 30px;
+  display: grid;
+  gap: 12px;
+}
+
+.mk-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 16px;
+  text-decoration: none;
+  color: var(--mk-fg1);
+}
+
+.mk-contact-row svg {
+  color: var(--mk-cyan);
+  flex: none;
+}
+
+/* Contact CTA garment: cyan link with a hairline that draws from the left. */
+.mk-contact-row .mk-contact-label {
+  position: relative;
+  padding-bottom: 2px;
+  color: var(--mk-fg1);
+}
+
+a.mk-contact-row:hover .mk-contact-label {
+  color: var(--mk-cyan-bright);
+}
+
+.mk-contact-row .mk-contact-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--mk-cyan);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--mk-dur-base) var(--mk-ease-spring);
+}
+
+a.mk-contact-row:hover .mk-contact-label::after {
+  transform: scaleX(1);
+}
+
+.mk-cal-frame {
+  border: 1px solid var(--mk-hairline);
+  border-radius: 16px;
+  background: var(--mk-ink-800);
+  box-shadow: var(--mk-glow-oxblood);
+  overflow: hidden;
+}
+
+.mk-cal-frame iframe {
+  display: block;
+  width: 100%;
+  height: 720px;
+  border: 0;
+  background: var(--mk-fg1);
+}
+
+@media (max-width: 640px) {
+  .mk-cal-frame iframe {
+    height: 640px;
+  }
+}
+
+/* Book CTA garment: hazard-lime band; the arrow shears on hover. */
+.mk-banner-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 44px;
+  background: var(--mk-lime);
+  color: var(--mk-on-neon);
+  border-top: 1px solid var(--mk-hairline);
+  padding: 18px 24px;
+  font-family: var(--mk-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: clamp(19px, 2.2vw, 24px);
+  letter-spacing: -0.015em;
+  text-decoration: none;
+  transition:
+    background var(--mk-dur-fast) var(--mk-ease-out),
+    box-shadow var(--mk-dur-base) var(--mk-ease-out);
+}
+
+.mk-banner-cta svg {
+  flex: none;
+  transition: transform var(--mk-dur-base) var(--mk-ease-spring);
+}
+
+.mk-banner-cta:hover {
+  background: var(--mk-lime-bright);
+  box-shadow: var(--mk-glow-lime);
+}
+
+.mk-banner-cta:hover svg {
+  transform: translateX(8px) skewX(-8deg);
+}
+
+.mk-banner-cta:active {
+  transform: scale(0.99);
+}
+
+.mk-book-fine {
+  margin-top: 22px;
+  font-size: 14px;
+  color: var(--mk-fg3);
+  max-width: 56ch;
+}
+
+/* ---------- footer ---------- */
+
+.mk-footer {
+  background: var(--mk-ink-950);
+  color: var(--mk-fg1);
+  padding: 56px 0 40px;
+  border-top: 1px solid var(--mk-hairline);
+}
+
+.mk-footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--mk-hairline);
+}
+
+.mk-footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-family: var(--mk-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--mk-fg1);
+}
+
+.mk-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+  font-family: var(--mk-mono);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mk-footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--mk-fg2);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition:
+    color var(--mk-dur-fast) var(--mk-ease-out),
+    border-color var(--mk-dur-fast) var(--mk-ease-out);
+}
+
+.mk-footer-links a:hover {
+  color: var(--mk-cyan-bright);
+  border-color: var(--mk-cyan);
+}
+
+.mk-footer-legal {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 28px;
+  font-size: 14px;
+  color: var(--mk-fg3);
+}
+
+/* ---------- reduced motion: everything collapses to near-zero ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  .mk-root *,
+  .mk-root *::before,
+  .mk-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.mk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- chat: the guided booking path (primary booking flow) ---------- */
 
 .mk-chat-card {
   max-width: 780px;
@@ -1384,7 +1646,7 @@ html[data-reading-mode="dyslexic"]
 .mk-msg-user {
   align-self: flex-end;
   background: var(--mk-oxblood);
-  color: var(--mk-cream);
+  color: var(--mk-fg1);
   border-bottom-right-radius: 6px;
 }
 
@@ -1425,7 +1687,7 @@ html[data-reading-mode="dyslexic"]
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan);
   cursor: pointer;
   border-bottom: 1px solid transparent;
   min-height: 32px;
@@ -1435,7 +1697,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-change-btn:hover {
-  border-color: var(--mk-cyan-deep);
+  border-color: var(--mk-cyan);
 }
 
 /* typing indicator: three dots, never longer than ~450ms on screen */
@@ -1515,8 +1777,8 @@ html[data-reading-mode="dyslexic"]
 /* the escape hatch chip, always last: dashed cyan, says what it does */
 .mk-chat-chip-escape {
   border-style: dashed;
-  border-color: var(--mk-cyan-deep);
-  color: var(--mk-cyan-deep);
+  border-color: var(--mk-cyan);
+  color: var(--mk-cyan);
 }
 
 .mk-chat-chip-escape:hover {
@@ -1539,7 +1801,7 @@ html[data-reading-mode="dyslexic"]
   gap: 14px;
   min-height: 44px;
   background: var(--mk-oxblood);
-  color: var(--mk-cream);
+  color: var(--mk-fg1);
   border: 1px solid transparent;
   border-radius: 12px;
   padding: 15px 20px;
@@ -1584,7 +1846,7 @@ html[data-reading-mode="dyslexic"]
   font-family: var(--mk-body);
   font-weight: 600;
   font-size: 15px;
-  color: var(--mk-cyan-deep);
+  color: var(--mk-cyan);
   text-decoration: none;
   cursor: pointer;
   border-bottom: 1.5px solid transparent;
@@ -1592,7 +1854,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-chat-secondary:hover {
-  border-color: var(--mk-cyan-deep);
+  border-color: var(--mk-cyan);
 }
 
 /* free-text row: paper input + lime send (go signal, ink text) */
@@ -1623,7 +1885,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-chat-input:focus-visible {
-  border-color: var(--mk-cyan-deep);
+  border-color: var(--mk-cyan);
 }
 
 .mk-chat-send {
@@ -1676,265 +1938,90 @@ html[data-reading-mode="dyslexic"]
   color: var(--mk-fg3);
 }
 
-/* ---------- book ---------- */
+/* ---------- multipage chrome additions (brand revision 3) ---------- */
 
-.mk-book {
-  background: var(--mk-ink-950);
-  border-block: 1px solid var(--mk-hairline);
+/* Active nav link: cyan text + the underline already drawn. */
+.mk-nav-link.mk-active {
+  color: var(--mk-cyan-bright);
 }
 
-.mk-book-grid {
-  display: grid;
-  gap: 44px;
-}
-
-@media (min-width: 960px) {
-  .mk-book-grid {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: 56px;
-    align-items: start;
-  }
-}
-
-/* Hours: oversized metrics strip. */
-.mk-hours {
-  display: grid;
-  gap: 0;
-  border-top: 1px solid var(--mk-hairline);
-  margin-top: 34px;
-}
-
-.mk-hours-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--mk-hairline);
-}
-
-.mk-hours-days {
-  font-family: var(--mk-mono);
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--mk-fg3);
-}
-
-.mk-hours-time {
-  font-family: var(--mk-display);
-  font-weight: 900;
-  font-size: clamp(24px, 3vw, 34px);
-  letter-spacing: -0.02em;
-  color: var(--mk-fg1);
-}
-
-.mk-contact-rows {
-  margin-top: 30px;
-  display: grid;
-  gap: 12px;
-}
-
-.mk-contact-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px;
-  font-size: 16px;
-  text-decoration: none;
-  color: var(--mk-fg1);
-}
-
-.mk-contact-row svg {
-  color: var(--mk-cyan-deep);
-  flex: none;
-}
-
-/* Contact CTA garment: cyan link with a hairline that draws from the left. */
-.mk-contact-row .mk-contact-label {
-  position: relative;
-  padding-bottom: 2px;
-  color: var(--mk-fg1);
-}
-
-a.mk-contact-row:hover .mk-contact-label {
-  color: var(--mk-cyan-deep);
-}
-
-.mk-contact-row .mk-contact-label::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1.5px;
-  background: var(--mk-cyan-deep);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--mk-dur-base) var(--mk-ease-spring);
-}
-
-a.mk-contact-row:hover .mk-contact-label::after {
+.mk-nav-link.mk-active::after {
   transform: scaleX(1);
 }
 
-.mk-cal-frame {
-  border: 1px solid var(--mk-hairline);
-  border-radius: 16px;
-  background: var(--mk-ink-800);
-  box-shadow: var(--mk-glow-oxblood);
-  overflow: hidden;
-}
+/* Mobile nav: links drop to a second thumb-reachable row under the bar. */
+@media (max-width: 899px) {
+  .mk-nav-inner {
+    flex-wrap: wrap;
+    padding: 10px 0;
+    row-gap: 4px;
+  }
 
-.mk-cal-frame iframe {
-  display: block;
-  width: 100%;
-  height: 720px;
-  border: 0;
-  background: var(--mk-ink-800);
-}
+  .mk-nav-links {
+    display: flex;
+    order: 3;
+    width: 100%;
+    gap: 20px;
+    overflow-x: auto;
+  }
 
-@media (max-width: 640px) {
-  .mk-cal-frame iframe {
-    height: 640px;
+  .mk-nav-link {
+    flex: none;
   }
 }
 
-/* Book CTA garment: hazard-lime band; the arrow shears on hover. */
-.mk-banner-cta {
-  display: flex;
+/* Page-closing CTA garment: oxblood band, the arrow slides on hover. */
+.mk-page-cta {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  width: 100%;
+  gap: 12px;
   min-height: 44px;
-  background: var(--mk-lime);
-  color: var(--mk-on-neon);
-  border-top: 1px solid var(--mk-hairline);
-  padding: 18px 24px;
-  font-family: var(--mk-display);
-  font-weight: 900;
-  text-transform: uppercase;
-  font-size: clamp(19px, 2.2vw, 24px);
-  letter-spacing: -0.015em;
+  background: var(--mk-oxblood);
+  color: var(--mk-fg1);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 15px 22px;
+  font-family: var(--mk-body);
+  font-weight: 700;
+  font-size: 16px;
   text-decoration: none;
   transition:
     background var(--mk-dur-fast) var(--mk-ease-out),
-    box-shadow var(--mk-dur-base) var(--mk-ease-out);
+    box-shadow var(--mk-dur-base) var(--mk-ease-out),
+    transform var(--mk-dur-fast) var(--mk-ease-spring);
 }
 
-.mk-banner-cta svg {
+.mk-page-cta svg {
   flex: none;
   transition: transform var(--mk-dur-base) var(--mk-ease-spring);
 }
 
-.mk-banner-cta:hover {
-  background: var(--mk-lime-bright);
-  box-shadow: var(--mk-glow-lime);
+.mk-page-cta:hover {
+  background: var(--mk-oxblood-bright);
+  box-shadow: var(--mk-glow-oxblood);
 }
 
-.mk-banner-cta:hover svg {
-  transform: translateX(8px) skewX(-8deg);
+.mk-page-cta:hover svg {
+  transform: translateX(5px);
 }
 
-.mk-banner-cta:active {
-  transform: scale(0.99);
+.mk-page-cta:active {
+  transform: scale(0.98);
 }
 
-.mk-book-fine {
-  margin-top: 22px;
-  font-size: 14px;
-  color: var(--mk-fg3);
-  max-width: 56ch;
-}
-
-/* ---------- footer ---------- */
-
-.mk-footer {
-  background: var(--mk-ink-950);
-  color: var(--mk-fg1);
-  padding: 56px 0 40px;
-  border-top: 1px solid var(--mk-hairline);
-}
-
-.mk-footer-top {
+/* Closing CTA row at the foot of a page. */
+.mk-close-ctas {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid var(--mk-hairline);
+  gap: 18px;
 }
 
-.mk-footer-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  font-family: var(--mk-display);
-  font-weight: 900;
-  text-transform: uppercase;
-  font-size: 17px;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  color: var(--mk-fg1);
+/* Route-change focus target: h1 gets focused programmatically, never outlined. */
+main h1[tabindex="-1"]:focus {
+  outline: none;
 }
 
-.mk-footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 28px;
-  font-family: var(--mk-mono);
-  font-weight: 700;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.mk-footer-links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  color: var(--mk-fg2);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition:
-    color var(--mk-dur-fast) var(--mk-ease-out),
-    border-color var(--mk-dur-fast) var(--mk-ease-out);
-}
-
-.mk-footer-links a:hover {
-  color: var(--mk-cyan-deep);
-  border-color: var(--mk-cyan-deep);
-}
-
-.mk-footer-legal {
-  margin-top: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 28px;
-  font-size: 14px;
-  color: var(--mk-fg3);
-}
-
-/* ---------- reduced motion: everything collapses to near-zero ---------- */
-
-@media (prefers-reduced-motion: reduce) {
-  .mk-marquee-track {
-    animation: none;
-    flex-wrap: wrap;
-    width: auto;
-  }
-
-  .mk-root *,
-  .mk-root *::before,
-  .mk-root *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+main h1[tabindex="-1"]:focus-visible {
+  outline: none;
 }
