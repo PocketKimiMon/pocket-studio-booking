@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { calEventUrl, contact, hours, policies, scenes, services, travel, travelFeeRange, whyDirect } from "../../lib/site";
 import {
@@ -459,7 +459,80 @@ export function HoursContact() {
 
 /* ---------- booking calendar (book page, the fallback path) ---------- */
 
+// Official Cal.com embed. The SSR pass renders a plain (dark-themed) iframe so
+// the calendar works without hydration; on the client we upgrade it to the
+// official embed.js inline embed, which keeps the iframe dark and auto-sizes
+// its height via postMessage instead of a fixed-height scroll box.
+const CAL_EMBED_JS = "https://app.cal.com/embed/embed.js";
+const CAL_ORIGIN = "https://app.cal.com";
+const CAL_LINK = "maneautoimation";
+const CAL_FALLBACK_SRC = `${contact.calUrl}?layout=month_view&theme=dark&hideEventTypeDetails=true`;
+
+type CalFn = ((...args: unknown[]) => void) & {
+  loaded?: boolean;
+  q?: unknown[];
+  ns?: Record<string, CalFn>;
+};
+
+// Cal.com's standard inline loader, ported to TS. Loads embed.js exactly once
+// and queues instructions until the script is ready.
+function getCal(): CalFn {
+  const w = window as unknown as { Cal?: CalFn };
+  if (!w.Cal) {
+    const p = (a: CalFn, ar: unknown[]) => {
+      a.q = a.q ?? [];
+      a.q.push(ar);
+    };
+    const cal: CalFn = (...ar: unknown[]) => {
+      const c = w.Cal as CalFn;
+      if (!c.loaded) {
+        c.ns = {};
+        c.q = [];
+        const s = document.createElement("script");
+        s.src = CAL_EMBED_JS;
+        document.head.appendChild(s);
+        c.loaded = true;
+      }
+      if (ar[0] === "init") {
+        const api: CalFn = (...a2: unknown[]) => p(api, a2);
+        api.q = [];
+        const namespace = ar[1] as string;
+        (c.ns as Record<string, CalFn>)[namespace] = api;
+        p(api, ar);
+        p(c, ["initNamespace", namespace]);
+      } else {
+        p(c, ar);
+      }
+    };
+    w.Cal = cal;
+  }
+  return w.Cal;
+}
+
 export function BookingCalendar() {
+  const calRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = calRef.current;
+    // Guard against double-mounts (StrictMode) and repeat client navigations.
+    if (!el || el.querySelector("cal-inline")) return;
+    const Cal = getCal();
+    Cal("init", "mykey", { origin: CAL_ORIGIN });
+    // The SSR fallback iframe makes room for the skeleton-loading embed.
+    el.querySelector("iframe.mk-cal-fallback")?.remove();
+    Cal.ns?.mykey("inline", {
+      elementOrSelector: el,
+      calLink: CAL_LINK,
+      config: { layout: "month_view", theme: "dark" },
+    });
+    Cal.ns?.mykey("ui", {
+      theme: "dark",
+      layout: "month_view",
+      hideEventTypeDetails: true,
+      showTimezoneWhenEventDetailsHidden: true,
+    });
+  }, []);
+
   return (
     <section className="mk-section mk-book" id="calendar">
       <div className="mk-wrap">
@@ -481,11 +554,14 @@ export function BookingCalendar() {
             </p>
           </div>
           <div className="mk-cal-frame">
-            <iframe
-              src={contact.calEmbed}
-              title="Book an appointment with MyKey on Cal.com"
-              loading="lazy"
-            />
+            <div className="mk-cal-embed" ref={calRef}>
+              <iframe
+                className="mk-cal-fallback"
+                src={CAL_FALLBACK_SRC}
+                title="Book an appointment with MyKey on Cal.com"
+                loading="lazy"
+              />
+            </div>
             <a
               className="mk-banner-cta"
               href={contact.calUrl}

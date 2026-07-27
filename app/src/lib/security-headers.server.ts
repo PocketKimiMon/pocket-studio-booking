@@ -15,12 +15,14 @@ export function applySecurityHeaders(response: Response): Response {
   headers.set(
     'Content-Security-Policy',
     "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline'; " +
+      // The booking section embeds the live Cal.com calendar: the official
+      // embed script loads from app.cal.com (covered for iframes by the
+      // *.cal.com wildcard in frame-src below).
+      "script-src 'self' 'unsafe-inline' https://app.cal.com; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       "font-src 'self' https://fonts.gstatic.com; " +
       "img-src 'self' data: https:; media-src 'self' https:; " +
       "connect-src 'self' https:; " +
-      // The booking section embeds the live Cal.com calendar in an iframe.
       "frame-src 'self' https://cal.com https://*.cal.com; " +
       "base-uri 'self'; form-action 'self'",
   );

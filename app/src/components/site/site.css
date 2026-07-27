@@ -1326,16 +1326,33 @@ a.mk-contact-row:hover .mk-contact-label::after {
   overflow: hidden;
 }
 
-.mk-cal-frame iframe {
+/* Cal.com inline embed: embed.js auto-sizes the iframe height; the
+   min-height just holds the layout steady while the skeleton loads. */
+.mk-cal-embed {
+  min-height: 720px;
+}
+
+.mk-cal-embed cal-inline {
+  display: block;
+  width: 100%;
+}
+
+/* SSR/no-JS fallback iframe, replaced by the embed on hydration. Dark
+   background so it never flashes white on the dark page. */
+.mk-cal-fallback {
   display: block;
   width: 100%;
   height: 720px;
   border: 0;
-  background: var(--mk-fg1);
+  background: var(--mk-ink-800);
 }
 
 @media (max-width: 640px) {
-  .mk-cal-frame iframe {
+  .mk-cal-embed {
+    min-height: 640px;
+  }
+
+  .mk-cal-fallback {
     height: 640px;
   }
 }
