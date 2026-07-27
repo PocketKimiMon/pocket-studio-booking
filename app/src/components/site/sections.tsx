@@ -1,4 +1,4 @@
-import { contact, hours, policies, scenes, services, whyDirect } from "../../lib/site";
+import { calEventUrl, contact, hours, policies, scenes, services, whyDirect } from "../../lib/site";
 import {
   IconArrow,
   IconCalendar,
@@ -36,12 +36,7 @@ export function Nav() {
           </a>
         </nav>
         <ReadingModeToggle compact />
-        <a
-          className="mk-ticket-cta"
-          href={contact.calUrl}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a className="mk-ticket-cta" href="#chat">
           <span className="mk-notch" aria-hidden="true" />
           Book a cut
         </a>
@@ -75,12 +70,7 @@ export function Hero() {
           tag.
         </p>
         <div className="mk-hero-ctas">
-          <a
-            className="mk-hero-cta"
-            href={contact.calUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className="mk-hero-cta" href="#chat">
             Book a cut
             <IconArrow size={19} />
           </a>
@@ -158,7 +148,7 @@ export function Services() {
                     <span className="mk-service-meta">{s.tag}</span>
                     <a
                       className="mk-chip-cta"
-                      href={contact.calUrl}
+                      href={calEventUrl(s.slug)}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -282,7 +272,7 @@ export function Book() {
     <section className="mk-section mk-book" id="book">
       <div className="mk-wrap">
         <div className="mk-section-head">
-          <h2 className="mk-h2">Book it.</h2>
+          <h2 className="mk-h2">Straight to the calendar.</h2>
           <p className="mk-tldr">
             <strong>TL;DR</strong> The calendar below is live and confirms
             instantly. Chair appointments and house calls book in the same
@@ -358,9 +348,7 @@ export function Footer() {
           <div className="mk-footer-links">
             <a href={`tel:${contact.tel}`}>Text MyKey</a>
             <a href={`mailto:${contact.email}`}>Email</a>
-            <a href={contact.calUrl} target="_blank" rel="noreferrer">
-              Book a cut
-            </a>
+            <a href="#chat">Book a cut</a>
             <ReadingModeToggle />
           </div>
         </div>

@@ -4,8 +4,8 @@
   "description": "Book cuts and color directly with MyKey Pocket, Seattle hair artist.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0B0B0F",
-  "theme_color": "#0B0B0F",
+  "background_color": "#F7F2E9",
+  "theme_color": "#F7F2E9",
   "icons": [
     {
       "src": "/assets/icon-192.png",

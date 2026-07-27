@@ -11,13 +11,14 @@ import {
   RouteMarquee,
   Services,
 } from "../components/site/sections";
+import { ChatSection } from "../components/site/chat";
 import { ScrollScrubJourney } from "../components/scroll-scrub/scroll-scrub";
 import { MotionRuntime } from "../components/site/motion";
 import "../components/site/site.css";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [{ name: "theme-color", content: "#0B0B0F" }],
+    meta: [{ name: "theme-color", content: "#F7F2E9" }],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -41,6 +42,7 @@ function Index() {
         <Hero />
         <RouteMarquee />
         <Services />
+        <ChatSection />
         <ScrollScrubJourney sceneId="cut" />
         <About />
         <Policies />

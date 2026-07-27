@@ -23,6 +23,7 @@ export const hours = [
 
 export type Service = {
   name: string;
+  slug: string; // Cal.com event-type slug under cal.com/maneautoimation/
   duration: string;
   price: string;
   lead: string;
@@ -33,6 +34,7 @@ export type Service = {
 export const services: Service[] = [
   {
     name: "Buzz Cut",
+    slug: "buzz-cut",
     duration: "30 min",
     price: "$45",
     lead: "books 2 days out",
@@ -41,6 +43,7 @@ export const services: Service[] = [
   },
   {
     name: "Short Cut",
+    slug: "short-cut",
     duration: "45 min",
     price: "$65",
     lead: "books 2 days out",
@@ -49,6 +52,7 @@ export const services: Service[] = [
   },
   {
     name: "Long Cut",
+    slug: "long-cut",
     duration: "60 min",
     price: "$85",
     lead: "books 2 days out",
@@ -57,6 +61,7 @@ export const services: Service[] = [
   },
   {
     name: "New-Client Color Consult",
+    slug: "hair-consultation",
     duration: "45 min",
     price: "$35",
     lead: "books 3 days out",
@@ -66,6 +71,7 @@ export const services: Service[] = [
   },
   {
     name: "Existing-Client Color",
+    slug: "existing-client-color-appointment",
     duration: "3-5 hr",
     price: "$120+",
     lead: "books 1 week out",
@@ -74,6 +80,9 @@ export const services: Service[] = [
       "Roots, refresh, full transformation. We already know the vibe. Block the afternoon.",
   },
 ];
+
+export const calEventUrl = (slug: string) =>
+  `${contact.calUrl}${slug}`;
 
 export const policies = [
   {

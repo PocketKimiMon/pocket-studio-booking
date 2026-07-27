@@ -1,7 +1,8 @@
-/* MyKey Booking: theme layer on the owner-supplied PocketStudio design system
-   (~/Downloads/pocketstudio-design-system/, see app/design-brief.md "Brand
-   revision"). Charcoal ink canvas, oxblood + hazard lime leads, signal cyan
-   for links/focus, film grain, hard accent edges, springy 130/220/380ms.
+/* MyKey Booking: PocketStudio design system, PAPER surface (brand revision 2,
+   owner feedback: warm, calm, welcoming — a neighborhood studio's front desk,
+   not a nightclub flyer). Warm cream canvas, soft ink text, oxblood/lime/cyan
+   as SPOT accents. Film grain very subtle, hard accent edges, hairlines,
+   springy 130/220/380ms, press = scale(.97), double focus ring, 44px targets.
    Radius rule: content surfaces 10-16px; CTAs/tags/toggles may go pill.
    No site-wide button utility classes: every CTA is styled in its own block. */
 
@@ -51,28 +52,30 @@
 }
 
 :root {
-  /* ink + text */
-  --mk-ink-950: #070709;
-  --mk-ink-900: #0b0b0f;
-  --mk-ink-850: #101015;
-  --mk-ink-800: #16161d;
-  --mk-ink-700: #1f1f28;
-  --mk-ink-600: #2b2b36;
-  --mk-fg1: #f4efe6;
-  --mk-fg2: #adb0bd;
-  --mk-fg3: #797c8a;
-  --mk-hairline: rgba(244, 239, 230, 0.08);
-  --mk-border: #3a3a48;
+  /* warm paper canvas + soft ink text (theme-paper values from the system) */
+  --mk-ink-950: #eae1cd; /* deepest band (footer / book strip) */
+  --mk-ink-900: #f7f2e9; /* page canvas */
+  --mk-ink-850: #f1eada; /* hover surface */
+  --mk-ink-800: #fbf8f1; /* cards / raised */
+  --mk-ink-700: #f0e8d6; /* guide bubbles / fills */
+  --mk-ink-600: #e6dcc4; /* hover fill / toggle track */
+  --mk-fg1: #181426;
+  --mk-fg2: #4a4360;
+  --mk-fg3: #756b85;
+  --mk-hairline: rgba(24, 20, 38, 0.12);
+  --mk-border: #d9cdb2;
+  --mk-cream: #f4efe6; /* text ON oxblood fills */
 
-  /* tactical accents */
+  /* tactical accents (spot roles on paper) */
   --mk-oxblood: #c53b38;
-  --mk-oxblood-bright: #e25c57;
+  --mk-oxblood-bright: #d94f4b;
   --mk-oxblood-deep: #7e211f;
-  --mk-lime: #b6f23a;
+  --mk-lime: #b6f23a; /* fill only, always with ink text */
   --mk-lime-bright: #cdff6e;
-  --mk-lime-deep: #82b500;
+  --mk-lime-deep: #82b500; /* lime TEXT on paper (AA) */
   --mk-cyan: #33cbd2;
   --mk-cyan-bright: #6fe6eb;
+  --mk-cyan-deep: #128a93; /* cyan TEXT/links on paper (AA) */
   --mk-on-neon: #0b0b0f;
 
   /* type */
@@ -82,15 +85,15 @@
   --mk-font-dyslexic: "OpenDyslexic", "Comic Sans MS", "Atkinson Hyperlegible", sans-serif;
   --mk-font-dyslexic-mono: "OpenDyslexicMono", "OpenDyslexic", ui-monospace, monospace;
 
-  /* edges + elevation */
-  --mk-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  /* edges + elevation (warm, soft on paper) */
+  --mk-shadow-md: 0 4px 16px rgba(24, 20, 38, 0.1);
   --mk-glow-oxblood:
-    0 0 0 1.5px rgba(197, 59, 56, 0.9), 0 0 14px -6px rgba(197, 59, 56, 0.5);
+    0 0 0 1.5px rgba(197, 59, 56, 0.9), 0 0 14px -6px rgba(197, 59, 56, 0.4);
   --mk-glow-cyan:
-    0 0 0 1.5px rgba(51, 203, 210, 0.85), 0 0 12px -6px rgba(51, 203, 210, 0.45);
+    0 0 0 1.5px rgba(18, 138, 147, 0.85), 0 0 12px -6px rgba(18, 138, 147, 0.4);
   --mk-glow-lime:
-    0 0 0 1.5px rgba(182, 242, 58, 0.9), 0 0 12px -6px rgba(182, 242, 58, 0.45);
-  --mk-focus-ring: 0 0 0 3px #0b0b0f, 0 0 0 6px #6fe6eb;
+    0 0 0 1.5px rgba(130, 181, 0, 0.9), 0 0 12px -6px rgba(130, 181, 0, 0.4);
+  --mk-focus-ring: 0 0 0 3px #f7f2e9, 0 0 0 6px #128a93;
 
   /* motion */
   --mk-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -108,6 +111,18 @@
   --rm-leading-bump: 0.18;
 }
 
+.mk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- base ---------- */
 
 .mk-root {
@@ -121,7 +136,7 @@
   position: relative;
 }
 
-/* film grain over every dark surface */
+/* film grain, very subtle on paper */
 .mk-root::after {
   content: "";
   position: fixed;
@@ -129,7 +144,7 @@
   z-index: 90;
   pointer-events: none;
   background-image: var(--mk-grain);
-  opacity: 0.14;
+  opacity: 0.08;
 }
 
 .mk-root ::selection {
@@ -160,8 +175,8 @@ html[data-reading-mode="dyslexic"] {
   --mk-display: var(--mk-font-dyslexic);
   --mk-body: var(--mk-font-dyslexic);
   --mk-mono: var(--mk-font-dyslexic-mono);
-  --mk-fg2: #d6cfe2;
-  --mk-fg3: #a79dba;
+  --mk-fg2: #36304a;
+  --mk-fg3: #574f6b;
 }
 
 html[data-reading-mode="dyslexic"] body {
@@ -193,9 +208,9 @@ html[data-reading-mode="dyslexic"] .mk-chapter-title {
   letter-spacing: -0.01em;
 }
 
-/* thinner grain while reading; structural neon untouched */
+/* thinner grain while reading; structural accents untouched */
 html[data-reading-mode="dyslexic"] .mk-root::after {
-  opacity: 0.1;
+  opacity: 0.06;
 }
 
 /* mono kickers keep legibility without the wide tracking */
@@ -204,13 +219,13 @@ html[data-reading-mode="dyslexic"]
   letter-spacing: 0.02em;
 }
 
-/* ---------- nav (floating bar: translucent ink + blur allowed) ---------- */
+/* ---------- nav (floating bar: translucent paper + blur allowed) ---------- */
 
 .mk-nav {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 50;
-  background: rgba(11, 11, 15, 0.78);
+  background: rgba(247, 242, 233, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--mk-hairline);
@@ -287,14 +302,14 @@ html[data-reading-mode="dyslexic"]
   bottom: 6px;
   height: 2px;
   width: 100%;
-  background: var(--mk-cyan);
+  background: var(--mk-cyan-deep);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--mk-dur-base) var(--mk-ease-spring);
 }
 
 .mk-nav-link:hover {
-  color: var(--mk-cyan-bright);
+  color: var(--mk-cyan-deep);
 }
 
 .mk-nav-link:hover::after {
@@ -308,7 +323,7 @@ html[data-reading-mode="dyslexic"]
   gap: 9px;
   min-height: 44px;
   background: var(--mk-oxblood);
-  color: var(--mk-fg1);
+  color: var(--mk-cream);
   font-family: var(--mk-body);
   font-weight: 700;
   font-size: 15px;
@@ -391,7 +406,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-rmt.mk-on .mk-rmt-icon {
-  color: var(--mk-cyan-bright);
+  color: var(--mk-cyan-deep);
 }
 
 .mk-rmt-track {
@@ -455,8 +470,8 @@ html[data-reading-mode="dyslexic"]
   overflow: hidden;
 }
 
-/* the warm plates, graded into the charcoal world: desaturated, darkened,
-   high-contrast 35mm. No new generation (credits: 0), pure CSS treatment. */
+/* the warm plates, re-graded lighter for the paper world: gentle desaturate,
+   a touch of sepia. No new generation (credits: 0), pure CSS treatment. */
 .mk-scene-img {
   width: 100%;
   height: 100%;
@@ -464,7 +479,7 @@ html[data-reading-mode="dyslexic"]
   object-position: center;
   transform-origin: center;
   will-change: transform;
-  filter: saturate(0.5) contrast(1.08) brightness(0.66);
+  filter: saturate(0.82) contrast(1.02) sepia(0.1);
 }
 
 .mk-hero::after,
@@ -474,12 +489,12 @@ html[data-reading-mode="dyslexic"]
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(60% 45% at 30% 82%, rgba(197, 59, 56, 0.16), transparent 70%),
+    radial-gradient(60% 45% at 30% 84%, rgba(197, 59, 56, 0.08), transparent 70%),
     linear-gradient(
       to top,
-      rgba(11, 11, 15, 0.92) 0%,
-      rgba(11, 11, 15, 0.45) 42%,
-      rgba(11, 11, 15, 0.12) 68%
+      rgba(247, 242, 233, 0.97) 0%,
+      rgba(247, 242, 233, 0.6) 45%,
+      rgba(247, 242, 233, 0.08) 72%
     );
 }
 
@@ -493,7 +508,6 @@ html[data-reading-mode="dyslexic"]
 .mk-hero-title {
   font-family: var(--mk-display);
   font-weight: 900;
-  text-transform: uppercase;
   font-size: clamp(44px, 8.5vw, 110px);
   line-height: 1.04;
   letter-spacing: -0.035em;
@@ -503,7 +517,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-hero-title .mk-em {
-  color: var(--mk-lime);
+  color: var(--mk-oxblood);
 }
 
 .mk-hero-title .mk-line-mask {
@@ -532,14 +546,14 @@ html[data-reading-mode="dyslexic"]
   flex-wrap: wrap;
 }
 
-/* Hero CTA garment: the armed oxblood pill; the arrow chambers on hover. */
+/* Hero CTA garment: the warm oxblood pill; the arrow chambers on hover. */
 .mk-hero-cta {
   display: inline-flex;
   align-items: center;
   gap: 12px;
   min-height: 44px;
   background: var(--mk-oxblood);
-  color: var(--mk-fg1);
+  color: var(--mk-cream);
   font-family: var(--mk-body);
   font-weight: 700;
   font-size: clamp(16px, 1.7vw, 19px);
@@ -595,7 +609,7 @@ html[data-reading-mode="dyslexic"]
 .mk-hero-secondary:hover {
   border-color: transparent;
   box-shadow: var(--mk-glow-cyan);
-  color: var(--mk-cyan-bright);
+  color: var(--mk-cyan-deep);
 }
 
 .mk-hero-secondary:active {
@@ -637,7 +651,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-marquee-item svg {
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
   flex: none;
 }
 
@@ -665,14 +679,13 @@ html[data-reading-mode="dyslexic"]
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-cyan);
+  color: var(--mk-cyan-deep);
   margin-bottom: 16px;
 }
 
 .mk-h2 {
   font-family: var(--mk-display);
   font-weight: 900;
-  text-transform: uppercase;
   font-size: clamp(30px, 4.6vw, 52px);
   line-height: 1.18;
   letter-spacing: -0.025em;
@@ -692,7 +705,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-tldr strong {
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
   font-weight: 700;
   font-family: var(--mk-mono);
   font-size: 0.85em;
@@ -778,7 +791,7 @@ html[data-reading-mode="dyslexic"]
   font-weight: 900;
   font-size: clamp(20px, 2.4vw, 28px);
   letter-spacing: -0.02em;
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
 }
 
 .mk-service-plus {
@@ -798,7 +811,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-service-row:hover .mk-service-plus {
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
   border-color: var(--mk-lime-deep);
 }
 
@@ -845,7 +858,7 @@ html[data-reading-mode="dyslexic"]
   font-weight: 700;
   font-size: 14px;
   text-decoration: none;
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
   background: transparent;
   border: 1px solid var(--mk-lime-deep);
   border-radius: 999px;
@@ -860,7 +873,6 @@ html[data-reading-mode="dyslexic"]
 .mk-chip-cta:hover {
   box-shadow: var(--mk-glow-lime);
   border-color: transparent;
-  color: var(--mk-lime-bright);
 }
 
 .mk-chip-cta:active {
@@ -880,7 +892,7 @@ html[data-reading-mode="dyslexic"]
 .mk-services-note svg {
   flex: none;
   margin-top: 2px;
-  color: var(--mk-cyan);
+  color: var(--mk-cyan-deep);
 }
 
 /* ---------- scene chapters (stops on the route) ---------- */
@@ -918,7 +930,6 @@ html[data-reading-mode="dyslexic"]
 .mk-chapter-title {
   font-family: var(--mk-display);
   font-weight: 900;
-  text-transform: uppercase;
   font-size: clamp(32px, 5.6vw, 68px);
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -935,15 +946,15 @@ html[data-reading-mode="dyslexic"]
   z-index: 2;
   margin: 0;
   padding: 8px 14px;
-  border: 1px solid var(--mk-border);
+  border: 1px solid var(--mk-hairline);
   border-radius: 999px;
   font-family: var(--mk-mono);
   font-weight: 700;
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-fg2);
-  background: rgba(11, 11, 15, 0.55);
+  color: var(--mk-fg1);
+  background: rgba(251, 248, 241, 0.78);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -959,7 +970,7 @@ html[data-reading-mode="dyslexic"]
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--mk-cyan-bright);
+  color: var(--mk-cyan-deep);
   text-decoration: none;
   position: relative;
   padding-bottom: 6px;
@@ -974,7 +985,7 @@ html[data-reading-mode="dyslexic"]
   height: 2px;
   background: repeating-linear-gradient(
     to right,
-    var(--mk-cyan) 0 8px,
+    var(--mk-cyan-deep) 0 8px,
     transparent 8px 13px
   );
   background-size: 200% 100%;
@@ -1052,7 +1063,7 @@ html[data-reading-mode="dyslexic"]
 
 .mk-why-list svg {
   flex: none;
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
   transform: translateY(2px);
 }
 
@@ -1081,7 +1092,7 @@ html[data-reading-mode="dyslexic"]
   aspect-ratio: 4 / 3.4;
   object-fit: cover;
   object-position: center 30%;
-  filter: saturate(0.55) contrast(1.06) brightness(0.82);
+  filter: saturate(0.85) sepia(0.08);
 }
 
 .mk-crop-caption {
@@ -1119,7 +1130,7 @@ html[data-reading-mode="dyslexic"]
 
 .mk-quiet-note {
   margin-top: 30px;
-  border: 1.5px dashed var(--mk-cyan-deep, #128a93);
+  border: 1.5px dashed var(--mk-cyan-deep);
   border-radius: 16px;
   padding: 18px 20px;
   font-size: 16px;
@@ -1161,7 +1172,7 @@ html[data-reading-mode="dyslexic"]
   font-family: var(--mk-mono);
   font-weight: 700;
   font-size: 12px;
-  color: var(--mk-lime);
+  color: var(--mk-lime-deep);
   letter-spacing: 0.06em;
   padding-top: 5px;
 }
@@ -1194,18 +1205,20 @@ html[data-reading-mode="dyslexic"]
   font-size: 16px;
   color: var(--mk-fg1);
   text-decoration: none;
-  border: 1.5px dashed var(--mk-oxblood-bright);
+  border: 1.5px dashed var(--mk-oxblood);
   border-radius: 999px;
   padding: 12px 22px;
   transition:
     background var(--mk-dur-fast) var(--mk-ease-out),
     border-style var(--mk-dur-fast) var(--mk-ease-out),
     transform var(--mk-dur-fast) var(--mk-ease-spring),
-    box-shadow var(--mk-dur-base) var(--mk-ease-out);
+    box-shadow var(--mk-dur-base) var(--mk-ease-out),
+    color var(--mk-dur-fast) var(--mk-ease-out);
 }
 
 .mk-emg-cta:hover {
   background: var(--mk-oxblood);
+  color: var(--mk-cream);
   border-style: solid;
   border-color: transparent;
   box-shadow: var(--mk-glow-oxblood);
@@ -1213,6 +1226,454 @@ html[data-reading-mode="dyslexic"]
 
 .mk-emg-cta:active {
   transform: scale(0.97);
+}
+
+/* ---------- chat: the front desk (primary booking path) ---------- */
+
+.mk-chat-card {
+  max-width: 780px;
+  margin: 0 auto;
+  background: var(--mk-ink-800);
+  border: 1px solid var(--mk-hairline);
+  border-radius: 16px;
+  box-shadow: var(--mk-shadow-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.mk-chat-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--mk-hairline);
+  background: var(--mk-ink-700);
+}
+
+.mk-chat-title {
+  font-family: var(--mk-mono);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mk-fg2);
+}
+
+/* progress dots: 4 stops, no timers, no pressure */
+.mk-chat-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-chat-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.mk-chat-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 1.5px solid var(--mk-border);
+  background: transparent;
+  transition:
+    background var(--mk-dur-base) var(--mk-ease-out),
+    border-color var(--mk-dur-base) var(--mk-ease-out);
+}
+
+.mk-chat-dot.mk-done {
+  background: var(--mk-lime-deep);
+  border-color: var(--mk-lime-deep);
+}
+
+.mk-chat-dot.mk-now {
+  border-color: var(--mk-oxblood);
+  background: var(--mk-oxblood);
+}
+
+.mk-chat-step-label {
+  font-family: var(--mk-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mk-fg3);
+}
+
+/* back chip: quiet ghost with a left arrow */
+.mk-chat-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--mk-border);
+  border-radius: 999px;
+  font-family: var(--mk-body);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--mk-fg2);
+  cursor: pointer;
+  transition:
+    color var(--mk-dur-fast) var(--mk-ease-out),
+    border-color var(--mk-dur-fast) var(--mk-ease-out),
+    transform var(--mk-dur-fast) var(--mk-ease-spring);
+}
+
+.mk-chat-back:hover {
+  color: var(--mk-fg1);
+  border-color: var(--mk-fg3);
+}
+
+.mk-chat-back:active {
+  transform: scale(0.97);
+}
+
+.mk-chat-back:disabled {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.mk-chat-log {
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 62dvh;
+  overflow-y: auto;
+}
+
+/* bubbles: on-mount entrance only (screenshot-safe; never viewport-gated) */
+@keyframes mk-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mk-msg {
+  max-width: 86%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 16px;
+  line-height: 1.55;
+  animation: mk-bubble-in var(--mk-dur-base) var(--mk-ease-out) both;
+}
+
+@media (min-width: 640px) {
+  .mk-msg {
+    max-width: 74%;
+  }
+}
+
+.mk-msg-guide {
+  align-self: flex-start;
+  background: var(--mk-ink-700);
+  color: var(--mk-fg1);
+  border-bottom-left-radius: 6px;
+}
+
+.mk-msg-user {
+  align-self: flex-end;
+  background: var(--mk-oxblood);
+  color: var(--mk-cream);
+  border-bottom-right-radius: 6px;
+}
+
+.mk-msg-rows {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.mk-msg-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mk-msg-row dt {
+  font-family: var(--mk-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mk-fg3);
+}
+
+.mk-msg-row dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* change-an-answer: tiny underline button inside the summary */
+.mk-change-btn {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  margin-left: 10px;
+  font-family: var(--mk-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mk-cyan-deep);
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  min-height: 32px;
+  transition:
+    color var(--mk-dur-fast) var(--mk-ease-out),
+    border-color var(--mk-dur-fast) var(--mk-ease-out);
+}
+
+.mk-change-btn:hover {
+  border-color: var(--mk-cyan-deep);
+}
+
+/* typing indicator: three dots, never longer than ~450ms on screen */
+@keyframes mk-typing-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.mk-typing {
+  display: inline-flex;
+  gap: 5px;
+  align-self: flex-start;
+  background: var(--mk-ink-700);
+  padding: 14px 16px;
+  border-radius: 16px;
+  border-bottom-left-radius: 6px;
+}
+
+.mk-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--mk-fg3);
+  animation: mk-typing-dot 0.8s var(--mk-ease-out) infinite;
+}
+
+.mk-typing span:nth-child(2) {
+  animation-delay: 0.12s;
+}
+
+.mk-typing span:nth-child(3) {
+  animation-delay: 0.24s;
+}
+
+/* answer chips: tap-to-answer, warm pill with an oxblood edge on hover */
+.mk-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px 18px 22px;
+}
+
+.mk-chat-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 11px 18px;
+  background: var(--mk-ink-800);
+  color: var(--mk-fg1);
+  border: 1px solid var(--mk-border);
+  border-radius: 999px;
+  font-family: var(--mk-body);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    transform var(--mk-dur-fast) var(--mk-ease-spring),
+    box-shadow var(--mk-dur-base) var(--mk-ease-out),
+    border-color var(--mk-dur-base) var(--mk-ease-out);
+}
+
+.mk-chat-chip:hover {
+  border-color: transparent;
+  box-shadow: var(--mk-glow-oxblood);
+  transform: translateY(-1px);
+}
+
+.mk-chat-chip:active {
+  transform: scale(0.97);
+}
+
+/* the escape hatch chip, always last: dashed cyan, says what it does */
+.mk-chat-chip-escape {
+  border-style: dashed;
+  border-color: var(--mk-cyan-deep);
+  color: var(--mk-cyan-deep);
+}
+
+.mk-chat-chip-escape:hover {
+  box-shadow: var(--mk-glow-cyan);
+}
+
+/* chat completion CTAs (their own garments, inside the card) */
+.mk-chat-ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 18px 22px;
+}
+
+/* primary: oxblood band with a sliding arrow */
+.mk-chat-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 44px;
+  background: var(--mk-oxblood);
+  color: var(--mk-cream);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 15px 20px;
+  font-family: var(--mk-body);
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition:
+    background var(--mk-dur-fast) var(--mk-ease-out),
+    box-shadow var(--mk-dur-base) var(--mk-ease-out),
+    transform var(--mk-dur-fast) var(--mk-ease-spring);
+}
+
+.mk-chat-primary svg {
+  flex: none;
+  transition: transform var(--mk-dur-base) var(--mk-ease-spring);
+}
+
+.mk-chat-primary:hover {
+  background: var(--mk-oxblood-bright);
+  box-shadow: var(--mk-glow-oxblood);
+}
+
+.mk-chat-primary:hover svg {
+  transform: translateX(5px);
+}
+
+.mk-chat-primary:active {
+  transform: scale(0.98);
+}
+
+/* secondary: quiet text link with a growing cyan hairline */
+.mk-chat-secondary {
+  align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 0;
+  padding: 8px 0;
+  font-family: var(--mk-body);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--mk-cyan-deep);
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color var(--mk-dur-base) var(--mk-ease-out);
+}
+
+.mk-chat-secondary:hover {
+  border-color: var(--mk-cyan-deep);
+}
+
+/* free-text row: paper input + lime send (go signal, ink text) */
+.mk-chat-input-row {
+  display: flex;
+  gap: 10px;
+  padding: 0 18px 22px;
+  flex-wrap: wrap;
+}
+
+.mk-chat-input {
+  flex: 1 1 220px;
+  min-height: 44px;
+  padding: 12px 16px;
+  background: var(--mk-ink-900);
+  color: var(--mk-fg1);
+  border: 1px solid var(--mk-border);
+  border-radius: 10px;
+  font-family: var(--mk-body);
+  font-size: 16px;
+  transition:
+    border-color var(--mk-dur-base) var(--mk-ease-out),
+    box-shadow var(--mk-dur-base) var(--mk-ease-out);
+}
+
+.mk-chat-input::placeholder {
+  color: var(--mk-fg3);
+}
+
+.mk-chat-input:focus-visible {
+  border-color: var(--mk-cyan-deep);
+}
+
+.mk-chat-send {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 22px;
+  background: var(--mk-lime);
+  color: var(--mk-on-neon);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-family: var(--mk-body);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition:
+    background var(--mk-dur-fast) var(--mk-ease-out),
+    box-shadow var(--mk-dur-base) var(--mk-ease-out),
+    transform var(--mk-dur-fast) var(--mk-ease-spring);
+}
+
+.mk-chat-send:hover {
+  background: var(--mk-lime-bright);
+  box-shadow: var(--mk-glow-lime);
+}
+
+.mk-chat-send:active {
+  transform: scale(0.97);
+}
+
+.mk-chat-send:disabled {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+/* send-off choices after typing: sms primary (lime), email secondary (ghost) */
+.mk-chat-sendoff {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 18px 22px;
+}
+
+.mk-chat-note {
+  padding: 0 18px 20px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--mk-fg3);
 }
 
 /* ---------- book ---------- */
@@ -1286,7 +1747,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 .mk-contact-row svg {
-  color: var(--mk-cyan);
+  color: var(--mk-cyan-deep);
   flex: none;
 }
 
@@ -1298,7 +1759,7 @@ html[data-reading-mode="dyslexic"]
 }
 
 a.mk-contact-row:hover .mk-contact-label {
-  color: var(--mk-cyan-bright);
+  color: var(--mk-cyan-deep);
 }
 
 .mk-contact-row .mk-contact-label::after {
@@ -1308,7 +1769,7 @@ a.mk-contact-row:hover .mk-contact-label {
   bottom: 0;
   width: 100%;
   height: 1.5px;
-  background: var(--mk-cyan);
+  background: var(--mk-cyan-deep);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--mk-dur-base) var(--mk-ease-spring);
@@ -1331,7 +1792,7 @@ a.mk-contact-row:hover .mk-contact-label::after {
   width: 100%;
   height: 720px;
   border: 0;
-  background: var(--mk-fg1);
+  background: var(--mk-ink-800);
 }
 
 @media (max-width: 640px) {
@@ -1446,8 +1907,8 @@ a.mk-contact-row:hover .mk-contact-label::after {
 }
 
 .mk-footer-links a:hover {
-  color: var(--mk-cyan-bright);
-  border-color: var(--mk-cyan);
+  color: var(--mk-cyan-deep);
+  border-color: var(--mk-cyan-deep);
 }
 
 .mk-footer-legal {

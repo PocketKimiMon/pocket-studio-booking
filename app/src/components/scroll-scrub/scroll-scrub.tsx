@@ -17,7 +17,6 @@
 // - prefers-reduced-motion shows the complete static story (the plates ARE
 //   the posters)
 // - scenes are a module constant so their identity never rebuilds the controller
-import { contact } from "../../lib/site";
 import { IconArrow } from "../site/icons";
 
 export type JourneyScene = {
@@ -60,12 +59,7 @@ export function ScrollScrubJourney({ sceneId }: { sceneId: JourneyScene["id"] })
         <p className="mk-waypoint">{scene.stop}</p>
         <div className="mk-wrap mk-chapter-content">
           <h2 className="mk-chapter-title">{scene.headline}</h2>
-          <a
-            className="mk-route-cta"
-            href={contact.calUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className="mk-route-cta" href="#chat">
             Book a cut
             <IconArrow size={14} />
           </a>
