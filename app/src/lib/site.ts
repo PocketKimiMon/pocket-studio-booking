@@ -1,7 +1,7 @@
 // Real business content for the combined MyKey booking site.
 // Sources: pocket-studio-booking (live site), pocket-studio-booking-10a2c4c2
-// (React rebuild), booking-page, projects/{mykey-booking,mobile-barber-booking,
-// rudys-booking}. Prices, lead times, policies, and contact details are the
+// (React rebuild), booking-page, projects/{mykey-booking,mobile-barber-booking}.
+// Prices, lead times, policies, and contact details are the
 // owner's actual ones. Never invent placeholder content here.
 
 export const contact = {
@@ -121,7 +121,7 @@ export const policies = [
   },
   {
     title: "Pricing and payment",
-    body: "Prices are quoted before or at service and can vary with hair and complexity. Payment is due at the appointment unless we agree otherwise.",
+    body: "Prices are quoted before or at service and can vary with hair and complexity. Payment is due at the appointment unless we agree otherwise. Miss a confirmed appointment without timely notice and you may be charged up to the full quoted or estimated amount, invoiced if there is no card on file.",
   },
   {
     title: "House-call space",

@@ -81,9 +81,8 @@ export function Hero() {
           Your <span className="mk-em">chair</span> is ready.
         </h1>
         <p className="mk-hero-sub">
-          Cuts and color, booked direct with MyKey. The chair in Fremont, or
-          your own place within 30 miles of Seattle. No front desk. No phone
-          tag.
+          Cuts and color, booked direct with MyKey, at your own place within
+          30 miles of Seattle. No front desk. No phone tag.
         </p>
         <div className="mk-hero-ctas">
           <Link className="mk-hero-cta" to="/book">
@@ -102,8 +101,8 @@ export function Hero() {
 /* ---------- route marquee ---------- */
 
 const marqueeStops = [
-  "chair at rudy's fremont",
   "house calls within 30 miles",
+  "seattle hair artist, comes to you",
   "book direct, no front desk",
   "quiet chair, zero small talk required",
 ];
@@ -133,9 +132,9 @@ export function HomeClose() {
         <div className="mk-section-head">
           <h2 className="mk-h2">The short version.</h2>
           <p className="mk-tldr">
-            <strong>TL;DR</strong> Cuts and color with MyKey, in the Fremont
-            chair or at your place. The menu lives on the services page.
-            Booking takes about a minute and the calendar confirms instantly.
+            <strong>TL;DR</strong> Cuts and color with MyKey, at your place.
+            The menu lives on the services page. Booking takes about a minute
+            and the calendar confirms instantly.
           </p>
         </div>
         <div className="mk-close-ctas">
@@ -163,8 +162,8 @@ export function Services({ level = "h2" }: { level?: Level }) {
           <p className="mk-kicker">{"// the menu"}</p>
           <H className="mk-h2">Pick a service.</H>
           <p className="mk-tldr">
-            <strong>TL;DR</strong> Five services, one menu for the chair and
-            the house call. Prices are quoted before anything touches your
+            <strong>TL;DR</strong> Five services, one menu, and every one of
+            them comes to you. Prices are quoted before anything touches your
             head.
           </p>
         </div>
@@ -241,7 +240,7 @@ export function TravelFeeCalc() {
       <p className="mk-travel-tldr">
         <strong>TL;DR</strong> Travel is on us right now. When that changes,
         this is exactly what it would cost, no surprises. Tap your distance
-        from Fremont.
+        from Seattle.
       </p>
       <div className="mk-travel-chips">
         {travel.bands.map((b, i) => (
@@ -279,9 +278,8 @@ export function TravelFeeCalc() {
           <p className="mk-fee mk-travel-result">
             <span className="mk-fee-amount">Outside the zone</span>
             <span className="mk-fee-note">
-              House calls run within {travel.radius} miles of Seattle. The
-              Fremont chair is always an option, or text MyKey and we will
-              figure it out together.
+              House calls run within {travel.radius} miles of Seattle. Text
+              MyKey anyway and we will figure it out together.
             </span>
           </p>
         )}
@@ -299,7 +297,7 @@ export function About({ level = "h2" }: { level?: Level }) {
       <div className="mk-wrap mk-about-rail">
         <div className="mk-section-head">
           <p className="mk-kicker">{"// about the artist"}</p>
-          <H className="mk-h2">The human behind the chair.</H>
+          <H className="mk-h2">The human behind the hair.</H>
         </div>
         <div className="mk-about-grid">
           <div className="mk-about-body">
@@ -310,8 +308,9 @@ export function About({ level = "h2" }: { level?: Level }) {
               correction that takes six hours and a lot of trust.
             </p>
             <p>
-              My chair is a low-judgment zone. Come with reference pics, come
-              with bedhead, come with a vague idea and we will talk it through.
+              Every appointment is a house call and a low-judgment zone. Come
+              with reference pics, come with bedhead, come with a vague idea
+              and we will talk it through.
             </p>
             <ul className="mk-about-facts">
               <li>pronouns: they/them</li>
@@ -332,6 +331,11 @@ export function About({ level = "h2" }: { level?: Level }) {
               first-time appointments are always on the menu: same cuts, paced
               for you, zero small talk required. Say so in the booking notes
               and I handle the rest.
+            </p>
+            <p className="mk-quiet-note">
+              <span className="mk-fee-kicker">{"// the tea"}</span>
+              I used to work out of a shop in town. They let me go for a dumb
+              reason. Want the story? Book with me and I will spill.
             </p>
             <div className="mk-close-ctas">
               <Link className="mk-page-cta" to="/book">
@@ -411,7 +415,7 @@ export function ContactRows() {
       <span className="mk-contact-row">
         <IconPin size={16} />
         <span className="mk-contact-label">
-          Fremont chair + house calls, {contact.location}
+          House calls, {contact.location}
         </span>
       </span>
     </div>
@@ -443,10 +447,8 @@ export function HoursContact() {
           </div>
           <div>
             <p className="mk-book-fine">
-              The chair is inside Rudy's Barbershop in Fremont (not affiliated;
-              just where the chair lives). House calls run within 30 miles of
-              Seattle. Booking runs on Cal.com, reminders come by text or
-              email.
+              House calls only, within 30 miles of Seattle. Booking runs on
+              Cal.com, reminders come by text or email.
             </p>
           </div>
         </div>
@@ -465,16 +467,17 @@ export function BookingCalendar() {
           <h2 className="mk-h2">Straight to the calendar.</h2>
           <p className="mk-tldr">
             <strong>TL;DR</strong> Rather skip the chat? The calendar below is
-            live and confirms instantly. Chair appointments and house calls
-            book in the same place.
+            live and confirms instantly. Every service books as a house call
+            in the same place.
           </p>
         </div>
         <div className="mk-book-grid">
           <div>
             <ContactRows />
             <p className="mk-book-fine">
-              By booking you agree to the 24-hour cancel rule. Booking runs
-              on Cal.com.
+              By booking you agree to the 24-hour cancel rule and the no-show
+              charge. Reminders come by text or email. Booking runs on
+              Cal.com.
             </p>
           </div>
           <div className="mk-cal-frame">
@@ -522,7 +525,7 @@ export function Footer() {
         </div>
         <div className="mk-footer-legal">
           <span>© 2026 pocket studio / mykey pocket</span>
-          <span>not affiliated with Rudy's Barbershop</span>
+          <span>house calls only</span>
           <span>pronouns: they/them · seattle, wa</span>
           <span>
             <IconKey size={13} style={{ transform: "translateY(1px)" }} /> built

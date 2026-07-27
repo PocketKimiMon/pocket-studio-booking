@@ -39,20 +39,20 @@ type Answers = {
 const ESCAPE = "Just type to me, we'll figure it out together";
 
 const GREETING =
-  "Hey. I am the booking guide for this chair. Four quick steps and you are booked. No account, no phone tag.";
+  "Hey. I am MyKey's booking guide. A few quick steps and you are booked. No account, no phone tag.";
 
 const QUESTIONS = {
   service: "First up. What are we doing with your hair?",
   serviceHelp: "No problem, that is what I am here for. Which sounds closest?",
-  where: "Chair at Rudy's in Fremont, or should I come to you?",
-  travel: "Roughly how far from Fremont are you?",
+  where: "I come to you. Is your place within 30 miles of Seattle?",
+  travel: "Roughly how far from Seattle are you?",
   when: "Last pick. When were you thinking?",
   feeNote:
     "Travel is on us right now. When that changes, this is exactly what it would cost, no surprises.",
   outsideZone:
-    "That is outside my 30-mile travel zone. The Fremont chair is always an option, or type to me and we will figure something out together.",
+    "That is outside my 30-mile travel zone right now. Type to me anyway, and we will figure something out together.",
   summary:
-    "Here is the plan. Tap anything you want to change, otherwise pick a time below.",
+    "Here is the plan. Tap anything you want to change, otherwise pick a time below. You will get a text 2 hours before to confirm. Answer it and the slot stays yours.",
   freetext:
     "Go for it. Type like you would text a friend. Dates, hair history, access needs, all of it.",
   sendoff:
@@ -60,14 +60,14 @@ const QUESTIONS = {
 } as const;
 
 const WHERE_CHIPS = [
-  "Chair at Rudy's Fremont",
-  "House call within 30 miles",
+  "Yes, within 30 miles",
+  "Outside 30 miles",
   "Not sure yet",
 ];
 
-const HOUSE_CALL = WHERE_CHIPS[1];
+const HOUSE_CALL = WHERE_CHIPS[0];
 
-const OUTSIDE_ZONE = "Outside 30 miles";
+const OUTSIDE_ZONE = WHERE_CHIPS[1];
 
 const WHEN_CHIPS = ["This week", "Next week", "A specific day", "Just browsing"];
 
@@ -162,30 +162,53 @@ export function ChatCard() {
     askNext(guideMsgs, next);
   };
 
-  const answerService = (name: string, slug?: string) =>
-    answer("service", name, [{ role: "guide", text: QUESTIONS.where, q: "where" }], "where", slug);
+  const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  const answerService = (name: string, slug?: string) => {
+    const svc = services.find((s) => s.name === name);
+    const lead = svc ? ` ${cap(svc.lead)}.` : "";
+    answer(
+      "service",
+      name,
+      [
+        { role: "guide", text: `${name}, good call.${lead}` },
+        { role: "guide", text: QUESTIONS.where, q: "where" },
+      ],
+      "where",
+      slug,
+    );
+  };
 
   const answerWhere = (label: string) => {
     if (label === HOUSE_CALL) {
       answer("where", label, [{ role: "guide", text: QUESTIONS.travel, q: "travel" }], "travel");
       return;
     }
+    if (label === OUTSIDE_ZONE) {
+      answer(
+        "where",
+        label,
+        [
+          { role: "guide", text: QUESTIONS.outsideZone },
+          { role: "guide", text: QUESTIONS.when, q: "when" },
+        ],
+        "when",
+      );
+      return;
+    }
     answer("where", label, [{ role: "guide", text: QUESTIONS.when, q: "when" }], "when");
   };
 
   // Travel band picked: show the would-be fee (clearly NOT charged today),
-  // then move on to the when question. Outside the radius: the honest
-  // "let's figure it out" path instead of a number.
-  const answerTravel = (label: string, phrase?: string, range?: string) => {
+  // then move on to the when question.
+  const answerTravel = (label: string, phrase: string, range: string) => {
     interacted.current = true;
     setAnswers((cur) => ({ ...cur, travel: label, travelFee: range }));
     setMsgs((cur) => [...cur, push({ role: "user", text: label })]);
     askNext(
       [
-        range && phrase
-          ? { role: "guide" as const, text: QUESTIONS.feeNote, fee: { phrase, range } }
-          : { role: "guide" as const, text: QUESTIONS.outsideZone },
-        { role: "guide" as const, text: QUESTIONS.when, q: "when" as const },
+        { role: "guide", text: QUESTIONS.feeNote, fee: { phrase, range } },
+        { role: "guide", text: QUESTIONS.when, q: "when" },
       ],
       "when",
     );
@@ -207,6 +230,7 @@ export function ChatCard() {
 
   const helpPick = (label: string, serviceName: string) => {
     const svc = services.find((s) => s.name === serviceName);
+    const lead = svc ? ` ${cap(svc.lead)}.` : "";
     interacted.current = true;
     setAnswers((cur) => ({ ...cur, service: serviceName, slug: svc?.slug }));
     setMsgs((cur) => [...cur, push({ role: "user", text: label })]);
@@ -214,7 +238,7 @@ export function ChatCard() {
       [
         {
           role: "guide",
-          text: `Then let us say ${serviceName}. You can change it at the end.`,
+          text: `Then let us say ${serviceName}.${lead} You can change it at the end.`,
         },
         { role: "guide", text: QUESTIONS.where, q: "where" },
       ],
@@ -336,6 +360,8 @@ export function ChatCard() {
         ? "send it"
         : `step ${Math.min(pos + 1, path.length)} of ${path.length}`;
 
+  const pickedService = services.find((s) => s.name === answers.service);
+
   const canBack = step !== "service" && !typing;
 
   const chips: { label: string; onPick: () => void }[] =
@@ -358,13 +384,10 @@ export function ChatCard() {
         : step === "where"
           ? WHERE_CHIPS.map((label) => ({ label, onPick: () => answerWhere(label) }))
           : step === "travel"
-            ? [
-                ...travel.bands.map((b) => ({
-                  label: b.label,
-                  onPick: () => answerTravel(b.label, b.phrase, travelFeeRange(b)),
-                })),
-                { label: OUTSIDE_ZONE, onPick: () => answerTravel(OUTSIDE_ZONE) },
-              ]
+            ? travel.bands.map((b) => ({
+                label: b.label,
+                onPick: () => answerTravel(b.label, b.phrase, travelFeeRange(b)),
+              }))
             : step === "when"
               ? WHEN_CHIPS.map((label) => ({ label, onPick: () => answerWhen(label) }))
               : [];
@@ -427,6 +450,12 @@ export function ChatCard() {
                     </button>
                   </dd>
                 </div>
+                {pickedService && (
+                  <div className="mk-msg-row">
+                    <dt>lead time</dt>
+                    <dd>{pickedService.lead}</dd>
+                  </div>
+                )}
                 <div className="mk-msg-row">
                   <dt>where</dt>
                   <dd>

@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Cuts and color with MyKey Pocket, Seattle hair artist. The chair in Fremont or house calls within 30 miles. Book direct, no front desk.",
+          "Cuts and color with MyKey Pocket, Seattle hair artist. House calls within 30 miles of Seattle. Book direct, no front desk.",
       },
       { name: "theme-color", content: "#0B0B0F" },
     ],

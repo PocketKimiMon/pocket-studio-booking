@@ -3,6 +3,37 @@
 One site that merges every MyKey booking page (Pocket Studio, Rudy's Fremont chair,
 mobile barber, "Book with Me") into a single branded booking destination.
 
+## Brand revision 5 (follow-up edit, 2026-07-27, owner corrections)
+Two corrections:
+
+1. RUDY'S IS GONE. MyKey no longer works at Rudy's Fremont; every "Rudy's" /
+   "Fremont" reference is swept from the site (content lib comments, hero,
+   marquee, home close, about, contact rows, hours/contact, calendar TL;DR,
+   footer legal, chat where/travel/outside copy, meta descriptions,
+   app-meta.json). MyKey is house-call/mobile only; NO new salon or chair
+   location is named (none was given). The chat's where step is now "I come
+   to you. Is your place within 30 miles of Seattle?" (yes -> travel step,
+   outside -> honest type-to-me path, not sure -> when). Travel anchor
+   re-anchored from Fremont to Seattle everywhere ("Roughly how far from
+   Seattle are you?"). The about page tells the story in the owner's framing
+   without naming the shop: kicker `// the tea` + "I used to work out of a
+   shop in town. They let me go for a dumb reason. Want the story? Book with
+   me and I will spill."
+2. The 3 removed policies were a DISPLAY removal, not abolished rules. They
+   now live where booking/payment actually happens:
+   - Advance notice / lead times: on /services rows (already) + one short
+     line in the chat's service confirmation bubble ("Books 2 days out.") +
+     a "lead time" row in the chat summary.
+   - No-call no-show charge: appended to the "Pricing and payment" policy
+     body (stays on /policies) + restored in the /book calendar fine print
+     ("By booking you agree to the 24-hour cancel rule and the no-show
+     charge. Reminders come by text or email. Booking runs on Cal.com.").
+   - 2-hour verification: a line in the chat's summary bubble ("You will get
+     a text 2 hours before to confirm. Answer it and the slot stays yours.")
+     + "reminders come by text or email" in the calendar fine print.
+   The /policies page still shows exactly 4 cards (One month at a time,
+   24-hour cancellation, Pricing and payment, House-call space).
+
 ## Brand revision 4 (follow-up edit, 2026-07-27, owner feature request)
 Travel fee calculator, back from the old booking pages — but SHOWN, NOT
 charged. The owner's framing: clients should see what travel WOULD cost when
@@ -248,5 +279,5 @@ Services/prices/lead times from pocket-studio-booking-10a2c4c2/src/content.ts an
 pocket-studio-booking/index.html. Policies from the live site's fine print.
 Contact: 425-918-2029, mykeypocket@icloud.com, Seattle WA, they/them.
 Hours: Thu 11-6, Fri 12-5, Sat-Sun 12-8. Booking: https://cal.com/maneautoimation/
-Chair: Rudy's Fremont. House calls: within ~30 miles, travel quoted before booking.
+House calls only (revision 5): within ~30 miles of Seattle, travel quoted before booking.
 Zero em-dashes anywhere in visible copy.
