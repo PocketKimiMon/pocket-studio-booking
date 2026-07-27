@@ -3,6 +3,32 @@
 One site that merges every MyKey booking page (Pocket Studio, Rudy's Fremont chair,
 mobile barber, "Book with Me") into a single branded booking destination.
 
+## Brand revision 4 (follow-up edit, 2026-07-27, owner feature request)
+Travel fee calculator, back from the old booking pages — but SHOWN, NOT
+charged. The owner's framing: clients should see what travel WOULD cost when
+it starts being charged; right now travel is free.
+
+- Numbers (real, not invented): flat $25 + $2 per mile, 30-mile max radius,
+  fee = flat + perMile x distance. Sources: mobile-barber-booking/index.html
+  (config defaults travelFlatFee 25, travelPerMile 2, maxTravelRadius 30) and
+  mykey-booking-merged/server.py (same values + the /api/travel-fee formula).
+  mykey-booking/index.html + backend.py have no travel-fee logic, so the
+  "prefer mykey-booking on conflict" rule never fired.
+- In the /book chat: picking "House call within 30 miles" adds a travel step
+  ("Roughly how far from Fremont are you?") with tap bands (under 5 / 5-15 /
+  15-30 / outside 30). No geocoding API, so no address lookup — bands only,
+  fee shown as an honest range for the band ($25-$35 / $35-$55 / $55-$85).
+  The fee bubble carries a `// not charged yet` mono kicker and the framing
+  line: "Travel is on us right now. When that changes, this is exactly what
+  it would cost, no surprises." Outside 30 miles: no number, just the honest
+  "chair or type to me, we'll figure it out" path. The summary gains a
+  "travel fee: $X to $Y, free for now" row with a change button; the path
+  grows to 5 progress dots for house calls; the sms:/mailto: hand-off body
+  includes the travel line.
+- On /services: the same calculator as a standalone card in the house-call
+  section (same bands, same `// not charged yet` framing, aria-pressed chips,
+  aria-live result). Zero backend, zero credits, dark-system native.
+
 ## Brand revision 3 (follow-up edit, 2026-07-27, owner feedback)
 Owner's verdict on revision 2's light flip: "ew no — undo change, then review
 improve and make multipage website, not a 1 page." So:

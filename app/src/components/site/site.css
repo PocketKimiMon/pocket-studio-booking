@@ -2025,3 +2025,84 @@ main h1[tabindex="-1"]:focus {
 main h1[tabindex="-1"]:focus-visible {
   outline: none;
 }
+
+/* ---------- travel fee: shown, not charged (brand revision 4) ---------- */
+
+/* The would-be fee display, inside a chat bubble or the services card. */
+.mk-fee {
+  display: block;
+  margin-top: 10px;
+  padding: 14px 16px;
+  background: var(--mk-ink-900);
+  border: 1px solid var(--mk-hairline);
+  border-radius: 10px;
+}
+
+.mk-fee-kicker {
+  display: block;
+  font-family: var(--mk-mono);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mk-lime);
+}
+
+.mk-fee-amount {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mk-display);
+  font-weight: 900;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  color: var(--mk-fg1);
+}
+
+.mk-fee-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--mk-fg3);
+}
+
+/* Standalone calculator card on /services (house-call section). */
+.mk-travel-card {
+  margin-top: 26px;
+  background: var(--mk-ink-800);
+  border: 1px solid var(--mk-hairline);
+  border-radius: 16px;
+  padding: 24px 22px;
+}
+
+.mk-travel-title {
+  margin: 8px 0 6px;
+  font-family: var(--mk-display);
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--mk-fg1);
+}
+
+.mk-travel-tldr {
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: var(--mk-fg2);
+  max-width: 60ch;
+}
+
+.mk-travel-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mk-travel-result {
+  margin-top: 16px;
+}
+
+/* Picked band chip: lime edge so the toggle state is visible. */
+.mk-chat-chip[aria-pressed="true"] {
+  border-color: var(--mk-lime);
+  box-shadow: var(--mk-glow-lime);
+}

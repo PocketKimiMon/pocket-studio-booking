@@ -84,6 +84,32 @@ export const services: Service[] = [
 export const calEventUrl = (slug: string) =>
   `${contact.calUrl}${slug}`;
 
+// House-call travel fee config: the owner's real values from the old booking
+// pages (mobile-barber-booking/index.html config defaults and
+// mykey-booking-merged/server.py CONFIG + /api/travel-fee):
+// fee = flat + perMile x distance in miles, available within radius only.
+// mykey-booking itself has no travel-fee logic, so nothing conflicts.
+// SHOWN, not charged: travel is free right now; this only previews the
+// would-be price (see design-brief.md, brand revision 4).
+export const travel = {
+  flat: 25,
+  perMile: 2,
+  radius: 30,
+  bands: [
+    { label: "Under 5 miles", phrase: "under 5 miles", minMi: 0, maxMi: 5 },
+    { label: "5 to 15 miles", phrase: "5 to 15 miles out", minMi: 5, maxMi: 15 },
+    { label: "15 to 30 miles", phrase: "15 to 30 miles out", minMi: 15, maxMi: 30 },
+  ],
+} as const;
+
+export type TravelBand = (typeof travel.bands)[number];
+
+export const travelFee = (mi: number) => travel.flat + travel.perMile * mi;
+
+// A band is honest as a range: fee at the band's low edge to its high edge.
+export const travelFeeRange = (band: TravelBand) =>
+  `$${travelFee(band.minMi)} to $${travelFee(band.maxMi)}`;
+
 export const policies = [
   {
     title: "One month at a time",

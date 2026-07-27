@@ -5,13 +5,14 @@
 // 400ms typing beat. All state is React state and browser globals only appear
 // in handlers and effects, so SSR renders the greeting and the first question.
 import { useEffect, useRef, useState } from "react";
-import { calEventUrl, contact, services } from "../../lib/site";
+import { calEventUrl, contact, services, travel, travelFeeRange } from "../../lib/site";
 import { IconArrow, IconMail, IconPhone } from "./icons";
 
 type Step =
   | "service"
   | "serviceHelp"
   | "where"
+  | "travel"
   | "when"
   | "summary"
   | "freetext"
@@ -23,12 +24,15 @@ type Msg = {
   text: string;
   q?: Step; // guide message that asked a question (back/change anchor)
   summary?: boolean; // guide message that renders the answer summary rows
+  fee?: { phrase: string; range: string }; // guide message with the would-be travel fee
 };
 
 type Answers = {
   service?: string;
   slug?: string;
   where?: string;
+  travel?: string;
+  travelFee?: string;
   when?: string;
 };
 
@@ -41,7 +45,12 @@ const QUESTIONS = {
   service: "First up. What are we doing with your hair?",
   serviceHelp: "No problem, that is what I am here for. Which sounds closest?",
   where: "Chair at Rudy's in Fremont, or should I come to you?",
+  travel: "Roughly how far from Fremont are you?",
   when: "Last pick. When were you thinking?",
+  feeNote:
+    "Travel is on us right now. When that changes, this is exactly what it would cost, no surprises.",
+  outsideZone:
+    "That is outside my 30-mile travel zone. The Fremont chair is always an option, or type to me and we will figure something out together.",
   summary:
     "Here is the plan. Tap anything you want to change, otherwise pick a time below.",
   freetext:
@@ -55,6 +64,10 @@ const WHERE_CHIPS = [
   "House call within 30 miles",
   "Not sure yet",
 ];
+
+const HOUSE_CALL = WHERE_CHIPS[1];
+
+const OUTSIDE_ZONE = "Outside 30 miles";
 
 const WHEN_CHIPS = ["This week", "Next week", "A specific day", "Just browsing"];
 
@@ -152,8 +165,31 @@ export function ChatCard() {
   const answerService = (name: string, slug?: string) =>
     answer("service", name, [{ role: "guide", text: QUESTIONS.where, q: "where" }], "where", slug);
 
-  const answerWhere = (label: string) =>
+  const answerWhere = (label: string) => {
+    if (label === HOUSE_CALL) {
+      answer("where", label, [{ role: "guide", text: QUESTIONS.travel, q: "travel" }], "travel");
+      return;
+    }
     answer("where", label, [{ role: "guide", text: QUESTIONS.when, q: "when" }], "when");
+  };
+
+  // Travel band picked: show the would-be fee (clearly NOT charged today),
+  // then move on to the when question. Outside the radius: the honest
+  // "let's figure it out" path instead of a number.
+  const answerTravel = (label: string, phrase?: string, range?: string) => {
+    interacted.current = true;
+    setAnswers((cur) => ({ ...cur, travel: label, travelFee: range }));
+    setMsgs((cur) => [...cur, push({ role: "user", text: label })]);
+    askNext(
+      [
+        range && phrase
+          ? { role: "guide" as const, text: QUESTIONS.feeNote, fee: { phrase, range } }
+          : { role: "guide" as const, text: QUESTIONS.outsideZone },
+        { role: "guide" as const, text: QUESTIONS.when, q: "when" as const },
+      ],
+      "when",
+    );
+  };
 
   const answerWhen = (label: string) =>
     answer(
@@ -217,11 +253,12 @@ export function ChatCard() {
     });
     setAnswers((cur) => {
       const next = { ...cur };
-      const order = ["service", "where", "when"] as const;
+      const order = ["service", "where", "travel", "when"] as const;
       const start = order.indexOf(target as (typeof order)[number]);
       if (start !== -1) {
         for (let i = start; i < order.length; i++) delete next[order[i]];
         if (start === 0) delete next.slug;
+        if (start <= 2) delete next.travelFee;
       }
       return next;
     });
@@ -234,7 +271,8 @@ export function ChatCard() {
       service: "service",
       serviceHelp: "service",
       where: "service",
-      when: "where",
+      travel: "where",
+      when: answers.travel ? "travel" : "where",
       summary: "when",
       freetext: prevStep.current,
       sendoff: "freetext",
@@ -258,6 +296,15 @@ export function ChatCard() {
     const lines = ["Hi MyKey, from the booking chat:"];
     if (answers.service) lines.push(`Service: ${answers.service}`);
     if (answers.where) lines.push(`Where: ${answers.where}`);
+    if (answers.travel) {
+      lines.push(
+        `Travel: ${answers.travel}${
+          answers.travelFee
+            ? ` (would be ${answers.travelFee}, free for now)`
+            : " (outside the 30-mile zone)"
+        }`,
+      );
+    }
     if (answers.when) lines.push(`When: ${answers.when}`);
     lines.push("", sentNote);
     return lines.join("\n");
@@ -266,15 +313,28 @@ export function ChatCard() {
   const smsHref = `sms:${contact.phoneDisplay}?&body=${encodeURIComponent(sendBody())}`;
   const mailHref = `mailto:${contact.email}?subject=${encodeURIComponent("Booking chat with MyKey")}&body=${encodeURIComponent(sendBody())}`;
 
+  // The path grows by one step when a house call adds the travel question.
+  const hasTravel = answers.where === HOUSE_CALL || step === "travel";
+  const path: Step[] = hasTravel
+    ? ["service", "where", "travel", "when", "summary"]
+    : ["service", "where", "when", "summary"];
   const answeredCount =
-    (answers.service ? 1 : 0) + (answers.where ? 1 : 0) + (answers.when ? 1 : 0);
-  const pos = step === "summary" || step === "sendoff" ? 3 : answeredCount;
+    (answers.service ? 1 : 0) +
+    (answers.where ? 1 : 0) +
+    (answers.travel ? 1 : 0) +
+    (answers.when ? 1 : 0);
+  const pos =
+    step === "summary" || step === "sendoff"
+      ? path.length - 1
+      : step === "freetext"
+        ? Math.min(answeredCount, path.length - 1)
+        : Math.max(0, path.indexOf(step));
   const stepLabel =
     step === "freetext"
       ? "type to me"
       : step === "sendoff"
         ? "send it"
-        : `step ${Math.min(pos + 1, 4)} of 4`;
+        : `step ${Math.min(pos + 1, path.length)} of ${path.length}`;
 
   const canBack = step !== "service" && !typing;
 
@@ -297,12 +357,24 @@ export function ChatCard() {
           ]
         : step === "where"
           ? WHERE_CHIPS.map((label) => ({ label, onPick: () => answerWhere(label) }))
-          : step === "when"
-            ? WHEN_CHIPS.map((label) => ({ label, onPick: () => answerWhen(label) }))
-            : [];
+          : step === "travel"
+            ? [
+                ...travel.bands.map((b) => ({
+                  label: b.label,
+                  onPick: () => answerTravel(b.label, b.phrase, travelFeeRange(b)),
+                })),
+                { label: OUTSIDE_ZONE, onPick: () => answerTravel(OUTSIDE_ZONE) },
+              ]
+            : step === "when"
+              ? WHEN_CHIPS.map((label) => ({ label, onPick: () => answerWhen(label) }))
+              : [];
 
   const isQuestionStep =
-    step === "service" || step === "serviceHelp" || step === "where" || step === "when";
+    step === "service" ||
+    step === "serviceHelp" ||
+    step === "where" ||
+    step === "travel" ||
+    step === "when";
 
   return (
     <div className="mk-chat-card">
@@ -310,9 +382,9 @@ export function ChatCard() {
         <span className="mk-chat-title">booking guide</span>
         <div className="mk-chat-progress">
           <div className="mk-chat-dots" aria-hidden="true">
-            {[0, 1, 2, 3].map((i) => (
+            {path.map((s, i) => (
               <span
-                key={i}
+                key={s}
                 className={`mk-chat-dot${i < pos ? " mk-done" : i === pos ? " mk-now" : ""}`}
               />
             ))}
@@ -334,6 +406,16 @@ export function ChatCard() {
         {msgs.map((m) => (
           <div key={m.id} className={`mk-msg ${m.role === "guide" ? "mk-msg-guide" : "mk-msg-user"}`}>
             {m.text}
+            {m.fee && (
+              <span className="mk-fee">
+                <span className="mk-fee-kicker">{"// not charged yet"}</span>
+                <span className="mk-fee-amount">{m.fee.range}</span>
+                <span className="mk-fee-note">
+                  for {m.fee.phrase}, at ${travel.flat} flat + ${travel.perMile} a
+                  mile. Free for now.
+                </span>
+              </span>
+            )}
             {m.summary && (
               <dl className="mk-msg-rows">
                 <div className="mk-msg-row">
@@ -354,6 +436,19 @@ export function ChatCard() {
                     </button>
                   </dd>
                 </div>
+                {answers.travel && (
+                  <div className="mk-msg-row">
+                    <dt>travel fee</dt>
+                    <dd>
+                      {answers.travelFee
+                        ? `${answers.travelFee}, free for now`
+                        : "outside the zone, let's talk"}
+                      <button type="button" className="mk-change-btn" onClick={() => rewindTo("travel")}>
+                        change
+                      </button>
+                    </dd>
+                  </div>
+                )}
                 <div className="mk-msg-row">
                   <dt>when</dt>
                   <dd>

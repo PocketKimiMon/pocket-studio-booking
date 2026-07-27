@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { calEventUrl, contact, hours, policies, scenes, services, whyDirect } from "../../lib/site";
+import { calEventUrl, contact, hours, policies, scenes, services, travel, travelFeeRange, whyDirect } from "../../lib/site";
 import {
   IconArrow,
   IconCalendar,
@@ -210,6 +211,7 @@ export function Services({ level = "h2" }: { level?: Level }) {
           House calls: every service travels. Within 30 miles of Seattle, and
           any travel fee is quoted before you book, never after.
         </p>
+        <TravelFeeCalc />
         <div className="mk-close-ctas">
           <Link className="mk-page-cta" to="/book">
             Book a cut
@@ -218,6 +220,73 @@ export function Services({ level = "h2" }: { level?: Level }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ---------- travel fee calculator (shown, NOT charged) ---------- */
+
+// The owner's real numbers ($25 flat + $2 a mile, 30-mile radius, from the old
+// booking pages) presented as a preview only: travel is free right now.
+// Taps-only, zero backend; SSR renders the bands, picks are client state.
+export function TravelFeeCalc() {
+  // picked: band index, bands.length = outside the radius, null = nothing yet.
+  const [picked, setPicked] = useState<number | null>(null);
+  const outside = picked === travel.bands.length;
+  const band = picked !== null && !outside ? travel.bands[picked] : null;
+
+  return (
+    <div className="mk-travel-card">
+      <span className="mk-fee-kicker">{"// not charged yet"}</span>
+      <h2 className="mk-travel-title">The house-call travel fee, someday.</h2>
+      <p className="mk-travel-tldr">
+        <strong>TL;DR</strong> Travel is on us right now. When that changes,
+        this is exactly what it would cost, no surprises. Tap your distance
+        from Fremont.
+      </p>
+      <div className="mk-travel-chips">
+        {travel.bands.map((b, i) => (
+          <button
+            key={b.label}
+            type="button"
+            className="mk-chat-chip"
+            aria-pressed={picked === i}
+            onClick={() => setPicked(i)}
+          >
+            {b.label}
+          </button>
+        ))}
+        <button
+          type="button"
+          className="mk-chat-chip"
+          aria-pressed={outside}
+          onClick={() => setPicked(travel.bands.length)}
+        >
+          Outside 30 miles
+        </button>
+      </div>
+      <div aria-live="polite">
+        {band && (
+          <p className="mk-fee mk-travel-result">
+            <span className="mk-fee-kicker">{"// not charged yet"}</span>
+            <span className="mk-fee-amount">{travelFeeRange(band)}</span>
+            <span className="mk-fee-note">
+              for {band.phrase}, at ${travel.flat} flat + ${travel.perMile} a
+              mile. Free for now.
+            </span>
+          </p>
+        )}
+        {outside && (
+          <p className="mk-fee mk-travel-result">
+            <span className="mk-fee-amount">Outside the zone</span>
+            <span className="mk-fee-note">
+              House calls run within {travel.radius} miles of Seattle. The
+              Fremont chair is always an option, or text MyKey and we will
+              figure it out together.
+            </span>
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 
