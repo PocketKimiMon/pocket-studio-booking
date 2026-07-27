@@ -3,7 +3,36 @@
 One site that merges every MyKey booking page (Pocket Studio, Rudy's Fremont chair,
 mobile barber, "Book with Me") into a single branded booking destination.
 
-## Brand revision (follow-up edit, 2026-07-27)
+## Brand revision 2 (follow-up edit, 2026-07-27, owner feedback)
+Owner's verdict on revision 1: "I kinda hate it." The dark hazard-on-charcoal
+look fights the product's actual promise (quiet, trauma-informed,
+neurospicy-friendly hair appointments). Redesign target: a friendly
+neighborhood studio's front desk — warm, calm, unhurried. Same PocketStudio
+system (it ships an opt-in paper theme), flipped to the light surface:
+
+- Canvas: warm paper (`#F7F2E9` family, NOT clinical white), soft ink text
+  (`#181426` / `#4A4360` / `#756B85` per `.theme-paper` in colors_and_type.css).
+- Accents demoted to SPOT roles on paper: oxblood = warmth/emphasis + primary
+  CTA fills; hazard lime = go-signals only (text uses `--lime-deep #82B500` for
+  AA on cream; bright lime only as a fill with ink text); cyan = links/focus
+  (`--cyan-deep #128A93` on paper for AA).
+- Kept from the system: Archivo/Hanken/Space Mono type, voice rules (TL;DR
+  first, sentence case, plain-language buttons), film grain (now 0.08, very
+  subtle), double focus ring (paper variant), 44px targets, springy
+  130/220/380ms motion, reduced-motion collapse, dyslexia reading mode
+  (ON by default, persisted; paper fg overrides applied).
+- Scene plates: same 4 generations (credits still 0), re-graded lighter/warmer
+  via CSS (mild desaturate + sepia); scrims flipped from ink to paper so hero
+  and chapter text sits in ink on cream over the photos.
+
+Also in this revision: the site's PRIMARY booking path becomes a guided chat
+flow (`#chat`, "the front desk"): one multiple-choice question at a time,
+every question's last chip is "Just type to me, we'll figure it out together"
+(opens free text that composes a real sms:/mailto: to MyKey, a human), with
+progress dots, a back chip, changeable answers, no timers, no backend, no AI.
+Completion deep-links the matching Cal.com event and/or scrolls to the embed.
+
+## Brand revision 1 (follow-up edit, 2026-07-27)
 The owner supplied their REAL brand design system
 (`~/Downloads/pocketstudio-design-system/`: README brand bible, `colors_and_type.css`
 token layer, self-hosted OpenDyslexic family, reading-mode assets, marketing UI kit).
@@ -32,6 +61,8 @@ headline builds. Motion re-timed to the brand system: springy 130/220/380ms,
 `--ease-spring` entrances, press = scale(.97).
 
 ## Locked palette (PocketStudio design system, user-supplied — explicit brand colors)
+SUPERSEDED by Brand revision 2 above: the ink canvas below flipped to the
+system's own warm paper theme; the accent roles and defense still apply.
 - Ink canvas `#0B0B0F` (`--ink-900`) with raised surfaces `#16161D` / `#1F1F28`.
 - Text: cream `#F4EFE6` primary, steel-grey `#ADB0BD` secondary.
 - Lead accents: **oxblood `#C53B38`** (primary CTA, emphasis edges) +
