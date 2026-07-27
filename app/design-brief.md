@@ -3,10 +3,23 @@
 One site that merges every MyKey booking page (Pocket Studio, Rudy's Fremont chair,
 mobile barber, "Book with Me") into a single branded booking destination.
 
+## Brand revision (follow-up edit, 2026-07-27)
+The owner supplied their REAL brand design system
+(`~/Downloads/pocketstudio-design-system/`: README brand bible, `colors_and_type.css`
+token layer, self-hosted OpenDyslexic family, reading-mode assets, marketing UI kit).
+This restyle applies that system verbatim; it SUPERSEDES the bone/void/lime palette
+and Bricolage/Inter/Plex type below. As the user's explicit brand colors, these
+override the skill's banned-palette gate (recorded here per the gate's override
+rule). Everything else in this brief (spine, journey, sections, CTA inventory,
+asset plan) still stands; the plates are CSS-graded into the charcoal/oxblood
+world because credits are 0 and no new generation is possible.
+
 ## Design read
 For Seattle clients (many neurodivergent, many ex-Rudy's regulars) who want to book
 MyKey directly: warm, low-pressure, a little playful, completely plain-spoken. The
 emotional register is "a friend who happens to be great at hair," not a salon brand.
+Now spoken in the PocketStudio voice: streetwise mentor, warm and direct,
+trauma-informed, TL;DR first, plain-language buttons, mono `//` kickers.
 
 ## Concept spine
 **The house-call route.** The page is one continuous trip: it opens at the chair,
@@ -15,22 +28,29 @@ waypoints spine: each chapter is a stop on the route, and booking is the last st
 
 ## Delivery tier
 `cinema` — Lenis + GSAP ScrollTrigger, scroll-driven scene journey, staggered
-headline builds. (Spectacle's WebGL/GLB is out of credit reach; see cost note.)
+headline builds. Motion re-timed to the brand system: springy 130/220/380ms,
+`--ease-spring` entrances, press = scale(.97).
 
-## Locked palette (existing brand, honored)
-- Bone `#F3ECDE` — page ground (the brand's paper).
-- Void `#120E17` — ink, off-black (never pure black).
-- Lime `#8ACE00` — the ONE accent (brand chartreuse; CTAs, marquee, focus).
-- Ash `#6F6878` — muted secondary text.
-Defense: these are the owner's live brand colors, pulled verbatim from
-pocket-studio-booking; lime-on-bone is a chromatic-light pairing, not a banned
-dark-glow family. (User's explicit brand colors override the default bans.)
+## Locked palette (PocketStudio design system, user-supplied — explicit brand colors)
+- Ink canvas `#0B0B0F` (`--ink-900`) with raised surfaces `#16161D` / `#1F1F28`.
+- Text: cream `#F4EFE6` primary, steel-grey `#ADB0BD` secondary.
+- Lead accents: **oxblood `#C53B38`** (primary CTA, emphasis edges) +
+  **hazard lime `#B6F23A`** (go signals, highlight words).
+- **Signal cyan `#33CBD2`** reserved for links + the always-visible double
+  focus ring (`--focus-ring`).
+- Film grain (`--grain` SVG noise) over all dark surfaces; hard accent edge-glows
+  instead of soft beauty shadows; hairline borders; 10-16px radii.
+- Defense: user-supplied brand system; the previous bone/void/lime scheme is
+  retired. Oxblood + lime lead this surface; cyan never decorates, only signals.
 
 ## Locked type
-- Display: **Bricolage Grotesque** (existing brand display face, expressive grotesk).
-- Body: **Inter** (existing brand body).
-- Mono labels/meta: **IBM Plex Mono** (existing brand mono).
-No serif. Caveat (hand) reserved for at most one tiny annotation, matching brand.
+- Display: **Archivo** 800-900, uppercase heroes/section heads, tight tracking.
+- Body/UI: **Hanken Grotesk**, 16px floor, fluid clamp() scale.
+- Mono kickers/labels: **Space Mono**, uppercase, tracked out (`// KICKER`).
+- Reading mode (ON by default, user-switchable, persisted): self-hosted
+  **OpenDyslexic** + **OpenDyslexicMono** (OFL, vendored to `app/public/fonts/`),
+  wired through the design system's override layer + an SSR-safe toggle.
+No serif. Zero em-dashes in visible copy (carried over, non-negotiable).
 
 Animation mode: animated-website
 
@@ -80,10 +100,13 @@ single-style inline SVG stroke set (no credits). Byte budget: ≤ 1.5 MB per pla
 after local re-encode, ≤ 6 MB total imagery.
 
 ## Combinatorial pick (locked across all boards)
-- Theme paradigm: Quiet Premium Neutral (bone, dark ink) + one chartreuse accent.
-- Background character: full-bleed cinematic imagery (scene plates) alternating
-  with flat bone editorial blocks.
-- Typography character: expressive display grotesk (Bricolage) + mono meta.
+- Theme paradigm: REVISED to the user-supplied system — Deep Dark (charcoal ink)
+  with the brand's own twist: hazard accents (oxblood + lime), film grain, hard
+  edges. Explicit brand colors, gate override recorded above.
+- Background character: grain-textured ink surfaces alternating with duotone-graded
+  full-bleed scene plates (the existing 4 plates, CSS-graded; credits are 0).
+- Typography character: industrial display grotesk (Archivo 900 uppercase) +
+  humanist sans (Hanken Grotesk) + Space Mono kickers.
 - Hero architecture: massive image-first, restrained text, bottom-left headline
   over the scene plate (image-as-canvas anchor; NOT left-text/right-image).
 - Section system: poster-stacked storytelling (journey chapters) with editorial
@@ -110,10 +133,10 @@ wraps to two lines, all plates stay center-cropped.
 - Scene plates ×4 (nano_banana_pro): chair, cut, color, house call. Hero visual +
   section plates + content imagery in one set.
 - Cover + OG: one nano_banana_pro generation, composed locally per app-cover.md.
-- Logo/monogram + favicon: bespoke inline SVG "MK" ticket monogram, rasterized
-  locally (no credit).
-- Icon set: single-weight inline SVG stroke icons (scissors, comb, bowl, key,
-  pin, clock, phone, envelope), one stroke style, void ink (no credit).
+- Icon set: REVISED — Lucide stroke icons (the design system's adopted set),
+  inlined as SVG path data (no CDN script, CSP-safe). Replaces the hand-drawn set.
+- Logo/monogram + favicon: bespoke "MK" mark restyled to the system (oxblood
+  rounded square, cream letterforms, lime utility notch), rasterized locally.
 - Video loop / GLB: none — credit exhaustion, recorded above.
 
 ## CTA inventory (bespoke chrome, one label per intent)
