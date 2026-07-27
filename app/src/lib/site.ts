@@ -116,20 +116,8 @@ export const policies = [
     body: "The calendar opens one month at a time, first come first serve. On the 1st of each month, the next full month becomes available.",
   },
   {
-    title: "Advance notice",
-    body: "Haircuts book 2 days out. New-client color consults book 3 days out, existing-client color 1 week out. Color takes prep. Need it sooner? Send an emergency request below.",
-  },
-  {
     title: "24-hour cancellation",
     body: "Need to cancel or reschedule? Give me 24 hours notice unless it is an actual emergency. Just talk to me. I am reasonable, but my time is how I pay rent.",
-  },
-  {
-    title: "No-call no-show gets charged",
-    body: "Miss a confirmed appointment without timely notice and you may be charged up to the full quoted or estimated amount, invoiced if there is no card on file. Fairness goes both ways.",
-  },
-  {
-    title: "2-hour verification",
-    body: "You will get a text or email 2 hours before your appointment to confirm. If I do not hear back, I may release the slot.",
   },
   {
     title: "Pricing and payment",

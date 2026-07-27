@@ -51,7 +51,7 @@ improve and make multipage website, not a 1 page." So:
     Cal.com embed as the fallback path ("Straight to the calendar.").
   - `/about`: the artist, the quiet chair (Silent Cuts, AuDHD first-time),
     house calls, Rudy's Fremont.
-  - `/policies`: the 7 policies + emergency request, then hours and contact.
+  - `/policies`: the 4 policies + emergency request, then hours and contact.
 - Shared chrome on every page via __root: fixed nav (brand + Services/About/
   Policies + reading-mode toggle + Book-a-cut ticket CTA), footer. Mobile nav
   drops to a second thumb-reachable row under the bar; active link gets the

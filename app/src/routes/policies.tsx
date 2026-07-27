@@ -9,7 +9,7 @@ export const Route = createFileRoute("/policies")({
       {
         name: "description",
         content:
-          "The fine print, spelled out: booking lead times, the 24-hour cancel rule, no-show charge, plus hours and how to reach MyKey.",
+          "The fine print, spelled out: the 24-hour cancel rule, pricing, house-call basics, plus hours and how to reach MyKey.",
       },
       { name: "theme-color", content: "#0B0B0F" },
     ],

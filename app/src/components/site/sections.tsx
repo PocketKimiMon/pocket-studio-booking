@@ -363,8 +363,9 @@ export function Policies({ level = "h2" }: { level?: Level }) {
           <p className="mk-kicker">{"// the fine print"}</p>
           <H className="mk-h2">So nobody gets surprised.</H>
           <p className="mk-tldr">
-            <strong>TL;DR</strong> Book ahead, cancel 24 hours out, and answer
-            the confirmation text. Everything below is just that, spelled out.
+            <strong>TL;DR</strong> The calendar opens a month at a time,
+            cancel 24 hours out, and have a workable spot ready for house
+            calls. Everything below is just that, spelled out.
           </p>
         </div>
         <div className="mk-policy-grid">
@@ -472,8 +473,8 @@ export function BookingCalendar() {
           <div>
             <ContactRows />
             <p className="mk-book-fine">
-              By booking you agree to the 24-hour cancel rule, the no-show
-              charge, and SMS or email reminders. Booking runs on Cal.com.
+              By booking you agree to the 24-hour cancel rule. Booking runs
+              on Cal.com.
             </p>
           </div>
           <div className="mk-cal-frame">
