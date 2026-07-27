@@ -161,13 +161,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" style={{ colorScheme: "light" }}>
-      {/* MyKey Booking is a light (bone) independent brand site: no dark pin,
-          no theme controller. The booking brand owns the whole page. */}
+    <html lang="en" data-reading-mode="dyslexic" style={{ colorScheme: "dark" }}>
+      {/* PocketStudio design system: ink canvas, permanently dark. The
+          data-reading-mode attribute ships ON by default; the inline bootstrap
+          below removes it before paint only for users who opted out (persisted
+          in localStorage). Reading-mode state lives on <html>, never in React
+          render, so SSR stays safe. */}
       <head>
+        {/* Reading-mode bootstrap: runs before first paint. Default is ON;
+            only an explicit 'off' preference removes the attribute. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('ps-reading-mode')==='off'){document.documentElement.removeAttribute('data-reading-mode')}}catch(e){}",
+          }}
+        />
         <HeadContent />
       </head>
-      <body style={{ margin: 0, background: "#F3ECDE", color: "#120E17" }}>
+      <body style={{ margin: 0, background: "#0B0B0F", color: "#F4EFE6" }}>
         {children}
         <Scripts />
       </body>

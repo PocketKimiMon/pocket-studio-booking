@@ -1,14 +1,18 @@
 import { contact, hours, policies, scenes, services, whyDirect } from "../../lib/site";
 import {
   IconArrow,
+  IconCalendar,
   IconCheck,
   IconKey,
   IconMail,
   IconPhone,
   IconPin,
+  IconPlus,
   IconScissors,
+  IconZap,
 } from "./icons";
 import { MkMonogram } from "./logo";
+import { ReadingModeToggle } from "./reading-mode-toggle";
 
 /* ---------- nav ---------- */
 
@@ -31,14 +35,14 @@ export function Nav() {
             Policies
           </a>
         </nav>
+        <ReadingModeToggle compact />
         <a
           className="mk-ticket-cta"
           href={contact.calUrl}
           target="_blank"
           rel="noreferrer"
         >
-          <IconScissors size={15} />
-          <span className="mk-ticket-perf" aria-hidden="true" />
+          <span className="mk-notch" aria-hidden="true" />
           Book a cut
         </a>
       </div>
@@ -60,14 +64,15 @@ export function Hero() {
           data-scrub
         />
       </div>
+      <p className="mk-waypoint">{scenes.chair.stop}</p>
       <div className="mk-wrap mk-hero-content">
-        <p className="mk-hero-stop">{scenes.chair.stop} · pocket studio, seattle</p>
         <h1 className="mk-hero-title" data-split>
-          Your chair is ready.
+          Your <span className="mk-em">chair</span> is ready.
         </h1>
         <p className="mk-hero-sub">
-          Cuts and color direct with MyKey. At the chair in Fremont, or at your
-          door anywhere within 30 miles of Seattle. No front desk, no phone tag.
+          Cuts and color, booked direct with MyKey. The chair in Fremont, or
+          your own place within 30 miles of Seattle. No front desk. No phone
+          tag.
         </p>
         <div className="mk-hero-ctas">
           <a
@@ -120,10 +125,12 @@ export function Services() {
     <section className="mk-section" id="services">
       <div className="mk-wrap">
         <div className="mk-section-head">
+          <p className="mk-kicker">{"// the menu"}</p>
           <h2 className="mk-h2">Pick a service.</h2>
-          <p className="mk-section-sub">
-            One menu for the chair and the house call, same prices either way.
-            Every quote is confirmed before anything touches your head.
+          <p className="mk-tldr">
+            <strong>TL;DR</strong> Five services, one menu for the chair and
+            the house call. Prices are quoted before anything touches your
+            head.
           </p>
         </div>
         <div className="mk-services">
@@ -141,7 +148,7 @@ export function Services() {
                 </span>
                 <span className="mk-service-price">{s.price}</span>
                 <span className="mk-service-plus" aria-hidden="true">
-                  +
+                  <IconPlus size={18} />
                 </span>
               </button>
               <div className="mk-service-detail">
@@ -156,7 +163,7 @@ export function Services() {
                       rel="noreferrer"
                     >
                       Book a cut
-                      <IconArrow size={13} />
+                      <IconCalendar size={15} />
                     </a>
                   </div>
                 </div>
@@ -181,21 +188,20 @@ export function About() {
     <section className="mk-section" id="about">
       <div className="mk-wrap mk-about-rail">
         <div className="mk-section-head">
-          <p className="mk-eyebrow">About the artist</p>
+          <p className="mk-kicker">{"// about the artist"}</p>
           <h2 className="mk-h2">The human behind the chair.</h2>
         </div>
         <div className="mk-about-grid">
           <div className="mk-about-body">
             <p>
-              I am MyKey, a Seattle hair artist taking clients directly. I cut
-              and color all textures, but I especially love the transformations:
+              I am MyKey, a Seattle hair artist taking clients direct. I cut
+              and color all textures, but the transformations are my favorite:
               the grow-out rescue, the I-need-a-change moment, the color
               correction that takes six hours and a lot of trust.
             </p>
             <p>
               My chair is a low-judgment zone. Come with reference pics, come
-              with bedhead, come with a vague idea and a willingness to talk it
-              through.
+              with bedhead, come with a vague idea and we will talk it through.
             </p>
             <ul className="mk-about-facts">
               <li>pronouns: they/them</li>
@@ -206,16 +212,16 @@ export function About() {
             <ul className="mk-why-list">
               {whyDirect.map((w) => (
                 <li key={w}>
-                  <IconCheck size={15} />
+                  <IconCheck size={16} />
                   {w}
                 </li>
               ))}
             </ul>
             <p className="mk-quiet-note">
-              <strong>The quiet chair.</strong> Silent Cuts and AuDHD first-time
-              appointments are always available: same cuts, paced for you, zero
-              small talk required. Mention it in the booking notes and I will
-              handle the rest.
+              <strong>The quiet chair.</strong> Silent Cuts and AuDHD
+              first-time appointments are always on the menu: same cuts, paced
+              for you, zero small talk required. Say so in the booking notes
+              and I handle the rest.
             </p>
           </div>
           <figure className="mk-crop-frame">
@@ -237,8 +243,12 @@ export function Policies() {
     <section className="mk-section" id="policies">
       <div className="mk-wrap">
         <div className="mk-section-head">
-          <p className="mk-eyebrow">The fine print</p>
+          <p className="mk-kicker">{"// the fine print"}</p>
           <h2 className="mk-h2">So nobody gets surprised.</h2>
+          <p className="mk-tldr">
+            <strong>TL;DR</strong> Book ahead, cancel 24 hours out, and answer
+            the confirmation text. Everything below is just that, spelled out.
+          </p>
         </div>
         <div className="mk-policy-grid">
           {policies.map((p, i) => (
@@ -258,7 +268,7 @@ export function Policies() {
           href={`mailto:${contact.email}?subject=Emergency%20booking%20request&body=Hi%20MyKey%2C%20I%20need%20an%20appointment%20sooner%20than%20the%20calendar%20allows.%0A%0AName%3A%0APhone%3A%0AWhat%20I%20need%3A%0AWhen%20I%20need%20it%3A`}
         >
           Need it sooner? Send an emergency request
-          <IconArrow size={15} />
+          <IconZap size={15} />
         </a>
       </div>
     </section>
@@ -273,9 +283,10 @@ export function Book() {
       <div className="mk-wrap">
         <div className="mk-section-head">
           <h2 className="mk-h2">Book it.</h2>
-          <p className="mk-section-sub">
-            Availability is live on the calendar: real time, instant
-            confirmation. Chair appointments and house calls both book here.
+          <p className="mk-tldr">
+            <strong>TL;DR</strong> The calendar below is live and confirms
+            instantly. Chair appointments and house calls book in the same
+            place.
           </p>
         </div>
         <div className="mk-book-grid">
@@ -350,6 +361,7 @@ export function Footer() {
             <a href={contact.calUrl} target="_blank" rel="noreferrer">
               Book a cut
             </a>
+            <ReadingModeToggle />
           </div>
         </div>
         <div className="mk-footer-legal">
