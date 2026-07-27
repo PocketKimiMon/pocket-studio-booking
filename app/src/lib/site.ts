@@ -12,7 +12,6 @@ export const contact = {
   email: "mykeypocket@icloud.com",
   location: "Seattle, WA",
   calUrl: "https://cal.com/maneautoimation/",
-  calEmbed: "https://cal.com/maneautoimation/?layout=month_view",
 } as const;
 
 export const hours = [
