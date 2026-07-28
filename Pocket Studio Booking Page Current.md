@@ -43,6 +43,7 @@ All the visible text on index.html, section by section. Edit here, then tell me 
 - `i worked the salon floor for years, most recently at Rudy's, and i loved the people and hated the overhead. Pocket Studio is what happened when i decided clients should pay for the actual work, not for someone else's rent.`
 - `i cut and color all textures, but i especially love the transformations: the grow-out rescue, the "i need a change" moment, the color correction that takes six hours and a lot of trust.`
 - `my chair is a low-judgment zone. come with reference pics, come with bedhead, come with a vague idea and a willingness to talk it through.`
+- `expect real conversation, honest recommendations, tea if you're around long enough, and a cut that fits how you actually live — not how your stylist wants to instagram it.`
 - Contact line: `pronouns: they/them · seattle, wa · 425-918-2029 · mykeypocket@icloud.com`
 
 ### "why book direct?" card
