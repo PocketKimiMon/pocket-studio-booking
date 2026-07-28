@@ -1,0 +1,37 @@
+<!-- @dsCard group="Components" subtitle="Loading & empty states" width="700" height="250" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .panel { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:16px; }
+  .sk { background:linear-gradient(90deg,var(--ink-700) 25%,var(--ink-600) 37%,var(--ink-700) 63%);
+    background-size:400% 100%; animation:sh 1.4s ease infinite; border-radius:6px; }
+  @keyframes sh { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+  .empty { text-align:center; }
+  .empty .ic { width:44px; height:44px; margin:2px auto 10px; color:var(--steel-bright); }
+  .empty h4 { font-family:var(--font-sans); font-weight:700; font-size:15px; color:var(--fg1); margin-bottom:4px; }
+  .empty p { font-size:13px; }
+  .btn { margin-top:12px; min-height:40px; display:inline-flex; align-items:center; padding:0 16px; border-radius:999px;
+    background:var(--oxblood); color:var(--on-neon); font-family:var(--font-sans); font-weight:700; font-size:13px; border:none; }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--cyan)">Loading &amp; empty states · skeletons, then meaning</div>
+    <div class="grid">
+      <div class="panel">
+        <div class="row" style="gap:10px"><div class="sk" style="width:40px;height:40px;border-radius:10px"></div>
+          <div class="col" style="gap:7px;flex:1"><div class="sk" style="width:60%;height:12px"></div><div class="sk" style="width:85%;height:10px"></div></div></div>
+        <div class="sk" style="width:100%;height:10px;margin-top:14px"></div>
+        <div class="sk" style="width:70%;height:10px;margin-top:8px"></div>
+      </div>
+      <div class="panel empty">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><path d="M5.6 5.6l2.1 2.1"/><path d="M3 12h3"/><circle cx="12" cy="14" r="6"/><path d="M12 14l3-2"/></svg>
+        <h4>Nothing here yet — and that's allowed.</h4>
+        <p>Spin up your first agent when you're ready.</p>
+        <button class="btn">Make one</button>
+      </div>
+    </div>
+  </div>
+</body></html>

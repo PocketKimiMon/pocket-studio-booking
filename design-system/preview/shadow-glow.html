@@ -1,0 +1,27 @@
+<!-- @dsCard group="Spacing" subtitle="Elevation & neon glow" width="700" height="240" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; padding:6px 4px 4px; }
+  .box { height:56px; border-radius:12px; background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:10px; color:var(--fg2); }
+  .nm { font-family:var(--font-mono); font-size:10px; color:var(--fg3); margin-top:9px; display:block; text-align:center; }
+</style>
+</head><body>
+  <div class="col" style="gap:8px">
+    <div class="mono-cap" style="color:var(--cyan)">Elevation · shadow on ink · glow = hard edge, minimal bloom</div>
+    <div class="grid">
+      <div><div class="box" style="box-shadow:var(--shadow-sm)">sm</div><span class="nm">shadow-sm</span></div>
+      <div><div class="box" style="box-shadow:var(--shadow-md)">md</div><span class="nm">shadow-md</span></div>
+      <div><div class="box" style="box-shadow:var(--shadow-lg)">lg</div><span class="nm">shadow-lg</span></div>
+      <div><div class="box" style="box-shadow:var(--shadow-xl)">xl</div><span class="nm">shadow-xl</span></div>
+      <div><div class="box" style="box-shadow:var(--glow-oxblood);color:var(--oxblood-bright)">glow</div><span class="nm" style="color:var(--oxblood)">glow-magenta</span></div>
+      <div><div class="box" style="box-shadow:var(--glow-cyan);color:var(--cyan-bright)">glow</div><span class="nm" style="color:var(--cyan)">glow-cyan</span></div>
+      <div><div class="box" style="box-shadow:var(--glow-lime);color:var(--lime)">glow</div><span class="nm" style="color:var(--lime)">glow-lime</span></div>
+      <div><div class="box" style="box-shadow:var(--glow-amber);color:var(--amber-bright)">glow</div><span class="nm" style="color:var(--amber)">glow-amber</span></div>
+    </div>
+  </div>
+</body></html>

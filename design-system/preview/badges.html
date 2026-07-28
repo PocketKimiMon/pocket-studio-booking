@@ -1,0 +1,29 @@
+<!-- @dsCard group="Components" subtitle="Badges & tags" width="700" height="200" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .badge { display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 11px; border-radius:999px;
+    font-family:var(--font-mono); font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }
+  .dot { width:7px; height:7px; border-radius:50%; }
+  .tag { display:inline-flex; align-items:center; height:30px; padding:0 13px; border-radius:8px;
+    font-family:var(--font-sans); font-weight:600; font-size:13px; background:var(--surface-2); color:var(--fg1); border:1px solid var(--border); }
+</style>
+</head><body>
+  <div class="col" style="gap:14px">
+    <div class="mono-cap" style="color:var(--amber)">Badges &amp; tags · status uses semantic neon + a dot</div>
+    <div class="row" style="gap:10px;flex-wrap:wrap">
+      <span class="badge" style="background:color-mix(in oklab,var(--lime) 18%,transparent);color:var(--lime)"><span class="dot" style="background:var(--lime)"></span>Running</span>
+      <span class="badge" style="background:color-mix(in oklab,var(--amber) 18%,transparent);color:var(--amber)"><span class="dot" style="background:var(--amber)"></span>Paused</span>
+      <span class="badge" style="background:color-mix(in oklab,var(--coral) 18%,transparent);color:var(--coral-bright)"><span class="dot" style="background:var(--coral)"></span>Failed</span>
+      <span class="badge" style="background:color-mix(in oklab,var(--cyan) 18%,transparent);color:var(--cyan)"><span class="dot" style="background:var(--cyan)"></span>Idle</span>
+      <span class="badge" style="background:var(--oxblood);color:var(--on-neon)">New</span>
+    </div>
+    <div class="row" style="gap:8px;flex-wrap:wrap">
+      <span class="tag">#neurospicy</span>
+      <span class="tag">#chaos-to-product</span>
+      <span class="tag">#built-for-outsiders</span>
+    </div>
+  </div>
+</body></html>

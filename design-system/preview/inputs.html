@@ -1,0 +1,28 @@
+<!-- @dsCard group="Components" subtitle="Form inputs" width="700" height="250" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .field { display:flex; flex-direction:column; gap:6px; }
+  label { font-family:var(--font-sans); font-weight:600; font-size:13px; color:var(--fg1); }
+  .hint { font-family:var(--font-sans); font-size:12px; color:var(--fg3); }
+  .input { min-height:44px; background:var(--surface-2); border:1px solid var(--border);
+    border-radius:var(--radius-md); padding:0 14px; color:var(--fg1); font-family:var(--font-sans); font-size:15px; }
+  .input::placeholder { color:var(--fg3); }
+  .input-focus { border-color:transparent; box-shadow:var(--focus-ring); }
+  .input-error { border-color:var(--coral); }
+  .err { font-family:var(--font-sans); font-size:12px; color:var(--coral-bright); }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+</style>
+</head><body>
+  <div class="col" style="gap:12px">
+    <div class="mono-cap" style="color:var(--cyan)">Inputs · visible focus · plain labels + helper text</div>
+    <div class="grid">
+      <div class="field"><label>What's the agent called?</label><input class="input" placeholder="Inbox triage bot"><span class="hint">You can rename it anytime.</span></div>
+      <div class="field"><label>Run every</label><input class="input input-focus" value="15 minutes"><span class="hint">Focused state shown.</span></div>
+      <div class="field"><label>Webhook URL</label><input class="input input-error" value="not-a-url"><span class="err">That's not a URL — not your fault, try again.</span></div>
+      <div class="field"><label>API key</label><input class="input" type="password" value="••••••••••" disabled><span class="hint">Locked while a run is active.</span></div>
+    </div>
+  </div>
+</body></html>

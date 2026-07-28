@@ -1,0 +1,25 @@
+<!-- @dsCard group="Spacing" subtitle="Spacing scale — 4px base" width="700" height="300" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .row2 { display:flex; align-items:center; gap:12px; }
+  .bar { height:16px; background:linear-gradient(90deg,var(--oxblood),var(--violet)); border-radius:3px; }
+  .tok { font-family:var(--font-mono); font-size:11px; color:var(--fg3); width:120px; flex:none; }
+  .px { font-family:var(--font-mono); font-size:11px; color:var(--fg2); }
+</style>
+</head><body>
+  <div class="col" style="gap:9px">
+    <div class="mono-cap" style="color:var(--lime)">Spacing · 4px base · whitespace is content</div>
+    <div class="row2"><span class="tok">space-1</span><div class="bar" style="width:4px"></div><span class="px">4</span></div>
+    <div class="row2"><span class="tok">space-2</span><div class="bar" style="width:8px"></div><span class="px">8</span></div>
+    <div class="row2"><span class="tok">space-3</span><div class="bar" style="width:12px"></div><span class="px">12</span></div>
+    <div class="row2"><span class="tok">space-4</span><div class="bar" style="width:16px"></div><span class="px">16</span></div>
+    <div class="row2"><span class="tok">space-5</span><div class="bar" style="width:24px"></div><span class="px">24</span></div>
+    <div class="row2"><span class="tok">space-6</span><div class="bar" style="width:32px"></div><span class="px">32</span></div>
+    <div class="row2"><span class="tok">space-7</span><div class="bar" style="width:48px"></div><span class="px">48</span></div>
+    <div class="row2"><span class="tok">space-8</span><div class="bar" style="width:64px"></div><span class="px">64</span></div>
+    <div class="row2"><span class="tok">touch-min</span><div class="bar" style="width:44px;background:var(--cyan)"></div><span class="px">44 · a11y floor</span></div>
+  </div>
+</body></html>

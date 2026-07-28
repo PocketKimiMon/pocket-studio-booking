@@ -1,0 +1,31 @@
+/* Shared layout for Design System preview cards.
+   Each card links ../colors_and_type.css then this file. */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--ink-900);
+  color: var(--fg1);
+  font-family: var(--font-sans);
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+/* grain overlay */
+body::after {
+  content: "";
+  position: fixed; inset: 0;
+  background-image: var(--grain);
+  background-size: 180px 180px;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+.card-grid { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; }
+.row { display: flex; align-items: center; gap: 12px; }
+.col { display: flex; flex-direction: column; gap: 10px; }
+.muted { color: var(--fg3); }
+.mono-cap {
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.swatch { border-radius: 10px; border: 1px solid var(--hairline); }

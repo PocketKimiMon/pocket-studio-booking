@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" subtitle="Mobile bottom-tab nav" width="700" height="230" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .bar { display:flex; gap:4px; background:rgba(12,10,18,0.8); backdrop-filter:blur(12px);
+    border:1px solid var(--border-subtle); border-radius:var(--radius-xl); padding:8px; max-width:380px; }
+  .tab { flex:1; min-height:54px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+    border-radius:var(--radius-md); color:var(--fg3); font-family:var(--font-sans); font-weight:600; font-size:11px;
+    background:transparent; border:none; cursor:pointer; }
+  .tab svg { width:24px; height:24px; }
+  .tab.active { color:var(--oxblood-bright); background:color-mix(in oklab,var(--oxblood) 14%,transparent); }
+</style>
+</head><body>
+  <div class="col" style="gap:12px">
+    <div class="mono-cap" style="color:var(--oxblood)">Bottom-tab nav · mobile-first · 3–5 destinations · 44px+ targets</div>
+    <nav class="bar">
+      <button class="tab active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 3l9 6.5"/><path d="M5 10v10h14V10"/></svg>Home</button>
+      <button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Agents</button>
+      <button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>Runs</button>
+      <button class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>You</button>
+    </nav>
+    <div class="small muted" style="font-size:12px;font-family:var(--font-sans)">Translucent ink + blur floats over content. Active tab gets a neon tint. Lucide icons (shadcn default).</div>
+  </div>
+</body></html>

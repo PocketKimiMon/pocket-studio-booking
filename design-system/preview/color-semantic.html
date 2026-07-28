@@ -1,0 +1,27 @@
+<!-- @dsCard group="Colors" subtitle="Semantic color roles" width="700" height="220" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .tok { display:flex; flex-direction:column; gap:6px; }
+  .chip { height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:11px; font-weight:700; }
+  .nm { font-family:var(--font-mono); font-size:10px; color:var(--fg3); }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--cyan)">Semantic roles · default ink theme</div>
+    <div class="grid">
+      <div class="tok"><div class="chip" style="background:var(--primary);color:var(--on-primary)">CTA</div><span class="nm">--primary</span></div>
+      <div class="tok"><div class="chip" style="background:var(--success);color:var(--on-neon)">OK</div><span class="nm">--success</span></div>
+      <div class="tok"><div class="chip" style="background:var(--warning);color:var(--on-neon)">WARN</div><span class="nm">--warning</span></div>
+      <div class="tok"><div class="chip" style="background:var(--danger);color:var(--on-neon)">ERROR</div><span class="nm">--danger</span></div>
+      <div class="tok"><div class="chip" style="background:var(--surface);color:var(--fg1);border:1px solid var(--border)">surface</div><span class="nm">--surface</span></div>
+      <div class="tok"><div class="chip" style="background:var(--bg);color:var(--fg2);border:1px solid var(--border)">bg</div><span class="nm">--bg</span></div>
+      <div class="tok"><div class="chip" style="background:transparent;color:var(--link);border:1px solid var(--border)">link</div><span class="nm">--link</span></div>
+      <div class="tok"><div class="chip" style="background:transparent;color:var(--focus);box-shadow:var(--focus-ring)">focus</div><span class="nm">--focus</span></div>
+    </div>
+  </div>
+</body></html>

@@ -1,0 +1,30 @@
+<!-- @dsCard group="Colors" subtitle="Tactical accents — grounded darks + hazard signals" width="700" height="250" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .stack { display:flex; flex-direction:column; }
+  .chip { height:30px; }
+  .chip:first-child { border-radius:8px 8px 0 0; }
+  .chip:last-child { border-radius:0 0 8px 8px; }
+  .col8 { display:grid; grid-template-columns:repeat(8,1fr); gap:8px; }
+  .nm { font-family:var(--font-mono); font-size:10px; color:var(--fg2); margin-top:5px; display:block; }
+  .role { font-family:var(--font-sans); font-size:10px; color:var(--fg3); }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--oxblood-bright)">Tactical accents · grounded darks lead, hazard brights signal</div>
+    <div class="col8">
+      <div><div class="stack"><div class="chip" style="background:var(--oxblood-bright)"></div><div class="chip" style="background:var(--oxblood)"></div><div class="chip" style="background:var(--oxblood-deep)"></div></div><span class="nm" style="color:var(--oxblood-bright)">oxblood</span><span class="role">LEAD</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--rust-bright)"></div><div class="chip" style="background:var(--rust)"></div><div class="chip" style="background:var(--rust-deep)"></div></div><span class="nm" style="color:var(--rust-bright)">rust</span><span class="role">warm-hard</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--steel-bright)"></div><div class="chip" style="background:var(--steel)"></div><div class="chip" style="background:var(--steel-deep)"></div></div><span class="nm" style="color:var(--steel-bright)">steel</span><span class="role">tactical</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--lime-bright)"></div><div class="chip" style="background:var(--lime)"></div><div class="chip" style="background:var(--lime-deep)"></div></div><span class="nm" style="color:var(--lime)">lime</span><span class="role">hazard / go</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--cyan-bright)"></div><div class="chip" style="background:var(--cyan)"></div><div class="chip" style="background:var(--cyan-deep)"></div></div><span class="nm" style="color:var(--cyan)">cyan</span><span class="role">signal / focus</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--amber-bright)"></div><div class="chip" style="background:var(--amber)"></div><div class="chip" style="background:var(--amber-deep)"></div></div><span class="nm" style="color:var(--amber)">amber</span><span class="role">ember / warn</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--coral-bright)"></div><div class="chip" style="background:var(--coral)"></div><div class="chip" style="background:var(--coral-deep)"></div></div><span class="nm" style="color:var(--coral-bright)">red</span><span class="role">danger</span></div>
+      <div><div class="stack"><div class="chip" style="background:var(--magenta-bright)"></div><div class="chip" style="background:var(--magenta)"></div><div class="chip" style="background:var(--magenta-deep)"></div></div><span class="nm" style="color:var(--magenta)">magenta</span><span class="role">minor only</span></div>
+    </div>
+    <div class="small muted" style="font-size:12px;font-family:var(--font-sans)">Oxblood leads the studio. One accent leads per surface; magenta never leads. Dark <span class="mono" style="color:var(--fg1)">--on-neon</span> text on bright fills.</div>
+  </div>
+</body></html>

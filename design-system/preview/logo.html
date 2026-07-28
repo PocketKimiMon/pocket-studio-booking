@@ -1,0 +1,30 @@
+<!-- @dsCard group="Brand" subtitle="Wordmark + monogram — blocky, hard-edged" width="700" height="250" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .lock { display:inline-flex; align-items:center; gap:12px; }
+  .mark { width:46px; height:46px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    background:var(--oxblood); color:var(--fg1);
+    font-family:var(--font-display); font-weight:900; font-size:26px; position:relative; }
+  .mark::after { content:""; position:absolute; bottom:6px; right:6px; width:7px; height:7px; background:var(--lime); }
+  .wm { font-family:var(--font-display); font-weight:800; font-size:28px; letter-spacing:-0.01em; text-transform:uppercase; color:var(--fg1); }
+  .wm .s { color:var(--oxblood-bright); }
+  .mono-lock { font-family:var(--font-mono); font-weight:700; font-size:15px; letter-spacing:0.04em; color:var(--fg2); }
+  .mono-lock .sl { color:var(--lime); }
+</style>
+</head><body>
+  <div class="col" style="gap:16px">
+    <div class="mono-cap" style="color:var(--oxblood-bright)">Logo · blocky monogram + uppercase wordmark</div>
+    <div class="row" style="gap:22px;flex-wrap:wrap;align-items:center">
+      <div class="lock"><div class="mark">P</div><span class="wm">Pocket<span class="s">Studio</span></span></div>
+    </div>
+    <div class="row" style="gap:26px;flex-wrap:wrap;align-items:center">
+      <div class="mark" style="width:40px;height:40px;font-size:22px">P</div>
+      <span class="mono-lock"><span class="sl">//</span> POCKETSTUDIO</span>
+      <span class="wm" style="font-size:20px">Pocket<span class="s">Studio</span></span>
+    </div>
+    <div class="small muted" style="font-size:12px;font-family:var(--font-sans)">Archivo Black monogram on oxblood, square-ish radius, lime utility notch. No sparkles, no glow. Mono lockup for tight/utility spots.</div>
+  </div>
+</body></html>
