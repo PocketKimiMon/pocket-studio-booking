@@ -83,7 +83,7 @@ Tone: direct, irreverent, witchy undercurrent, neurodivergent-aware, zero corpor
 - Section note: `so nobody gets surprised`
 
 1. **one month at a time** — `calendar opens on the 1st for the full month ahead. first come, first serve — i don't hold slots.`
-2. **advance notice** — `haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out — color takes prep and i refuse to wing it. need it sooner? send an emergency request.`
+2. **advance notice** — `haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out — color takes prep and i refuse to wing it. need it sooner? text 425-918-2029.`
 3. **24-hour cancellation** — `cancel or reschedule? 24 hours notice. emergencies are real and i'm reasonable — but my time is literally how i pay rent, so please don't ghost me.`
 4. **no-call-no-show = charged** — `miss a confirmed appointment with no heads-up and you'll be charged up to the full service amount. i'll invoice you if there's no card on file. fairness goes both ways — full terms on the terms page.`
 5. **2-hour confirmation** — `you'll get a text or email 2 hours before your appointment. if i don't hear back, i may give your slot to someone else. just a quick "yep" is all i need.`
@@ -96,7 +96,6 @@ Tone: direct, irreverent, witchy undercurrent, neurodivergent-aware, zero corpor
 - Hours note: `thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm`
 - Lede: `answer a couple quick questions and i'll point you to the right slot — no guesswork, no booking the wrong thing and having to start over.`
 - Button: `let's book it →`
-- Emergency button: `🚨 need it sooner? emergency request`
 - Fine print 1: `calendar is live — real time, instant confirmation. house calls only right now.`
 - Fine print 2: `by booking you agree to the terms of service and privacy policy, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.`
 
@@ -123,6 +122,8 @@ Tone: direct, irreverent, witchy undercurrent, neurodivergent-aware, zero corpor
 - All booked: `that's the whole menu` / `you've lined up everything i offer` / `want something custom? text 425-918-2029 and we'll figure it out.`
 
 ## Emergency request modal
+**HIDDEN for now (2026-07-28).** All entry points removed (CTA button commented out in index.html, policy link replaced with "text 425-918-2029", quiz link removed). Modal markup + JS still in the file, dormant. To re-enable: uncomment the CTA button and re-add the policy/quiz triggers.
+
 - Title: `🚨 emergency request`
 - Lede: `need it sooner than the calendar allows?`
 - Hint: `tomorrow, this weekend, whenever — tell me and i'll try to make it work`

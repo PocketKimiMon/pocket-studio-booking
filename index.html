@@ -652,7 +652,7 @@
       <li class="policy">
         <span class="num">02</span>
         <h4>advance notice</h4>
-        <p>haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out — color takes prep and i refuse to wing it. need it sooner? <button type="button" class="linklike" data-emergency>send an emergency request</button>.</p>
+        <p>haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out — color takes prep and i refuse to wing it. need it sooner? text <a href="tel:+14259182029">425-918-2029</a>.</p>
       </li>
       <li class="policy">
         <span class="num">03</span>
@@ -754,8 +754,10 @@
     <div class="book-cta">
       <p class="book-cta-lede">answer a couple quick questions and i’ll point you to the right slot — no guesswork, no booking the wrong thing and having to start over.</p>
       <button type="button" id="open-quiz" class="book-cta-btn">let’s book it →</button>
+      <!-- emergency request hidden for now — re-enable by uncommenting
       <br>
       <button type="button" class="emg-cta" data-emergency>🚨 need it sooner? emergency request</button>
+      -->
       <p class="fine readable">calendar is live — real time, instant confirmation. house calls only right now.</p>
       <p class="fine readable">by booking you agree to the <a href="terms.html">terms of service</a> and <a href="privacy.html">privacy policy</a>, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.</p>
     </div>
@@ -1030,7 +1032,6 @@
       '<p class="bp-hint">nice — you’re set up for</p>'+
       '<div class="bp-result"><div class="r-name">'+s.name+'</div><div class="r-meta">'+s.dur+' · house call · seattle</div><div class="r-meta">books '+s.noticeLabel+' out minimum · earliest: '+earliestDate(s.notice)+'</div></div>'+
       '<button type="button" class="bp-go" id="bp-go">book my appointment →</button>'+
-      '<button type="button" class="bp-emg-link" data-emergency>🚨 need it sooner? emergency request →</button>'+
       '<p class="bp-note">opens the live calendar to pick a day & time. by booking you accept the <a href="terms.html" target="_blank" rel="noopener">terms</a> & <a href="privacy.html" target="_blank" rel="noopener">privacy policy</a>. text <a href="tel:+14259182029">425-918-2029</a> if nothing works.</p>'+
       '<div class="bp-row"><button type="button" class="bp-back" data-back>← start over</button></div>'
     );
