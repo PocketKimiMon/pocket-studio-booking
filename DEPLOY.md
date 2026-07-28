@@ -15,7 +15,7 @@ Needs `gh auth login` on this Mac (no GitHub token/SSH key present).
 
 Then:
 ```bash
-cd ~/pocket-studio-booking
+cd ~/"Pocket Studio Booking Page Current"
 gh repo create pocket-studio-booking --public --source=. --remote=origin --push
 # enable Pages: Settings → Pages → Deploy from branch main /
 ```

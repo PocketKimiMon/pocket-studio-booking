@@ -22,7 +22,7 @@ This maps every promise on the booking site to the system or process that actual
 | **No-call-no-show = charged** | Requires collecting payment info up front (Stripe) and manually charging the card if someone ghosts. Cal.com can hold card details; the charge is manual. |
 | **House calls only** | Drive to the client's address from the booking form. |
 | **No travel fee currently** | Don't add a travel fee. If this changes, update the site text and possibly Cal.com pricing. |
-| **Spill the tea deal** | If someone books 2+ days out, actually give them the extra tips/product recs during the appointment. |
+| **Spill the tea deal** | The "tea" is gossip, not a drink or product tips. If someone books 2+ days out, spill the story of how Rudy's wrongfully fired MyKey during the appointment. |
 
 ## What still needs to be set up in Cal.com
 
