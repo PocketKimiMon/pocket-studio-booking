@@ -230,7 +230,7 @@ function Hero() {
               className="inline-block rounded-full border-2 px-3 py-1"
               style={{
                 borderColor: "var(--color-void)",
-                background: i % 2 === 0 ? "#fff" : "rgba(155,92,255,.12)",
+                background: i % 2 === 0 ? "#fff" : "rgba(95,240,200,.45)",
                 transform: `rotate(${i % 2 === 0 ? -1.5 : 1.5}deg)`,
               }}
             >
@@ -251,7 +251,7 @@ function Hero() {
       >
         <span
           className="absolute -top-4 -left-2 -rotate-6 text-2xl sm:text-3xl"
-          style={{ fontFamily: "var(--font-hand)", color: "var(--color-flush)" }}
+          style={{ fontFamily: "var(--font-hand)", color: "var(--color-violet-brand)" }}
         >
           spill the tea ~
         </span>
@@ -288,7 +288,7 @@ function Hero() {
         </div>
         <div
           className="rounded-xl border p-4 text-sm"
-          style={{ background: "rgba(155,92,255,.1)", borderColor: "var(--color-violet-brand)" }}
+          style={{ background: "rgba(95,240,200,.22)", borderColor: "var(--color-violet-brand)" }}
         >
           <strong className="font-bold" style={{ color: "var(--color-violet-brand)" }}>
             house calls only right now.

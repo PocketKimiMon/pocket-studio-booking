@@ -150,7 +150,7 @@ export function EmergencyModal() {
               <p
                 className="mt-4 rounded-lg border-2 p-3 text-sm"
                 style={{
-                  background: "rgba(255,90,95,.1)",
+                  background: "rgba(232,93,4,.12)",
                   borderColor: "var(--color-flush)",
                   color: "var(--color-flush)",
                 }}

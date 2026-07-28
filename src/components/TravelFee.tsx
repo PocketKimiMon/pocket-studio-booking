@@ -131,7 +131,7 @@ export function TravelFee() {
         <p
           className="mt-4 inline-block rounded-lg border-2 px-4 py-2.5 text-sm font-black"
           style={{
-            background: "rgba(255,90,95,.15)",
+            background: "rgba(232,93,4,.15)",
             borderColor: "var(--color-flush)",
             color: "var(--color-flush)",
           }}

@@ -6,7 +6,7 @@ export const Route = createFileRoute("/mobile")({
 });
 
 const styles = `
-:root{--bone:#F3ECDE;--void:#120E17;--lime:#8ACE00;--flush:#FF5A5F;--violet:#9B5CFF;--ash:#6F6878;--mist:#5A5460}
+:root{--bone:#F3ECDE;--void:#120E17;--lime:#FF6A00;--flush:#E85D04;--violet:#0FA3A3;--aqua:#5FF0C8;--ash:#6F6878;--mist:#5A5460}
 *{box-sizing:border-box}
 .ps{background:var(--bone);color:var(--void);font-family:'Inter',system-ui,sans-serif;font-weight:400;line-height:1.55;min-height:100vh;overflow-x:hidden}
 .ps a{color:var(--violet);text-decoration:none}
@@ -46,8 +46,8 @@ const styles = `
 /* notice bands */
 .ps-band{border-radius:12px;padding:16px 20px;margin:16px 0;font-size:15px}
 .ps-band b{font-weight:700}
-.ps-band.violet{border:1.5px solid rgba(155,92,255,.28);border-left:4px solid var(--violet);background:rgba(155,92,255,.08)}
-.ps-band.flush{border:1.5px solid rgba(255,90,95,.28);border-left:4px solid var(--flush);background:rgba(255,90,95,.07)}
+.ps-band.violet{border:1.5px solid rgba(15,163,163,.35);border-left:4px solid var(--violet);background:rgba(95,240,200,.22)}
+.ps-band.flush{border:1.5px solid rgba(232,93,4,.3);border-left:4px solid var(--flush);background:rgba(232,93,4,.07)}
 
 /* marquee */
 .ps-marquee{overflow:hidden;border-top:1.5px solid var(--void);border-bottom:1.5px solid var(--void);background:var(--void);color:var(--bone);margin:36px 0}
@@ -128,7 +128,7 @@ function Scissors() {
       <circle cx="14" cy="44" r="8" stroke="#120E17" strokeWidth="2.5" fill="#F3ECDE"/>
       <circle cx="46" cy="44" r="8" stroke="#120E17" strokeWidth="2.5" fill="#F3ECDE"/>
       <path d="M20 38 L52 8 M40 38 L8 8" stroke="#120E17" strokeWidth="2.5" strokeLinecap="round"/>
-      <circle cx="30" cy="30" r="2" fill="#8ACE00"/>
+      <circle cx="30" cy="30" r="2" fill="#FF6A00"/>
     </svg>
   );
 }
