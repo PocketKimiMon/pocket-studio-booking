@@ -14,6 +14,23 @@ These must stay in sync with the `data-book` attributes in `index.html`:
 | New-Client Color Consult | `hair-consultation` | 45 min | Slug is still `hair-consultation` because the event was renamed from "Hair Consultation" |
 | Existing-Client Color Appointment | `existing-client-color-appointment` | 3 hr (180 min) | Set to 3 hr; description notes complex sessions can run 3–5 hr |
 
+## Pending event types (referenced by the chat flow, must be created in Cal.com)
+
+These two are linked from the chat booking flow but don't exist yet (404 as of 2026-07-28). Create them in the Cal.com dashboard:
+
+| Service | Cal.com slug | Duration | Price |
+|---|---|---|---|
+| Taper/Fade Cut | `taper-fade-cut` | 45 min | $65 |
+| Curl Cut | `curl-cut` | 75 min | $120 |
+
+Apply the same settings as the other haircut event types:
+- Availability: Thu 11am–6pm, Fri 12pm–5pm, Sat–Sun 12pm–8pm, America/Los_Angeles
+- Minimum notice: 2 days
+- Buffer: 90 min before + 90 min after (travel time between house calls)
+- Intake questions: Address (required), Phone (required), Anything I should know? (optional)
+- Workflow: 2-hour verification SMS/email
+- Booking window: rolling 30 days
+
 ## Availability (apply to every event type)
 
 - **Thursday:** 11:00 AM – 6:00 PM
