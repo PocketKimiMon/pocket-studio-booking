@@ -39,6 +39,12 @@ function BookPage() {
     if (messages.length > GREETING.length) endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages]);
 
+  // Let the My Besti page pet react to booking progress.
+  useEffect(() => {
+    if (stage === "done") window.dispatchEvent(new CustomEvent("mybesti:review"));
+    else if (stage !== "start") window.dispatchEvent(new CustomEvent("mybesti:waiting"));
+  }, [stage]);
+
   type MsgIn = { from: "user" | "bot"; text: string } | { from: "bot"; card: Service };
   const push = (...msgs: MsgIn[]) =>
     setMessages((m) => [...m, ...msgs.map((msg) => ({ ...msg, id: nextId.current++ }) as Msg)]);
@@ -207,6 +213,7 @@ function ServiceCard({ service, onReset }: { service: Service; onReset: () => vo
         href={`${CAL_BASE}${service.slug}`}
         target="_blank"
         rel="noreferrer"
+        onClick={() => window.dispatchEvent(new CustomEvent("mybesti:celebrate"))}
         className="mt-4 block w-full px-4 py-3 text-center text-sm font-bold uppercase tracking-wider transition hover:-translate-y-0.5"
         style={{ background: "var(--color-lime)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)", fontFamily: "var(--font-display)" }}
       >

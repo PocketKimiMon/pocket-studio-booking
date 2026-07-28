@@ -1,5 +1,9 @@
 
-/* My Besti — scroll companion. Trails the scroll with a soft lag, hops sides.
+/* My Besti — free-roam page pet. Wanders the viewport, treats visible
+ * elements as platforms to walk on, jump onto, fall onto, or smash into;
+ * chases the cursor at a polite distance; can be hovered, clicked, dragged
+ * and thrown; talks via a speech bubble; reacts to booking events
+ * (mybesti:celebrate / mybesti:review / mybesti:waiting).
  * Self-contained: atlas + renderer inlined. Exposes window.mybestiScroll. */
 (function () {
   'use strict';
@@ -83,15 +87,11 @@
   host.id = 'mybesti-scroll';
   host.setAttribute('aria-hidden', 'true');
   Object.assign(host.style, {
-    position: 'fixed', zIndex: '2147483646', left: '18px', top: '12px',
-    width: '96px', height: '104px', pointerEvents: 'none',
-    filter: 'drop-shadow(0 3px 5px rgba(0,0,0,.42))'
+    position: 'fixed', zIndex: '2147483646', left: '0', top: '0',
+    width: '96px', height: '104px', cursor: 'pointer',
+    filter: 'drop-shadow(0 3px 5px rgba(0,0,0,.42))',
+    willChange: 'transform'
   });
-  var style = document.createElement('style');
-  style.textContent = '@keyframes mybestiHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}'
-    + '#mybesti-scroll{animation:mybestiHop 1.7s ease-in-out infinite}'
-    + '@media(prefers-reduced-motion:reduce){#mybesti-scroll{animation:none}}';
-  document.documentElement.appendChild(style);
   (document.body || document.documentElement).appendChild(host);
 
   // Slow run cycle (low fps) so the jog feels calm, not frantic.
@@ -101,33 +101,288 @@
   host.appendChild(pet.el);
   window.mybestiScroll = pet;
 
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // state: current (rendered) and target positions; we ease toward target.
-  var st = { top: 12, left: 18, tTop: 12, tLeft: 18, cur: 'idle' };
-
-  function recompute() {
-    var doc = document.documentElement;
-    var max = (doc.scrollHeight - window.innerHeight) || 1;
-    var p = Math.min(1, Math.max(0, window.scrollY / max));
-    st.tTop = 12 + p * (window.innerHeight - 132);
-    var side = p < 0.5 ? 0 : 1;
-    st.tLeft = side === 0 ? 18 : Math.max(18, window.innerWidth - 116);
+  // speech bubble (auto-hides)
+  var bubble = document.createElement('div');
+  Object.assign(bubble.style, {
+    position: 'absolute', left: '50%', bottom: '100%',
+    transform: 'translateX(-50%)', marginBottom: '4px',
+    background: 'rgba(255,255,255,.95)', color: '#111', borderRadius: '10px',
+    padding: '2px 8px', fontSize: '16px', lineHeight: '1.4', whiteSpace: 'nowrap',
+    opacity: '0', transition: 'opacity .18s', pointerEvents: 'none',
+    boxShadow: '0 2px 6px rgba(0,0,0,.3)'
+  });
+  host.appendChild(bubble);
+  var bubbleTimer = null;
+  function say(text, ms) {
+    bubble.textContent = text;
+    bubble.style.opacity = '1';
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(function () { bubble.style.opacity = '0'; }, ms || 1500);
   }
 
-  function setPet(s) { if (s !== st.cur) { st.cur = s; pet.setState(s); } }
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var EASE = reduce ? 0.25 : 0.06; // low = more lag/trail
+  /* Behavior engine — desktop-pet style free roam (Shimeji-like).
+   * Modes: wander (walk, jump gaps, mount obstacles) and follow (orbit the
+   * cursor, keeping out of the way). Reactions override motion briefly:
+   * petted, celebrate, review, waiting. */
+
+  var PW = 96, PH = 104;        // pet footprint (px)
+  var GRAV = 0.55, MAXFALL = 13;
+  var JUMP = -10.5;
+  var WALK = 0.35, MAXRUN = 2.6;
+  var ORBIT = 110;              // standoff distance from the cursor
+
+  var pos = { x: 24, y: window.innerHeight - PH };
+  var vel = { x: 0, y: 0 };
+  var onGround = true, facing = 1, cur = 'idle';
+  var targetX = null;
+  var actUntil = 0, boredAt = 0;
+  var platforms = [];
+  var mouse = { x: -9999, y: -9999, at: 0 };
+
+  function setPet(s) { if (s !== cur) { cur = s; pet.setState(s); } }
+  function react(s, ms) { actUntil = performance.now() + ms; setPet(s); }
+
+  // Weighted wander behaviors — bigger weight = more likely.
+  var BEHAVIORS = [['walk', 4], ['idle', 3], ['look', 2], ['nap', 1]];
+  function pickBehavior() {
+    var total = 0, i;
+    for (i = 0; i < BEHAVIORS.length; i++) total += BEHAVIORS[i][1];
+    var roll = Math.random() * total;
+    for (i = 0; i < BEHAVIORS.length; i++) { roll -= BEHAVIORS[i][1]; if (roll <= 0) return BEHAVIORS[i][0]; }
+    return 'idle';
+  }
+
+  function celebrate() {
+    react('waving', 2400);
+    say('🎉', 2400);
+    var hops = 0;
+    var iv = setInterval(function () {
+      if (++hops > 3) { clearInterval(iv); return; }
+      if (onGround && !reduce) { vel.y = JUMP * 0.75; onGround = false; setPet('jumping'); }
+    }, 520);
+  }
+  pet.celebrate = celebrate;
+
+  window.addEventListener('mybesti:celebrate', celebrate);
+  window.addEventListener('mybesti:review', function () { react('review', 3500); say('👀', 2000); });
+  window.addEventListener('mybesti:waiting', function () { react('waiting', 3500); say('⏳', 2000); });
+
+  // Drag & throw (Shimeji-style): grab the pet and it dangles at the cursor;
+  // release flings it with the drag velocity. A click without dragging pets it.
+  var drag = null;
+  host.addEventListener('pointerdown', function (e) {
+    if (host.setPointerCapture) { try { host.setPointerCapture(e.pointerId); } catch (err) {} }
+    drag = { x: e.clientX, y: e.clientY, t: performance.now(), vx: 0, vy: 0, dist: 0 };
+    host.style.cursor = 'grabbing';
+  });
+  host.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var n = performance.now();
+    var dt = Math.max(1, n - drag.t);
+    drag.vx = (e.clientX - drag.x) / dt * 16; // px per frame, for release velocity
+    drag.vy = (e.clientY - drag.y) / dt * 16;
+    drag.dist += Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y);
+    drag.x = e.clientX; drag.y = e.clientY; drag.t = n;
+    mouse.x = e.clientX; mouse.y = e.clientY; mouse.at = n;
+  });
+  function endDrag(threw) {
+    if (!drag) return;
+    var d = drag; drag = null;
+    host.style.cursor = 'pointer';
+    if (threw && d.dist >= 8) {
+      vel.x = Math.max(-12, Math.min(12, d.vx * 0.6));
+      vel.y = Math.max(-14, Math.min(14, d.vy * 0.6));
+      onGround = false;
+      say('😮', 900);
+    } else {
+      react('waving', 1300);
+      say('❤️', 1200);
+      if (onGround && !reduce) { vel.y = JUMP * 0.55; onGround = false; }
+    }
+  }
+  host.addEventListener('pointerup', function () { endDrag(true); });
+  host.addEventListener('pointercancel', function () { endDrag(false); });
+
+  // Hover-to-pet (vscode-pets swipe), throttled so crossing it once isn't spammy.
+  var lastHover = 0;
+  host.addEventListener('pointerenter', function () {
+    var n = performance.now();
+    if (drag || n - lastHover < 3000) return;
+    lastHover = n;
+    react('waving', 900);
+    say('👋', 900);
+  });
+
+  window.addEventListener('pointermove', function (e) {
+    mouse.x = e.clientX; mouse.y = e.clientY; mouse.at = performance.now();
+  }, { passive: true });
+
+  // Reduced motion: park in the corner; still reacts, but nothing moves.
+  if (reduce) {
+    host.style.transform = 'translate(24px,' + (window.innerHeight - PH - 8) + 'px)';
+    return;
+  }
+
+  // Every visible block is a platform: walked on, jumped onto, fallen onto,
+  // or smashed into. Re-scanned on scroll/resize and on an interval for SPA
+  // navigations. Rects are viewport-space, matching the fixed host.
+  function scanPlatforms() {
+    var els = document.querySelectorAll(
+      'header, footer, nav, main, section, article, aside, form, h1, h2, h3, p, img, video, button, a, input, textarea, select, label, [class*="card"]'
+    );
+    var out = [];
+    for (var i = 0; i < els.length && out.length < 80; i++) {
+      var el = els[i];
+      if (el === host || host.contains(el)) continue;
+      var r = el.getBoundingClientRect();
+      if (r.width < 48 || r.height < 6) continue;                  // too small to matter
+      if (r.bottom < -20 || r.top > window.innerHeight + 20) continue; // offscreen
+      out.push({ l: r.left, t: r.top, r: r.right, b: r.bottom });
+    }
+    out.push({ l: -9999, t: window.innerHeight, r: 99999, b: 99999 }); // viewport floor
+    platforms = out;
+  }
+
+  scanPlatforms();
+  var lastScan = 0;
+  window.addEventListener('scroll', function () {
+    var n = performance.now();
+    if (n - lastScan > 180) { lastScan = n; scanPlatforms(); }
+  }, { passive: true });
+  window.addEventListener('resize', function () { scanPlatforms(); });
+  setInterval(function () { if (!document.hidden) scanPlatforms(); }, 2500);
+
+  function smash(dir) {
+    vel.x = dir * -1.8;
+    facing = -dir;
+    react('failed', 600);
+    say('💥', 700);
+  }
+
   function frame() {
-    recompute();
-    st.top += (st.tTop - st.top) * EASE;
-    st.left += (st.tLeft - st.left) * EASE;
-    host.style.top = st.top.toFixed(1) + 'px';
-    host.style.left = st.left.toFixed(1) + 'px';
-    // running while still trailing the target; idle once settled.
-    var dx = st.tTop - st.top, dy = st.tLeft - st.left;
-    var dist = Math.sqrt(dx * dx + dy * dy);
-    setPet(dist > 1.2 ? 'running' : 'idle');
+    // Held by the user: dangle at the cursor, physics resumes on release.
+    if (drag) {
+      pos.x = Math.max(0, Math.min(window.innerWidth - PW, mouse.x - PW / 2));
+      pos.y = Math.max(0, Math.min(window.innerHeight - PH, mouse.y - PH / 2));
+      vel.x = 0; vel.y = 0; onGround = false;
+      host.style.transform = 'translate(' + pos.x.toFixed(1) + 'px,' + pos.y.toFixed(1) + 'px)';
+      setPet('jumping');
+      requestAnimationFrame(frame);
+      return;
+    }
+
+    var now = performance.now();
+    var acting = now < actUntil;
+    var mode = now - mouse.at < 2600 ? 'follow' : 'wander';
+
+    // horizontal intent
+    var want = 0;
+    if (!acting) {
+      if (mode === 'follow') {
+        var cx = pos.x + PW / 2, cy = pos.y + PH / 2;
+        var dx = mouse.x - cx, dy = mouse.y - cy;
+        var d = Math.sqrt(dx * dx + dy * dy) || 1;
+        if (d > ORBIT + 40) want = dx > 0 ? 1 : -1;
+        else if (d < ORBIT - 30) want = dx > 0 ? -1 : 1; // too close — back off
+      } else {
+        if (targetX != null) {
+          if (Math.abs(targetX - pos.x) < 24) targetX = null;
+          else want = targetX > pos.x ? 1 : -1;
+        }
+      }
+    }
+
+    if (want !== 0) {
+      vel.x = Math.max(-MAXRUN, Math.min(MAXRUN, vel.x + WALK * want));
+      facing = want;
+    } else {
+      vel.x *= onGround ? 0.78 : 0.985;
+      if (Math.abs(vel.x) < 0.05) vel.x = 0;
+    }
+
+    // jump: gap ahead in the floor, or an obstacle worth mounting
+    if (want !== 0 && onGround) {
+      var feetY = pos.y + PH;
+      var aheadX = pos.x + (want > 0 ? PW + 30 : -30);
+      var floorAhead = false, wallAhead = false;
+      for (var i = 0; i < platforms.length; i++) {
+        var p = platforms[i];
+        if (aheadX < p.l || aheadX > p.r) continue;
+        if (p.t >= feetY - 6 && p.t <= feetY + 48) floorAhead = true;
+        else if (p.t < feetY - 6 && p.b > pos.y + 24) wallAhead = true;
+      }
+      if (!floorAhead || wallAhead) { vel.y = JUMP; onGround = false; }
+    }
+
+    vel.y = Math.min(vel.y + GRAV, MAXFALL);
+    var nx = pos.x + vel.x, ny = pos.y + vel.y;
+    var i2, pl;
+
+    // smash into sides
+    for (i2 = 0; i2 < platforms.length; i2++) {
+      pl = platforms[i2];
+      if (ny + PH <= pl.t + 10 || ny >= pl.b - 4) continue; // no vertical overlap
+      if (vel.x > 0 && pos.x + PW <= pl.l + 2 && nx + PW > pl.l) { nx = pl.l - PW; smash(1); break; }
+      if (vel.x < 0 && pos.x >= pl.r - 2 && nx < pl.r) { nx = pl.r; smash(-1); break; }
+    }
+
+    // bonk ceilings
+    if (vel.y < 0) {
+      for (i2 = 0; i2 < platforms.length; i2++) {
+        pl = platforms[i2];
+        if (nx + PW * 0.5 < pl.l || nx + PW * 0.5 > pl.r) continue;
+        if (pos.y >= pl.b - 6 && ny < pl.b) { ny = pl.b; vel.y = 0.5; react('failed', 400); break; }
+      }
+      if (ny < 0) { ny = 0; vel.y = 0.5; }
+    }
+
+    // fall onto platforms
+    onGround = false;
+    if (vel.y >= 0) {
+      for (i2 = 0; i2 < platforms.length; i2++) {
+        pl = platforms[i2];
+        if (nx + PW * 0.5 < pl.l || nx + PW * 0.5 > pl.r) continue;
+        if (pos.y + PH <= pl.t + 4 && ny + PH >= pl.t) {
+          ny = pl.t - PH;
+          if (vel.y > 6 && vel.y * 0.4 > 1.5) vel.y = -vel.y * 0.4; // bounce after a hard fall/throw
+          else { vel.y = 0; onGround = true; }
+          break;
+        }
+      }
+    }
+
+    // viewport walls
+    if (nx < 0) { nx = 0; vel.x = Math.abs(vel.x) * 0.5; facing = 1; }
+    if (nx + PW > window.innerWidth) { nx = window.innerWidth - PW; vel.x = -Math.abs(vel.x) * 0.5; facing = -1; }
+
+    pos.x = nx; pos.y = ny;
+    host.style.transform = 'translate(' + pos.x.toFixed(1) + 'px,' + pos.y.toFixed(1) + 'px)';
+
+    // sprite state
+    if (!acting) {
+      if (!onGround) setPet('jumping');
+      else if (Math.abs(vel.x) > 0.6) setPet(facing > 0 ? 'running-right' : 'running-left');
+      else if (now > boredAt) {
+        // Weighted behavior table (vscode-pets style): repeat a weight to
+        // bias the pick. Drives walks now that nothing else sets targetX.
+        var pick = pickBehavior();
+        if (pick === 'walk') {
+          targetX = 16 + Math.random() * (window.innerWidth - PW - 32);
+          boredAt = now + 800;
+        } else if (pick === 'look') {
+          react(Math.random() < 0.5 ? 'look1' : 'look2', 1500);
+          boredAt = now + 3500 + Math.random() * 4000;
+        } else if (pick === 'nap') {
+          react('idle', 5000);
+          boredAt = now + 8000 + Math.random() * 4000;
+        } else {
+          boredAt = now + 2500 + Math.random() * 3000;
+        }
+      } else setPet('idle');
+    }
+
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
