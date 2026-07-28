@@ -1,24 +1,19 @@
 # Deploy status
 
-## Live now (no password, temporary while this Mac is on)
-https://benjamin-reports-parenting-beneath.trycloudflare.com
+## Live now — Cloudflare Pages (permanent)
+https://pocket-studio.pages.dev
+- Project: `pocket-studio` (production branch: main)
+- Deploy: `npx wrangler pages deploy . --project-name=pocket-studio --branch=main` from a clean dir containing only index.html, privacy.html, terms.html, assets/ (see /tmp/pocket-studio-deploy pattern — do NOT deploy the repo root, it would upload node_modules)
+- Free tier: unlimited bandwidth, commercial use OK
+- Wrangler is logged in on this machine
 
-## Netlify Drop (permanent once claimed; password-gated until then)
-- Site: https://astonishing-sunflower-e48e0e.netlify.app
-- Password: My-Drop-Site
-- Claim within 60 minutes of deploy (see latest deploy output)
+## Old/temporary (dead or stale)
+- trycloudflare tunnel — temporary, dead when machine sleeps
+- Netlify Drop https://astonishing-sunflower-e48e0e.netlify.app — never claimed, has pre-revision copy, ignore
 
-After claiming in a Netlify account, remove site password in Site settings → Access control.
-
-## GitHub Pages (best long-term)
-Needs `gh auth login` on this Mac (no GitHub token/SSH key present).
-
-Then:
-```bash
-cd ~/"Pocket Studio Booking Page Current"
-gh repo create pocket-studio-booking --public --source=. --remote=origin --push
-# enable Pages: Settings → Pages → Deploy from branch main /
-```
+## GitHub
+Repo: https://github.com/PocketStudio-Biz/Pocket-Studio-Booking-Page-Current (private)
+Note: Pages deploys are manual via wrangler (not git-connected). After editing copy, re-run the wrangler deploy from a fresh clean copy.
 
 ## Custom domain
-`pocketstudio.biz` is on GoDaddy but currently points to 0.0.0.0. After Netlify claim, add the domain in Netlify DNS and update GoDaddy A/CNAME records.
+`pocketstudio.biz` is on GoDaddy but currently points to 0.0.0.0. To attach: Cloudflare dashboard → Pages → pocket-studio → Custom domains → add pocketstudio.biz, then update GoDaddy DNS (CNAME to pocket-studio.pages.dev, or move DNS to Cloudflare nameservers).
