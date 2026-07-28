@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CAL_BASE, SERVICES, type Service } from "../lib/services";
+import { TRAVEL } from "../lib/travel";
 
 export const Route = createFileRoute("/book")({
   head: () => ({
@@ -172,6 +173,8 @@ function BookPage() {
           </div>
         </div>
 
+        <TravelFeeCalculator />
+
         <p className="mt-6 text-sm" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
           prefer the full calendar?{" "}
           <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-bone)" }}>
@@ -193,6 +196,99 @@ function BookPage() {
           </span>
         </div>
       </footer>
+    </div>
+  );
+}
+
+type FeeResult = {
+  available: boolean;
+  distance_mi?: number;
+  fee?: number;
+  reason?: string;
+};
+
+function TravelFeeCalculator() {
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<FeeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function calculate() {
+    if (!address.trim() || loading) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch("/api/travel-fee", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: address.trim() }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setResult((await res.json()) as FeeResult);
+    } catch {
+      setError("couldn't reach the calculator — try again, or text us for a quote.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div
+      className="mt-8 border-2 p-4 sm:p-6"
+      style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}
+    >
+      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-violet-brand)" }}>TRAVEL FEE</p>
+      <h2 className="mt-1 text-xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+        House call? Get your travel fee.
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
+        House calls are Seattle-area only. The fee is ${TRAVEL.flat} base + ${TRAVEL.perMile}/mi from {TRAVEL.baseLocation},
+        quoted before you book — never after.
+      </p>
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void calculate(); } }}
+          placeholder="your address or neighborhood (e.g. Capitol Hill, Seattle)"
+          className="w-full flex-1 border-2 px-4 py-2.5 text-sm outline-none"
+          style={{ background: "var(--color-void)", color: "var(--color-bone)", borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+        />
+        <button
+          type="button"
+          onClick={() => void calculate()}
+          disabled={loading || !address.trim()}
+          className="border-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: "var(--color-lime)",
+            color: "var(--color-void)",
+            borderColor: "var(--color-void)",
+            boxShadow: "4px 4px 0 var(--color-void)",
+            fontFamily: "var(--font-display)",
+          }}
+        >
+          {loading ? "calculating…" : "Calculate travel fee"}
+        </button>
+      </div>
+      <div className="mt-4 text-sm" aria-live="polite" style={{ fontFamily: "var(--font-mono)" }}>
+        {loading && <p style={{ color: "var(--color-ash)" }}>checking the map…</p>}
+        {error && <p style={{ color: "var(--color-flush)" }}>{error}</p>}
+        {result && (
+          result.available ? (
+            <p style={{ color: "var(--color-bone)" }}>
+              {result.distance_mi != null
+                ? <>Distance: {result.distance_mi} mi — Travel fee: <span className="font-black" style={{ color: "var(--color-lime)" }}>${result.fee}</span></>
+                : <>Travel fee: <span className="font-black" style={{ color: "var(--color-lime)" }}>${result.fee}</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "estimate only"})</span></>}
+            </p>
+          ) : (
+            <p style={{ color: "var(--color-flush)" }}>
+              sorry, no house calls there{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — {result.reason ?? "outside service area"}.
+            </p>
+          )
+        )}
+      </div>
     </div>
   );
 }
