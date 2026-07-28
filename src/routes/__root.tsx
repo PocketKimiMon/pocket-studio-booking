@@ -115,6 +115,32 @@ function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Scripts />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                function loadMyBesti() {
+                  if (!document.getElementById('mybesti-scroll')) {
+                    var t = document.createElement('script');
+                    t.src = '/mybesti-scroll.js'; t.async = true;
+                    document.head.appendChild(t);
+                  }
+                }
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', loadMyBesti);
+                } else { loadMyBesti(); }
+                // Re-inject after SPA client-side navigations.
+                if (window.__mybestiBound !== true && window.addEventListener) {
+                  window.__mybestiBound = true;
+                  var last = location.pathname;
+                  setInterval(function () {
+                    if (location.pathname !== last) { last = location.pathname; loadMyBesti(); }
+                  }, 400);
+                }
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );
