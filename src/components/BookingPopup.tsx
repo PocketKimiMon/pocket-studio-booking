@@ -67,6 +67,17 @@ export function BookingPopup() {
 
   const allBooked = booked.length >= ALL_SLUGS.length;
 
+  // The pet dispatches this on click — it's the site's chatbot entry point.
+  useEffect(() => {
+    const open = () => {
+      setStep("start");
+      setPick(null);
+      setOpen(true);
+    };
+    window.addEventListener("mybesti:open-booking", open);
+    return () => window.removeEventListener("mybesti:open-booking", open);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     window.dispatchEvent(new CustomEvent(step === "result" ? "mybesti:review" : "mybesti:waiting"));

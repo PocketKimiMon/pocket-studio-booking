@@ -107,7 +107,8 @@
     position: 'absolute', left: '50%', bottom: '100%',
     transform: 'translateX(-50%)', marginBottom: '4px',
     background: 'rgba(255,255,255,.95)', color: '#111', borderRadius: '10px',
-    padding: '2px 8px', fontSize: '16px', lineHeight: '1.4', whiteSpace: 'nowrap',
+    padding: '4px 10px', fontSize: '13px', lineHeight: '1.35', whiteSpace: 'normal',
+    maxWidth: '220px', textAlign: 'center',
     opacity: '0', transition: 'opacity .18s', pointerEvents: 'none',
     boxShadow: '0 2px 6px rgba(0,0,0,.3)'
   });
@@ -129,8 +130,9 @@
 
   var PW = 96, PH = 104;        // pet footprint (px)
   var GRAV = 0.55, MAXFALL = 13;
-  var JUMP = -10.5;
-  var WALK = 0.35, MAXRUN = 2.6;
+  var JUMP = -9;
+  var WALK = 0.35, MAXRUN = 2.2;
+  var lastJump = 0;             // cooldown so it doesn't bounce constantly
   var ORBIT = 110;              // standoff distance from the cursor
 
   var pos = { x: 24, y: window.innerHeight - PH };
@@ -145,7 +147,7 @@
   function react(s, ms) { actUntil = performance.now() + ms; setPet(s); }
 
   // Weighted wander behaviors — bigger weight = more likely.
-  var BEHAVIORS = [['walk', 4], ['idle', 3], ['look', 2], ['nap', 1]];
+  var BEHAVIORS = [['walk', 3], ['idle', 3], ['look', 3], ['nap', 1], ['investigate', 3]];
   function pickBehavior() {
     var total = 0, i;
     for (i = 0; i < BEHAVIORS.length; i++) total += BEHAVIORS[i][1];
@@ -153,6 +155,36 @@
     for (i = 0; i < BEHAVIORS.length; i++) { roll -= BEHAVIORS[i][1]; if (roll <= 0) return BEHAVIORS[i][0]; }
     return 'idle';
   }
+
+  // Investigative streak: walk over to a page element and check it out.
+  var investigating = null; // { x, tag, text }
+  function pickInvestigateTarget() {
+    var cands = [];
+    for (var i = 0; i < platforms.length; i++) {
+      if (platforms[i].tag) cands.push(platforms[i]); // skip the synthetic floor
+    }
+    if (!cands.length) return null;
+    var p = cands[(Math.random() * cands.length) | 0];
+    return { x: p.l + (p.r - p.l) / 2 - PW / 2, tag: p.tag, text: p.text };
+  }
+  function investigateLine(t) {
+    if (t.tag === 'A' || t.tag === 'BUTTON') return 'that one clicks 👀';
+    if (t.tag === 'IMG' || t.tag === 'VIDEO') return 'nice hair!';
+    if (t.tag === 'INPUT' || t.tag === 'TEXTAREA' || t.tag === 'FORM') return "fill it in, i'll wait";
+    if (t.text) return '“' + t.text + '”';
+    return 'hmm. interesting.';
+  }
+
+  // Ambient helper chatter — the pet doubles as a booking nudge.
+  var CHATTER = [
+    'i can help you book ✂️',
+    'talk with me — click me!',
+    'need a cut? a color?',
+    "booking's open 👀",
+    'house calls — i come to you',
+    'the tea if you rebook ☕'
+  ];
+  var lastChatter = 0;
 
   function celebrate() {
     react('waving', 2400);
@@ -169,11 +201,13 @@
   window.addEventListener('mybesti:review', function () { react('review', 3500); say('👀', 2000); });
   window.addEventListener('mybesti:waiting', function () { react('waiting', 3500); say('⏳', 2000); });
 
-  // Click-to-pet.
+  // Click-to-chat: rotates helper lines and pings the booking popup if present.
+  var CLICK_LINES = ['hi! need a cut or color?', 'i can help you book!', "let's get you sorted ✂️", '❤️'];
+  var clickLine = 0;
   host.addEventListener('pointerdown', function () {
     react('waving', 1300);
-    say('❤️', 1200);
-    if (onGround && !reduce) { vel.y = JUMP * 0.55; onGround = false; }
+    say(CLICK_LINES[clickLine++ % CLICK_LINES.length], 1800);
+    window.dispatchEvent(new CustomEvent('mybesti:open-booking'));
   });
 
   // Hover-to-pet (vscode-pets swipe), throttled so crossing it once isn't spammy.
@@ -210,7 +244,7 @@
       var r = el.getBoundingClientRect();
       if (r.width < 48 || r.height < 6) continue;                  // too small to matter
       if (r.bottom < -20 || r.top > window.innerHeight + 20) continue; // offscreen
-      out.push({ l: r.left, t: r.top, r: r.right, b: r.bottom });
+      out.push({ l: r.left, t: r.top, r: r.right, b: r.bottom, tag: el.tagName, text: /^(H1|H2|H3)$/.test(el.tagName) ? (el.textContent || '').trim().slice(0, 40) : '' });
     }
     out.push({ l: -9999, t: window.innerHeight, r: 99999, b: 99999 }); // viewport floor
     platforms = out;
@@ -248,7 +282,16 @@
         else if (d < ORBIT - 30) want = dx > 0 ? -1 : 1; // too close — back off
       } else {
         if (targetX != null) {
-          if (Math.abs(targetX - pos.x) < 24) targetX = null;
+          if (Math.abs(targetX - pos.x) < 24) {
+            targetX = null;
+            if (investigating) {
+              var inv = investigating;
+              investigating = null;
+              react(Math.random() < 0.5 ? 'look1' : 'look2', 1800);
+              if (Math.random() < 0.65) say(investigateLine(inv), 2200);
+              boredAt = now + 3000;
+            }
+          }
           else want = targetX > pos.x ? 1 : -1;
         }
       }
@@ -273,7 +316,9 @@
         if (p.t >= feetY - 6 && p.t <= feetY + 48) floorAhead = true;
         else if (p.t < feetY - 6 && p.b > pos.y + 24) wallAhead = true;
       }
-      if (!floorAhead || wallAhead) { vel.y = JUMP; onGround = false; }
+      if (now - lastJump > 1400 && (wallAhead || (!floorAhead && Math.random() < 0.5))) {
+        vel.y = JUMP; onGround = false; lastJump = now;
+      }
     }
 
     vel.y = Math.min(vel.y + GRAV, MAXFALL);
@@ -329,8 +374,17 @@
         // bias the pick. Drives walks now that nothing else sets targetX.
         var pick = pickBehavior();
         if (pick === 'walk') {
+          investigating = null;
           targetX = 16 + Math.random() * (window.innerWidth - PW - 32);
           boredAt = now + 800;
+        } else if (pick === 'investigate') {
+          investigating = pickInvestigateTarget();
+          if (investigating) {
+            targetX = Math.max(16, Math.min(window.innerWidth - PW - 16, investigating.x));
+            boredAt = now + 800;
+          } else {
+            boredAt = now + 2000;
+          }
         } else if (pick === 'look') {
           react(Math.random() < 0.5 ? 'look1' : 'look2', 1500);
           boredAt = now + 3500 + Math.random() * 4000;
@@ -340,7 +394,13 @@
         } else {
           boredAt = now + 2500 + Math.random() * 3000;
         }
-      } else setPet('idle');
+      } else {
+        setPet('idle');
+        if (now - lastChatter > 25000 && Math.random() < 0.002) {
+          lastChatter = now;
+          say(CHATTER[(Math.random() * CHATTER.length) | 0], 2800);
+        }
+      }
     }
 
     requestAnimationFrame(frame);
