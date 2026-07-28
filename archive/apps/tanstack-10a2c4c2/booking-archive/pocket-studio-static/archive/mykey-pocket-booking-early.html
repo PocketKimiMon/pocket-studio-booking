@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyKey Pocket Booking</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:sans-serif;margin:0;padding:0;background:#f8f9fa;color:#333}
+.container{max-width:480px;margin:0 auto;padding:20px}
+header{background:#6c757d;color:#fff;padding:15px;text-align:center}
+form{background:#fff;padding:20px;margin:20px 0;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+label{display:block;margin-top:10px;font-weight:bold}
+input, select{width:100%;padding:10px;margin-top:5px;border:1px solid #ddd;border-radius:4px}
+button{width:100%;padding:12px;background:#007bff;color:#fff;border:none;border-radius:4px;cursor:pointer}
+button:hover{background:#0056b3}
+@media (prefers-color-scheme: dark) {
+  body{background:#212529;color:#adb5bd}
+  header{background:#495057}
+  form{background:#343a40;color:#fff}
+  input, select, button{background:#495057;border-color:#6c757d;color:#fff}
+}
+</style>
+</head>
+<body>
+<header><h1>MyKey Pocket Booking</h1></header>
+<div class="container">
+  <form id="bookingForm">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required>
+    
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="service">Service</label>
+    <select id="service" name="service" required>
+      <option value="">Select Service</option>
+      <option value="haircut">Haircut</option>
+      <option value="color">Color Service</option>
+      <option value="styling">Styling</option>
+    </select>
+    
+    <label for="date">Date</label>
+    <input type="date" id="date" name="date" required>
+    
+    <label for="time">Preferred Time</label>
+    <select id="time" name="time" required>
+      <option value="10:00">10:00 AM</option>
+      <option value="14:00">2:00 PM</option>
+      <option value="18:00">6:00 PM</option>
+    </select>
+    
+    <button type="submit">Book Appointment</button>
+  </form>
+</div>
+</body>
+</html>
