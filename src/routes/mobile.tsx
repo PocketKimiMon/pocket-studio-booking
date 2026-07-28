@@ -134,9 +134,9 @@ function Scissors() {
 }
 
 const services = [
-  { name: "Buzz Cut", time: "30 MIN · $45", desc: "Clean fade or one-length buzz. In and out, sharp.", accent: "var(--lime)", tag: null },
+  { name: "Buzz Cut", time: "30 MIN · $50", desc: "Clean fade or one-length buzz. In and out, sharp.", accent: "var(--lime)", tag: null },
   { name: "Short Cut", time: "45 MIN · $65", desc: "Scissor + clipper work. Shape, texture, done right.", accent: "var(--flush)", tag: null },
-  { name: "Long Cut", time: "60 MIN · $85", desc: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo.", accent: "var(--violet)", tag: null },
+  { name: "Long Cut", time: "60 MIN · $100", desc: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo.", accent: "var(--violet)", tag: null },
   { name: "New-Client Color Consult", time: "45 MIN · $35", desc: "Sit down, talk hair history, plan the vibe. Applied to your first color booking.", accent: "var(--violet)", tag: { label: "NEW CLIENTS", cls: "violet" } },
   { name: "Existing-Client Color", time: "90–120 MIN · $120+", desc: "Root touch-ups, gloss, lift, tone, and creative color for people I already know.", accent: "var(--lime)", tag: { label: "2+ DAYS OUT = TEA + GOODS", cls: "lime" } },
   { name: "Add-on: Tea + Product Recs", time: "FREE · WITH 2+ DAY BOOKINGS", desc: "Book 2+ days ahead and get tea in-service plus real product recs for your hair.", accent: "var(--flush)", tag: null },

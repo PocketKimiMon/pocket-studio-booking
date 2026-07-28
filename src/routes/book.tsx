@@ -14,7 +14,7 @@ export const Route = createFileRoute("/book")({
 });
 
 const bySlug = (slug: string) => SERVICES.find((s) => s.slug === slug)!;
-const CUTS = ["buzz-cut", "short-cut", "long-cut"].map(bySlug);
+const CUTS = ["buzz-cut", "taper-fade-cut", "short-cut", "long-cut", "curl-cut"].map(bySlug);
 const CONSULT = bySlug("hair-consultation");
 const EXISTING = bySlug("existing-client-color-appointment");
 

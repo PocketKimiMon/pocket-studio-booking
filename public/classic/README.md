@@ -46,7 +46,7 @@ To change hours, edit the `SCHEDULE` object at the top of the `<script>` in `ind
 Open `index.html` directly in a browser, or run a tiny server:
 
 ```bash
-cd pocket-studio-booking
+cd "Pocket Studio Booking Page Current"
 python3 -m http.server 8000
 # then visit http://localhost:8000
 ```
@@ -55,7 +55,7 @@ python3 -m http.server 8000
 
 Upload the folder to any static host:
 
-- **Netlify:** drag `pocket-studio-booking` into [Netlify Drop](https://app.netlify.com/drop)
+- **Netlify:** drag `Pocket Studio Booking Page Current` into [Netlify Drop](https://app.netlify.com/drop)
 - **Vercel:** `npx vercel --prod` (needs a Vercel account)
 - **GitHub Pages:** push the folder to a repo and enable Pages
 - **Cloudflare Pages, Surge, Render, etc.**
