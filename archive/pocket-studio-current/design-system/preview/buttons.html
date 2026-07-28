@@ -1,0 +1,34 @@
+<!-- @dsCard group="Components" subtitle="Buttons & states" width="700" height="240" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .btn { min-height:44px; display:inline-flex; align-items:center; gap:8px; padding:0 18px;
+    border-radius:var(--radius-pill); font-family:var(--font-sans); font-weight:700; font-size:15px;
+    border:1px solid transparent; cursor:pointer; transition:transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur-base), background var(--dur-base); }
+  .btn:active { transform:scale(.97); }
+  .btn-primary { background:var(--oxblood); color:var(--on-primary); box-shadow:var(--glow-oxblood); }
+  .btn-secondary { background:var(--surface-2); color:var(--fg1); border-color:var(--border); }
+  .btn-ghost { background:transparent; color:var(--fg1); border-color:var(--border); }
+  .btn-danger { background:transparent; color:var(--coral-bright); border-color:var(--coral-deep); }
+  .btn[disabled] { background:var(--surface); color:var(--fg-disabled); box-shadow:none; border-color:var(--border-subtle); cursor:not-allowed; }
+  .btn-focus { box-shadow:var(--focus-ring); }
+  .lbl { font-family:var(--font-mono); font-size:10px; color:var(--fg3); }
+</style>
+</head><body>
+  <div class="col" style="gap:12px">
+    <div class="mono-cap" style="color:var(--oxblood)">Buttons · 44px min target · plain-language labels</div>
+    <div class="row" style="gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary">Build the thing</button>
+      <button class="btn btn-secondary">Show me a run</button>
+      <button class="btn btn-ghost">Skip the tour</button>
+      <button class="btn btn-danger">Delete agent</button>
+    </div>
+    <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-end">
+      <div class="col" style="gap:5px;align-items:center"><button class="btn btn-primary btn-focus">Focused</button><span class="lbl">:focus-visible</span></div>
+      <div class="col" style="gap:5px;align-items:center"><button class="btn btn-primary" style="transform:scale(.97);background:var(--magenta-deep)">Pressed</button><span class="lbl">:active</span></div>
+      <div class="col" style="gap:5px;align-items:center"><button class="btn btn-primary" disabled>Disabled</button><span class="lbl">[disabled]</span></div>
+    </div>
+  </div>
+</body></html>

@@ -1,0 +1,25 @@
+<!-- @dsCard group="Spacing" subtitle="Corner radii" width="700" height="210" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .grid { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+  .box { height:60px; background:var(--surface-2); border:1px solid var(--border);
+    display:flex; align-items:flex-end; justify-content:center; padding-bottom:5px; }
+  .nm { font-family:var(--font-mono); font-size:10px; color:var(--fg3); margin-top:6px; display:block; text-align:center; }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--violet)">Radii · edgy, not bubbly</div>
+    <div class="grid">
+      <div><div class="box" style="border-radius:var(--radius-xs)"></div><span class="nm">xs · 4</span></div>
+      <div><div class="box" style="border-radius:var(--radius-sm)"></div><span class="nm">sm · 6</span></div>
+      <div><div class="box" style="border-radius:var(--radius-md)"></div><span class="nm">md · 10</span></div>
+      <div><div class="box" style="border-radius:var(--radius-lg)"></div><span class="nm">lg · 16</span></div>
+      <div><div class="box" style="border-radius:var(--radius-xl)"></div><span class="nm">xl · 24</span></div>
+      <div><div class="box" style="border-radius:var(--radius-pill)"></div><span class="nm">pill</span></div>
+    </div>
+    <div class="small muted" style="font-size:12px;font-family:var(--font-sans)">md–lg is the workhorse. Inputs/chips 6–10. Pills for tags &amp; toggles. Circles only for avatars + game orbs.</div>
+  </div>
+</body></html>

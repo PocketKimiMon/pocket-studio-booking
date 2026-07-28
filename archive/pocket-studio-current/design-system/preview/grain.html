@@ -1,0 +1,25 @@
+<!-- @dsCard group="Brand" subtitle="Grain texture" width="700" height="240" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .swatches { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .tx { height:84px; border-radius:12px; position:relative; overflow:hidden; border:1px solid var(--hairline); }
+  .tx::after { content:""; position:absolute; inset:0; background-image:var(--grain); background-size:160px 160px; mix-blend-mode:soft-light; }
+  .nm { font-family:var(--font-mono); font-size:10px; color:var(--fg3); margin-top:7px; display:block; text-align:center; }
+  .g1 { opacity:1; } .g1::after { opacity:0.5; }
+  .g2::after { opacity:0.22; }
+  .g3::after { opacity:0.1; }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--lime)">Grain · printed, physical, never clinical</div>
+    <div class="swatches">
+      <div><div class="tx g1" style="background:var(--ink-800)"></div><span class="nm">heavy · 0.5 · hero</span></div>
+      <div><div class="tx g2" style="background:var(--ink-800)"></div><span class="nm">default · 0.22 · app</span></div>
+      <div><div class="tx g3" style="background:var(--ink-800)"></div><span class="nm">reading mode · 0.10</span></div>
+    </div>
+    <div class="small muted" style="font-size:12px;font-family:var(--font-sans)">Tiling SVG noise via <span class="mono" style="color:var(--cyan)">--grain</span>, <span class="mono" style="color:var(--cyan)">mix-blend-mode:soft-light</span> over ink. Eases off in reading mode to reduce clutter.</div>
+  </div>
+</body></html>

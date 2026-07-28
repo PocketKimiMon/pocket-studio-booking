@@ -1,0 +1,31 @@
+<!-- @dsCard group="Components" subtitle="Cards" width="700" height="230" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .c { background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); padding:16px; }
+  .c-glow { box-shadow:var(--glow-oxblood); border-color:transparent; }
+  .c h4 { font-family:var(--font-sans); font-weight:700; font-size:16px; color:var(--fg1); margin-bottom:4px; }
+  .c p { font-size:13px; line-height:1.5; }
+  .pill { display:inline-flex; align-items:center; gap:6px; height:24px; padding:0 10px; border-radius:999px;
+    font-family:var(--font-mono); font-size:10px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--lime)">Cards · half-step surface · subtle border · glow = emphasis</div>
+    <div class="grid">
+      <div class="c">
+        <span class="pill" style="background:var(--surface-2);color:var(--cyan)">Default</span>
+        <h4 style="margin-top:10px">Inbox triage bot</h4>
+        <p>Sorts and labels new mail every 15 min. Quiet, dependable, low-stakes.</p>
+      </div>
+      <div class="c c-glow">
+        <span class="pill" style="background:var(--oxblood);color:var(--on-neon)">Live</span>
+        <h4 style="margin-top:10px">Lead scorer</h4>
+        <p>Emphasis card: neon glow replaces the shadow when something's active or featured.</p>
+      </div>
+    </div>
+  </div>
+</body></html>

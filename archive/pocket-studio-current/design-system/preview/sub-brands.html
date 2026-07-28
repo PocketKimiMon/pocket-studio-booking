@@ -1,0 +1,35 @@
+<!-- @dsCard group="Brand" subtitle="Sub-brands — one accent leads each surface" width="700" height="240" -->
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<link rel="stylesheet" href="card.css">
+<style>
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .sb { border-radius:var(--radius-md); border:1px solid var(--border-subtle); padding:14px; background:var(--surface); }
+  .sb .k { font-family:var(--font-mono); font-size:9px; letter-spacing:0.08em; text-transform:uppercase; }
+  .sb .t { font-family:var(--font-display); font-weight:900; font-size:17px; text-transform:uppercase; letter-spacing:-0.01em; color:var(--fg1); margin-top:8px; line-height:1.02; }
+  .sb .d { font-family:var(--font-sans); font-size:11px; color:var(--fg3); margin-top:5px; }
+</style>
+</head><body>
+  <div class="col" style="gap:10px">
+    <div class="mono-cap" style="color:var(--steel-bright)">Sub-brands · one accent leads each surface</div>
+    <div class="grid">
+      <div class="sb" style="box-shadow:var(--glow-oxblood);border-color:transparent">
+        <span class="k" style="color:var(--oxblood-bright)">// STUDIO</span>
+        <div class="t">Pocket<span style="color:var(--oxblood-bright)">Studio</span></div>
+        <div class="d">Marketing · oxblood + lime</div>
+      </div>
+      <div class="sb">
+        <span class="k" style="color:var(--coral-bright)">▲ GAME</span>
+        <div class="t" style="color:var(--coral)">Monster<br>Survivor</div>
+        <div class="d">Game · blood red + hazard lime</div>
+      </div>
+      <div class="sb">
+        <span class="k" style="color:var(--amber-bright)">● PODCAST</span>
+        <div class="t" style="color:var(--amber)">Rainbow<br>Rest Stop</div>
+        <div class="d">Podcast · ember amber, dark</div>
+      </div>
+    </div>
+    <div class="small muted" style="font-size:12px;font-family:var(--font-sans)">Dashboard leads with signal cyan on steel. Magenta is a minor accent anywhere, never a lead.</div>
+  </div>
+</body></html>
