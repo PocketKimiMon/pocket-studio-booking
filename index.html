@@ -520,7 +520,7 @@
         <span class="sticker lime" style="--r:-4deg"><img class="ico" src="assets/icons/scissors.svg" alt=""> scissors ready</span>
         <span class="sticker violet" style="--r:3deg"><img class="ico" src="assets/icons/color-blob.svg" alt=""> color chaos welcome</span>
         <span class="sticker flush" style="--r:-2deg"><img class="ico" src="assets/icons/house.svg" alt=""> house calls</span>
-        <span class="sticker bone" style="--r:5deg"><img class="ico" src="assets/icons/tea.svg" alt=""> the tea if you rebook</span>
+        <span class="sticker bone" style="--r:5deg"><img class="ico" src="assets/icons/tea.svg" alt=""> loyalty bribes</span>
       </div>
 
       <div class="fun-strip reveal-bit" aria-hidden="true">
@@ -530,8 +530,8 @@
       <div class="promo reveal-bit">
         <span class="hand">spill the tea <img class="hand-ico" src="assets/icons/tea.svg" alt=""></span>
         <div class="promo-kicker">current deal</div>
-        <div class="promo-title">rebook ahead, get the tea.</div>
-        <p>book your next appointment at least 2 days out and i'll spill everything — why i'm not at the old shop anymore, what really went down, all of it. consider it a loyalty bribe.</p>
+        <div class="promo-title">rebook ahead, get the good stuff.</div>
+        <p>book your next appointment at least 2 days out and i'll bring the extras — product recs that actually fit your hair, styling tricks, honest answers. consider it a loyalty bribe.</p>
       </div>
 
       <div class="notice-band reveal-bit">
@@ -539,7 +539,7 @@
       </div>
 
       <div class="house-call reveal-bit">
-        <strong>house calls only right now.</strong> i come to you — no travel fee yet, but that won't last forever. i'm between chairs and figuring out where to land next. thank you for rolling with it. i know shaking up your routine is a lot, especially if you're neurodivergent and changes hit different — i get it, i'm right there with you. we'll get back to something steady soon.
+        <strong>house calls only right now.</strong> i come to you — no travel fee yet, but that won't last forever. i'm between chairs and figuring out where to land next. thank you for rolling with it. we'll get back to something steady soon.
       </div>
     </div>
   </header>
@@ -553,8 +553,7 @@
 
     <div class="about-grid">
       <div class="about-text">
-        <p class="lede">i'm MyKey — hair artist, solo operator, the whole front desk and back office in one neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no middleman, no corporate scheduling system, just me and my booking link.</p>
-        <p>i worked the salon floor for years, most recently at Rudy's, and i loved the people and hated the overhead. Pocket Studio is what happened when i decided clients should pay for the actual work, not for someone else's rent.</p>
+        <p class="lede">i'm MyKey — hair artist, solo operator, the whole front desk and back office in one neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no middleman, no corporate scheduling system, just me and my booking link. clients should pay for the actual work, not someone else's rent.</p>
         <p>i cut and color all textures, but the transformations are what light me up: the grow-out rescue, the "i need to feel like a different person by friday" moment, the color correction that takes six hours and a dangerous amount of trust.</p>
         <p>show up however you show up. reference pics, bedhead, a vague idea and a willingness to talk it through — all valid. i'm not here to judge your hair crimes.</p>
         <p>expect real conversation, honest recommendations, tea if you're around long enough, and a cut that fits how you actually live — not how your stylist wants to instagram it.</p>
@@ -1097,7 +1096,7 @@
       what:document.getElementById('em-what').value,
       when:document.getElementById('em-when').value
     };
-    fetch('https://formsubmit.co/ajax/itspocketmykey@gmail.com',{
+    fetch('https://formsubmit.co/ajax/mykeypocket@icloud.com',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify(payload)
@@ -1108,7 +1107,7 @@
     })
     .catch(function(){
       btn.disabled=false; btn.textContent='send emergency request →';
-      emStatus.innerHTML='hmm, that didn\'t go through. text <a href="tel:+14259182029">425-918-2029</a> or email <a href="mailto:itspocketmykey@gmail.com">itspocketmykey@gmail.com</a> instead.';
+      emStatus.innerHTML='hmm, that didn\'t go through. text <a href="tel:+14259182029">425-918-2029</a> or email <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a> instead.';
     });
   });
 })();

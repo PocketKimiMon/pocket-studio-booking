@@ -23,26 +23,25 @@ Tone: direct, irreverent, witchy undercurrent, neurodivergent-aware, zero corpor
 - `scissors ready`
 - `color chaos welcome`
 - `house calls`
-- `the tea if you rebook`
+- `loyalty bribes`
 
-### Promo ("spill the tea" deal)
+### Promo (loyalty deal)
 - Hand label: `spill the tea`
 - Kicker: `current deal`
-- Title: `rebook ahead, get the tea.`
-- Body: `book your next appointment at least 2 days out and i'll spill everything — why i'm not at the old shop anymore, what really went down, all of it. consider it a loyalty bribe.`
+- Title: `rebook ahead, get the good stuff.`
+- Body: `book your next appointment at least 2 days out and i'll bring the extras — product recs that actually fit your hair, styling tricks, honest answers. consider it a loyalty bribe.`
 
 ### Notice band
 - **former Rudy's clients:** `i'm not at Rudy's anymore. this is where you book now — same hands, same energy, way fewer hoops.`
 
 ### House-call notice
-- **house calls only right now.** `i come to you — no travel fee yet, but that won't last forever. i'm between chairs and figuring out where to land next. thank you for rolling with it. i know shaking up your routine is a lot, especially if you're neurodivergent and changes hit different — i get it, i'm right there with you. we'll get back to something steady soon.`
+- **house calls only right now.** `i come to you — no travel fee yet, but that won't last forever. i'm between chairs and figuring out where to land next. thank you for rolling with it. we'll get back to something steady soon.`
 
 ---
 
 ## 01 · About the artist
 - Section note: `the human behind the chair`
-- Lede: `i'm MyKey — hair artist, solo operator, the whole front desk and back office in one neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no middleman, no corporate scheduling system, just me and my booking link.`
-- `i worked the salon floor for years, most recently at Rudy's, and i loved the people and hated the overhead. Pocket Studio is what happened when i decided clients should pay for the actual work, not for someone else's rent.`
+- Lede: `i'm MyKey — hair artist, solo operator, the whole front desk and back office in one neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no middleman, no corporate scheduling system, just me and my booking link. clients should pay for the actual work, not someone else's rent.`
 - `i cut and color all textures, but the transformations are what light me up: the grow-out rescue, the "i need to feel like a different person by friday" moment, the color correction that takes six hours and a dangerous amount of trust.`
 - `show up however you show up. reference pics, bedhead, a vague idea and a willingness to talk it through — all valid. i'm not here to judge your hair crimes.`
 - `expect real conversation, honest recommendations, tea if you're around long enough, and a cut that fits how you actually live — not how your stylist wants to instagram it.`
@@ -131,4 +130,4 @@ Tone: direct, irreverent, witchy undercurrent, neurodivergent-aware, zero corpor
 - Send button: `send emergency request →`
 - Note: `goes straight to my inbox. truly urgent? text 425-918-2029.`
 - Success: `got it — request sent. 🎉 i'll get back to you fast. if it's truly urgent, also text 425-918-2029.`
-- Error: `hmm, that didn't go through. text 425-918-2029 or email itspocketmykey@gmail.com instead.`
+- Error: `hmm, that didn't go through. text 425-918-2029 or email mykeypocket@icloud.com instead.`
