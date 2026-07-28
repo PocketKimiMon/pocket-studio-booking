@@ -1,8 +1,8 @@
 
 /* My Besti — free-roam page pet. Wanders the viewport, treats visible
  * elements as platforms to walk on, jump onto, fall onto, or smash into;
- * chases the cursor at a polite distance; can be hovered, clicked, dragged
- * and thrown; talks via a speech bubble; reacts to booking events
+ * chases the cursor at a polite distance; can be hovered and clicked;
+ * talks via a speech bubble; reacts to booking events
  * (mybesti:celebrate / mybesti:review / mybesti:waiting).
  * Self-contained: atlas + renderer inlined. Exposes window.mybestiScroll. */
 (function () {
@@ -169,47 +169,18 @@
   window.addEventListener('mybesti:review', function () { react('review', 3500); say('👀', 2000); });
   window.addEventListener('mybesti:waiting', function () { react('waiting', 3500); say('⏳', 2000); });
 
-  // Drag & throw (Shimeji-style): grab the pet and it dangles at the cursor;
-  // release flings it with the drag velocity. A click without dragging pets it.
-  var drag = null;
-  host.addEventListener('pointerdown', function (e) {
-    if (host.setPointerCapture) { try { host.setPointerCapture(e.pointerId); } catch (err) {} }
-    drag = { x: e.clientX, y: e.clientY, t: performance.now(), vx: 0, vy: 0, dist: 0 };
-    host.style.cursor = 'grabbing';
+  // Click-to-pet.
+  host.addEventListener('pointerdown', function () {
+    react('waving', 1300);
+    say('❤️', 1200);
+    if (onGround && !reduce) { vel.y = JUMP * 0.55; onGround = false; }
   });
-  host.addEventListener('pointermove', function (e) {
-    if (!drag) return;
-    var n = performance.now();
-    var dt = Math.max(1, n - drag.t);
-    drag.vx = (e.clientX - drag.x) / dt * 16; // px per frame, for release velocity
-    drag.vy = (e.clientY - drag.y) / dt * 16;
-    drag.dist += Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y);
-    drag.x = e.clientX; drag.y = e.clientY; drag.t = n;
-    mouse.x = e.clientX; mouse.y = e.clientY; mouse.at = n;
-  });
-  function endDrag(threw) {
-    if (!drag) return;
-    var d = drag; drag = null;
-    host.style.cursor = 'pointer';
-    if (threw && d.dist >= 8) {
-      vel.x = Math.max(-12, Math.min(12, d.vx * 0.6));
-      vel.y = Math.max(-14, Math.min(14, d.vy * 0.6));
-      onGround = false;
-      say('😮', 900);
-    } else {
-      react('waving', 1300);
-      say('❤️', 1200);
-      if (onGround && !reduce) { vel.y = JUMP * 0.55; onGround = false; }
-    }
-  }
-  host.addEventListener('pointerup', function () { endDrag(true); });
-  host.addEventListener('pointercancel', function () { endDrag(false); });
 
   // Hover-to-pet (vscode-pets swipe), throttled so crossing it once isn't spammy.
   var lastHover = 0;
   host.addEventListener('pointerenter', function () {
     var n = performance.now();
-    if (drag || n - lastHover < 3000) return;
+    if (n - lastHover < 3000) return;
     lastHover = n;
     react('waving', 900);
     say('👋', 900);
@@ -262,17 +233,6 @@
   }
 
   function frame() {
-    // Held by the user: dangle at the cursor, physics resumes on release.
-    if (drag) {
-      pos.x = Math.max(0, Math.min(window.innerWidth - PW, mouse.x - PW / 2));
-      pos.y = Math.max(0, Math.min(window.innerHeight - PH, mouse.y - PH / 2));
-      vel.x = 0; vel.y = 0; onGround = false;
-      host.style.transform = 'translate(' + pos.x.toFixed(1) + 'px,' + pos.y.toFixed(1) + 'px)';
-      setPet('jumping');
-      requestAnimationFrame(frame);
-      return;
-    }
-
     var now = performance.now();
     var acting = now < actUntil;
     var mode = now - mouse.at < 2600 ? 'follow' : 'wander';
