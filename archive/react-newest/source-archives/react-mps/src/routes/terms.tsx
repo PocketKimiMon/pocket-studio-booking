@@ -1,0 +1,89 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { LegalLayout } from "../lib/legal-page";
+
+export const Route = createFileRoute("/terms")({
+  head: () => ({
+    meta: [
+      { title: "Terms of Service — Pocket Studio" },
+      { name: "description", content: "Terms of Service for Pocket Studio / MyKey Pocket, a Seattle hair artist offering house calls." },
+    ],
+  }),
+  component: Terms,
+});
+
+function Terms() {
+  return (
+    <LegalLayout title="Terms of Service">
+      <p>These Terms of Service ("Terms") govern your use of the Pocket Studio / MyKey Pocket website and the hair services offered through it. By using this site, submitting a booking, or receiving services, you agree to these Terms. If you do not agree, do not book or use the services.</p>
+
+      <h2>1. Who we are</h2>
+      <p>Pocket Studio / MyKey Pocket is an independent hair artist and sole-proprietorship business based in Seattle, Washington. We are not affiliated with Rudy's Barbershop or any former employer. Contact: <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a> · <a href="tel:425-918-2029">425-918-2029</a>.</p>
+
+      <h2>2. Services</h2>
+      <p>We provide personal-care hair services including, but not limited to, buzz cuts, short cuts, long cuts, new-client color consultations, and existing-client color appointments. Descriptions and estimated durations on the booking page are estimates only. Actual time may vary based on hair condition, goals, and complexity.</p>
+      <p><b>House calls:</b> Services are currently offered as house calls in the Seattle, WA area only. You must provide a safe, appropriate location and accurate address. We may decline or end a visit if the location is unsafe, inaccessible, or unsuitable for professional service. Travel fee policy is stated on the booking page and may change; current house-call travel is free unless otherwise disclosed before booking.</p>
+
+      <h2>3. Booking and confirmation</h2>
+      <p>Bookings are made through Cal.com (or another scheduler we designate). A booking is confirmed when the scheduling system accepts it and you receive a confirmation by email and/or SMS. We may decline, cancel, or reschedule a booking for safety, availability, policy, or operational reasons and will notify you as soon as reasonably possible.</p>
+      <p>Availability is limited. The calendar generally opens about one month at a time (or a rolling window of similar length) and requires at least 2 days' advance notice, as configured in the booking system.</p>
+
+      <h2>4. Pricing and payment</h2>
+      <p>Service prices are quoted before or at the appointment (or shown in the booking system if listed). Prices may vary by hair length, density, condition, color history, and complexity. Payment is due at the time of service unless we agree otherwise in writing. Accepted payment methods will be communicated at booking or service.</p>
+      <p>If deposits, card-on-file, or prepayment are enabled through our payment processor, those terms will be shown at checkout. Taxes may apply as required by law.</p>
+
+      <h2>5. Cancellation and rescheduling</h2>
+      <p>You must cancel or reschedule at least 24 hours before the scheduled start time, except for a genuine emergency. Contact us by phone/text or email as soon as possible. Late cancellations may be treated as a no-show at our discretion.</p>
+
+      <h2>6. No-call / no-show</h2>
+      <p>If you miss a confirmed appointment without timely notice, you may be charged up to the full quoted or estimated price of the scheduled service. Repeated no-shows may result in refusal of future bookings.</p>
+      <p><b>How charges work today:</b> Unless we have collected a deposit or card on file at booking, no-show amounts may be invoiced after the missed appointment and are due upon receipt. If card-on-file or deposit collection is enabled, we may charge the card for the no-show amount as disclosed at booking. By booking, you agree these no-show terms are a reasonable estimate of lost time and preparation costs, not a penalty beyond our actual harm, to the extent permitted by Washington law.</p>
+
+      <h2>7. Two-hour verification</h2>
+      <p>We may send a verification message about 2 hours before your appointment. If we do not receive a timely response, we may release the time slot and treat the appointment as cancelled. Responding is part of holding the appointment.</p>
+
+      <h2>8. Client responsibilities and disclosures</h2>
+      <p>You agree to:</p>
+      <ul>
+        <li>Provide accurate contact and location information</li>
+        <li>Disclose known allergies, scalp conditions, prior chemical treatments, and anything else material to safe service</li>
+        <li>Be present and ready at the scheduled time</li>
+        <li>Provide a clean, reasonably private, and safe workspace for house calls (including pets secured if needed)</li>
+        <li>Not be under the influence of substances that impair consent or safety</li>
+      </ul>
+      <p>Failure to disclose material chemical or medical history may increase risk of adverse results. We may refuse or stop service if continuing would be unsafe or unprofessional.</p>
+
+      <h2>9. Color, chemical, and results disclaimer</h2>
+      <p>Hair color and chemical services involve inherent risk (sensitivity, breakage, unexpected lift/tone, etc.). Results vary based on hair history, condition, and prior treatments. A consultation does not guarantee a specific final look. Patch tests may be recommended but are not always performed; tell us immediately about any reaction history.</p>
+
+      <h2>10. Conduct and right to refuse service</h2>
+      <p>We may refuse, pause, or end service for disrespectful, aggressive, harassing, discriminatory, unsafe, or inappropriate conduct, or if the environment is unsafe. No refund is owed for time already spent when service ends for cause.</p>
+
+      <h2>11. Minors</h2>
+      <p>Bookings for clients under 18 must be made by a parent or legal guardian. A parent/guardian must be present for the service unless we agree otherwise in advance. The adult booker is responsible for payment and for these Terms.</p>
+
+      <h2>12. Photos and marketing (optional)</h2>
+      <p>We will not use identifiable photos of you for marketing without your separate permission. If you grant permission (verbally or in writing), you may revoke it later for future use by contacting us; prior published uses may remain where already distributed.</p>
+
+      <h2>13. Intellectual property</h2>
+      <p>Site content, branding, and design are owned by Pocket Studio / MyKey Pocket or our licensors. You may not copy or reuse them for commercial purposes without permission.</p>
+
+      <h2>14. Third-party services</h2>
+      <p>Booking, messaging, calendar, and payment features may be provided by third parties (including Cal.com and payment processors). Their terms and privacy policies also apply to your use of those tools. We are not responsible for outages or errors solely caused by third-party platforms, but we will help resolve booking issues when you contact us promptly.</p>
+
+      <h2>15. Limitation of liability</h2>
+      <p>To the fullest extent permitted by Washington law: (a) services are provided with professional care but without warranties of specific aesthetic results; (b) we are not liable for adverse reactions or results caused by undisclosed allergies, prior chemical treatments, inaccurate information, or client failure to follow aftercare; (c) our total liability arising out of any booking or service is limited to the amount you paid us for that specific service; and (d) we are not liable for indirect, incidental, special, or consequential damages. Some limitations may not apply where prohibited by law. Nothing in these Terms limits liability for gross negligence, willful misconduct, or other liability that cannot be limited under applicable law.</p>
+
+      <h2>16. Indemnity</h2>
+      <p>You agree to indemnify and hold us harmless from claims arising out of your breach of these Terms, inaccurate disclosures, or misuse of the site, except to the extent caused by our gross negligence or willful misconduct.</p>
+
+      <h2>17. Governing law</h2>
+      <p>These Terms are governed by the laws of the State of Washington, without regard to conflict-of-law rules. Exclusive venue for disputes is the state or federal courts located in King County, Washington, unless applicable consumer law requires otherwise.</p>
+
+      <h2>18. Changes</h2>
+      <p>We may update these Terms from time to time. The "Last updated" date will change when we do. Continued use of the site or services after an update constitutes acceptance of the revised Terms for future bookings.</p>
+
+      <h2>19. Contact</h2>
+      <p>Questions about these Terms:<br/>MyKey Pocket / Pocket Studio<br/>Email: <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a><br/>Phone / text: <a href="tel:425-918-2029">425-918-2029</a><br/>Seattle, WA</p>
+    </LegalLayout>
+  );
+}

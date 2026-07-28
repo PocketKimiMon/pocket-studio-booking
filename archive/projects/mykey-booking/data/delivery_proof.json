@@ -1,0 +1,19 @@
+[
+  {
+    "channel": "email",
+    "at": "2026-07-13T09:04:41.941245+00:00",
+    "payload": {
+      "from": "from:<mykey@test.local",
+      "to": "to:<MYKEYPOCKET@ICLOUD.COM",
+      "data": "From: mykey@test.local\r\nTo: MYKEYPOCKET@ICLOUD.COM\r\nSubject: New booking: =?utf-8?q?Jos=C3=A9?= Client\r\nContent-Type: text/plain; charset=\"utf-8\"\r\nContent-Transfer-Encoding: 8bit\r\nMIME-Version: 1.0\r\n\r\nNew booking \u2014 MyKey / Rudy's Fremont\r\nService : Long Haircut  ($58)\r\nClient  : Jos\u00e9 Client\r\nContact : (555) 321-9876  jose@demo.com\r\nWhen    : 2026-07-25 1:30 PM\r\nNotes   : live fan-out proof \u2014 em dash\r\n"
+    }
+  },
+  {
+    "channel": "telegram",
+    "at": "2026-07-13T09:04:41.944913+00:00",
+    "payload": {
+      "chat_id": "TEST_CHAT",
+      "text": "New booking \u2014 MyKey / Rudy's Fremont\nService : Long Haircut  ($58)\nClient  : Jos\u00e9 Client\nContact : (555) 321-9876  jose@demo.com\nWhen    : 2026-07-25 1:30 PM\nNotes   : live fan-out proof \u2014 em dash"
+    }
+  }
+]

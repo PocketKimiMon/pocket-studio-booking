@@ -1,0 +1,125 @@
+[
+  {
+    "name": "Proof Client",
+    "email": "proof@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof",
+    "id": "bk_20260713085147_1713397",
+    "status": "booked",
+    "created": "2026-07-13T08:51:47.585444+00:00"
+  },
+  {
+    "name": "Proof Client",
+    "email": "proof@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof",
+    "id": "bk_20260713085320_1713397",
+    "status": "booked",
+    "created": "2026-07-13T08:53:20.915922+00:00"
+  },
+  {
+    "name": "Proof Client",
+    "email": "proof@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof",
+    "id": "bk_20260713085734_1713397",
+    "status": "booked",
+    "created": "2026-07-13T08:57:34.331602+00:00"
+  },
+  {
+    "name": "Proof Client",
+    "email": "proof@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof",
+    "id": "bk_20260713090101_1713397",
+    "status": "booked",
+    "created": "2026-07-13T09:01:01.721552+00:00"
+  },
+  {
+    "name": "Proof Client",
+    "email": "proof@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof",
+    "id": "bk_20260713090202_1713397",
+    "status": "booked",
+    "created": "2026-07-13T09:02:02.387840+00:00"
+  },
+  {
+    "name": "Proof Client",
+    "email": "proof@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof",
+    "id": "bk_20260713090357_1713397",
+    "status": "booked",
+    "created": "2026-07-13T09:03:57.086957+00:00"
+  },
+  {
+    "name": "Jos\u00e9 Client",
+    "email": "jose@demo.com",
+    "phone": "(555) 321-9876",
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "notes": "live fan-out proof \u2014 em dash",
+    "id": "bk_20260713090441_1717817",
+    "status": "booked",
+    "created": "2026-07-13T09:04:41.904246+00:00"
+  },
+  {
+    "service": {
+      "name": "Long Haircut",
+      "price": 58
+    },
+    "stylist": "MyKey",
+    "date": "2026-07-14",
+    "time": "2:00 PM",
+    "name": "Jane Voice",
+    "email": "jane@test.com",
+    "phone": "5551234567",
+    "notes": "came from voice booking demo",
+    "total": 58,
+    "source": "voice-or-typed",
+    "id": "vb_20260713101059_5968",
+    "status": "booked",
+    "created": "2026-07-13T10:10:59.604979+00:00"
+  }
+]

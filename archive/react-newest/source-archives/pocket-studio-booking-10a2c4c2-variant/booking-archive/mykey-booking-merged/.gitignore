@@ -1,0 +1,16 @@
+# ---- private data (contains test PII: bookings, guestbook, hit counter) ----
+data/
+
+# ---- python ----
+__pycache__/
+*.pyc
+
+# ---- local verification artifacts (screenshots, videos) ----
+shots/
+proof/
+*.png
+*.webm
+
+# ---- editor / os ----
+.DS_Store
+*.swp

@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Jos\u00e9 Client",
+    "service": "Long Haircut",
+    "price": 58,
+    "date": "2026-07-25",
+    "time": "1:30 PM",
+    "phone": "(555) 321-9876",
+    "email": "jose@demo.com",
+    "notes": "live fan-out proof \u2014 em dash",
+    "status": "booked",
+    "created": "2026-07-13T09:04:41.904246+00:00"
+  }
+]

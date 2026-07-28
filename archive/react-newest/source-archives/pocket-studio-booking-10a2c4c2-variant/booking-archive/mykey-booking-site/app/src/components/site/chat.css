@@ -1,0 +1,80 @@
+/* Chat-feel polish (swarm/chat-feel). Runtime chat behaviors only; the base
+   garments still live in site.css. Selectors here carry higher specificity
+   than the base rules so stylesheet order does not matter. All entrance
+   motion is transform-based: SSR content is never hidden behind opacity. */
+
+/* Bubbles rise into place (transform only, no fade). */
+@keyframes mk-chat-rise {
+  from {
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mk-chat-log .mk-msg {
+  animation: mk-chat-rise 0.28s var(--mk-ease-spring, ease-out) both;
+}
+
+/* Consecutive bubbles from the same side nestle together, like iMessage. */
+.mk-chat-log .mk-msg.mk-grouped {
+  margin-top: -6px;
+}
+
+/* The typing indicator pops in with the same motion. */
+.mk-chat-log .mk-typing {
+  animation: mk-chat-rise 0.22s var(--mk-ease-out, ease-out) both;
+}
+
+/* Reply controls rise gently each time a new step lands. */
+@keyframes mk-chat-controls-rise {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.mk-chat-card .mk-chips,
+.mk-chat-card .mk-chat-ctas,
+.mk-chat-card .mk-chat-input-row,
+.mk-chat-card .mk-chat-sendoff {
+  animation: mk-chat-controls-rise 0.24s var(--mk-ease-out, ease-out) both;
+}
+
+/* Scroll the log, never the page; contain wheel/touch overscroll so the
+   page does not get yanked when the log hits its end. */
+.mk-chat-log {
+  overscroll-behavior: contain;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mk-chat-log {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Visible focus ring on every keyboard target inside the card. */
+.mk-chat-card .mk-chat-chip:focus-visible,
+.mk-chat-card .mk-chat-back:focus-visible,
+.mk-chat-card .mk-change-btn:focus-visible,
+.mk-chat-card .mk-chat-send:focus-visible,
+.mk-chat-card .mk-chat-primary:focus-visible,
+.mk-chat-card .mk-chat-secondary:focus-visible,
+.mk-chat-card .mk-chat-input:focus-visible {
+  outline: 2px solid var(--mk-cyan);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mk-chat-log .mk-msg,
+  .mk-chat-log .mk-typing,
+  .mk-chat-card .mk-chips,
+  .mk-chat-card .mk-chat-ctas,
+  .mk-chat-card .mk-chat-input-row,
+  .mk-chat-card .mk-chat-sendoff {
+    animation: none;
+  }
+}

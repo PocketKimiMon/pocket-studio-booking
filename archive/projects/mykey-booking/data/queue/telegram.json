@@ -1,0 +1,24 @@
+[
+  {
+    "booking": {
+      "service": {
+        "name": "Long Haircut",
+        "price": 58
+      },
+      "stylist": "MyKey",
+      "date": "2026-07-14",
+      "time": "2:00 PM",
+      "name": "Jane Voice",
+      "email": "jane@test.com",
+      "phone": "5551234567",
+      "notes": "came from voice booking demo",
+      "total": 58,
+      "source": "voice-or-typed",
+      "id": "vb_20260713101059_5968",
+      "status": "booked",
+      "created": "2026-07-13T10:10:59.604979+00:00"
+    },
+    "at": "2026-07-13T10:10:59.608762+00:00",
+    "error": "not configured"
+  }
+]
