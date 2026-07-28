@@ -2,11 +2,13 @@
 
 All the visible text on index.html, section by section. Edit here, then tell me what changed and I'll apply it to the page.
 
+Tone: direct, irreverent, witchy undercurrent, neurodivergent-aware, zero corporate sludge.
+
 ---
 
 ## Browser tab / SEO
 - Title: `Pocket Studio — book with MyKey`
-- Meta description: `Book cuts and color directly with MyKey Pocket, Seattle hair artist. Former Rudy's clients welcome.`
+- Meta description: `Book cuts and color directly with MyKey Pocket — Seattle hair artist, house calls only, no front desk in the way. Former Rudy's clients: this is where you book now.`
 
 ## Top bar
 - `pocket studio · seattle`
@@ -30,37 +32,37 @@ All the visible text on index.html, section by section. Edit here, then tell me 
 - Body: `book your next appointment at least 2 days out and i'll spill everything — why i'm not at the old shop anymore, what really went down, all of it. consider it a loyalty bribe.`
 
 ### Notice band
-- **former Rudy's clients:** `MyKey is no longer at Rudy's Barbershop. this is the new spot to book. same chair energy, fewer hoops.`
+- **former Rudy's clients:** `i'm not at Rudy's anymore. this is where you book now — same hands, same energy, way fewer hoops.`
 
 ### House-call notice
-- **house calls only right now.** `i'm coming to you — no travel fee at the moment, but that'll change once i land a new chair. bear with me while i figure out where to set up shop, and thank you for riding this out with me. i know i'm shaking up your routine, and i'm sorry. especially if you're neurodivergent and routine changes are rough — we'll get back to something steady soon.`
+- **house calls only right now.** `i come to you — no travel fee yet, but that won't last forever. i'm between chairs and figuring out where to land next. thank you for rolling with it. i know shaking up your routine is a lot, especially if you're neurodivergent and changes hit different — i get it, i'm right there with you. we'll get back to something steady soon.`
 
 ---
 
 ## 01 · About the artist
 - Section note: `the human behind the chair`
-- Lede: `i'm MyKey — a Seattle hair artist who just left Rudy's Barbershop and is taking clients directly.`
+- Lede: `i'm MyKey — hair artist, solo operator, the whole front desk and back office in one neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no middleman, no corporate scheduling system, just me and my booking link.`
 - `i worked the salon floor for years, most recently at Rudy's, and i loved the people and hated the overhead. Pocket Studio is what happened when i decided clients should pay for the actual work, not for someone else's rent.`
-- `i cut and color all textures, but i especially love the transformations: the grow-out rescue, the "i need a change" moment, the color correction that takes six hours and a lot of trust.`
-- `my chair is a low-judgment zone. come with reference pics, come with bedhead, come with a vague idea and a willingness to talk it through.`
+- `i cut and color all textures, but the transformations are what light me up: the grow-out rescue, the "i need to feel like a different person by friday" moment, the color correction that takes six hours and a dangerous amount of trust.`
+- `show up however you show up. reference pics, bedhead, a vague idea and a willingness to talk it through — all valid. i'm not here to judge your hair crimes.`
 - `expect real conversation, honest recommendations, tea if you're around long enough, and a cut that fits how you actually live — not how your stylist wants to instagram it.`
 - Contact line: `pronouns: they/them · seattle, wa · 425-918-2029 · mykeypocket@icloud.com`
 
 ### "why book direct?" card
 - `no front-desk telephone game`
-- `you know exactly who you're getting`
-- `rebooking reminders that actually make sense`
-- `your notes stay with me, not a rotating receptionist`
+- `you know exactly who's holding the scissors`
+- `rebooking reminders from a real human, not an auto-drip`
+- `your notes live with me — not a rotating cast of receptionists who've never seen your hair`
 - Hand label: `see you in the chair`
 
 ---
 
 ## 02 · What's going on (blog)
-- Section note: `updates from the chair`
+- Section note: `dispatches from the chair`
 
 ### Post — july 14, 2026 — "house calls + the hunt for a new chair"
-- `right now i'm doing house calls only. i'll come to you, set up wherever works, and get you sorted. no travel fee for now — consider it a thank-you for sticking with me while i find a new permanent spot.`
-- `things are a little chaotic and i know that's hard, especially if you rely on a routine. i feel that deeply. i'm working on getting a chair locked down so we can get back to something steady. appreciate you more than i can say.`
+- `doing house calls only right now. i show up, set up wherever works, and get you sorted. no travel fee for now — call it a thank-you for sticking around while i figure out my next spot.`
+- `i know it's chaotic. i know routine changes are hard — believe me, my brain runs on routine too. i'm working on locking down a chair so we can both stop improvising. genuinely appreciate you riding this out with me.`
 - Sign-off: `— mykey`
 
 ---
@@ -70,62 +72,34 @@ All the visible text on index.html, section by section. Edit here, then tell me 
 
 | Service | Time | Description | Tag |
 |---|---|---|---|
-| Buzz Cut | 30 min | `clippers all over, clean edges, back to your day.` | quick |
-| Short Cut | 45 min | `scissor or clipper-over-comb, shaped to your head.` | classic |
-| Long Cut | 60 min | `layers, texture, cleanup — keep the length, lose the dead ends.` | detail |
-| New-Client Color Consult | 45 min | `first time coloring with me? we plan the lift, the tone, and the maintenance before anything touches your head. books 3 days out.` | required for new color |
-| Existing-Client Color Appointment | 3 hr | `roots, refresh, full transformation — we already know the vibe. previous color clients: block the afternoon. complex sessions can run 3–5 hr. books 1 week out.` | color |
+| Buzz Cut | 30 min | `clippers all over, clean edges, back to your life.` | quick |
+| Short Cut | 45 min | `scissor or clipper-over-comb, shaped to your actual head.` | classic |
+| Long Cut | 60 min | `layers, texture, cleanup — keep the length, kill the dead ends.` | detail |
+| New-Client Color Consult | 45 min | `first time coloring with me? we sit down and plan everything — lift, tone, maintenance, realistic expectations — before anything touches your hair. books 3 days out.` | required for new color |
+| Existing-Client Color Appointment | 3 hr | `roots, refresh, full transformation — we already know the vibe. block the afternoon; complex sessions can run 3–5 hours and i'm not rushing your hair for anyone's schedule. books 1 week out.` | color |
 
 ---
 
 ## 04 · The fine print (policies)
 - Section note: `so nobody gets surprised`
 
-1. **one month at a time** — `the calendar opens one month at a time, first come first serve. on the 1st of each month, the next full month becomes available.`
-2. **advance notice** — `haircuts book 2 days out. new-client color consults book 3 days out, and existing-client color appointments book 1 week out — color takes prep. need it sooner? send an emergency request.`
-3. **24-hour cancellation** — `need to cancel or reschedule? 24 hours notice, unless it's an actual emergency. just talk to me — i'm reasonable, but my time is how i pay rent.`
-4. **no-call-no-show = charged** — `miss a confirmed appointment without timely notice and you may be charged up to the full quoted/estimated service amount (invoiced if no card on file). fairness goes both ways — full terms on the terms page.`
-5. **2-hour verification** — `you'll get a text or email 2 hours before your appointment to confirm. if i don't hear back, i may release the slot.`
-6. **pricing & payment** — `prices are quoted before or at service (they can vary by hair/complexity). payment is due at the appointment unless we agree otherwise.`
-7. **house-call space** — `provide a safe, ready spot and an accurate address. i may decline or end a visit if the location isn't workable. disclose allergies & prior chemical work.`
+1. **one month at a time** — `calendar opens on the 1st for the full month ahead. first come, first serve — i don't hold slots.`
+2. **advance notice** — `haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out — color takes prep and i refuse to wing it. need it sooner? send an emergency request.`
+3. **24-hour cancellation** — `cancel or reschedule? 24 hours notice. emergencies are real and i'm reasonable — but my time is literally how i pay rent, so please don't ghost me.`
+4. **no-call-no-show = charged** — `miss a confirmed appointment with no heads-up and you'll be charged up to the full service amount. i'll invoice you if there's no card on file. fairness goes both ways — full terms on the terms page.`
+5. **2-hour confirmation** — `you'll get a text or email 2 hours before your appointment. if i don't hear back, i may give your slot to someone else. just a quick "yep" is all i need.`
+6. **pricing & payment** — `prices are quoted before or at the chair — they vary by hair and complexity because hair isn't one-size-fits-all. payment is due at the appointment unless we work something out.`
+7. **house-call space** — `give me a safe, ready spot and an accurate address. i may leave if the situation isn't workable — nothing personal. let me know about allergies and any prior chemical work so i don't fry your hair.`
 
 ---
 
 ## 05 · Book it (CTA)
 - Hours note: `thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm`
-- Lede: `answer a couple quick questions and i'll point you straight to the right appointment — no guesswork, no wrong slot.`
+- Lede: `answer a couple quick questions and i'll point you to the right slot — no guesswork, no booking the wrong thing and having to start over.`
 - Button: `let's book it →`
 - Emergency button: `🚨 need it sooner? emergency request`
-- Fine print 1: `availability is live on the calendar — real time, instant confirmation. house calls only right now.`
+- Fine print 1: `calendar is live — real time, instant confirmation. house calls only right now.`
 - Fine print 2: `by booking you agree to the terms of service and privacy policy, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.`
-
----
-
-## 06 · Travel fee calculator (new app, /book page)
-Lives on the TanStack app (`pocket-studio-booking-10a2c4c2`), above the Cal.com iframe. Rates are editable in `src/content.ts` (`travel`: flat $25, perMile $2, maxRadiusMi 30). Backend: `POST /api/travel-fee` (Nominatim geocode + straight-line distance from Seattle, WA).
-
-- Title: `House call? Get your travel fee.`
-- Explainer: `House calls are Seattle-area only. The fee is $25 base + $2/mi from Seattle, WA, quoted before you book — never after.`
-- Input placeholder: `Your address or neighborhood (e.g. Capitol Hill, Seattle)`
-- Button: `Calculate travel fee` (while loading: `Calculating…`)
-- Loading line: `Checking the map…`
-- Result: `Distance: X mi — Travel fee: $Y`
-- Outside area: `Sorry, no house calls there (X mi) — outside service area (30 mi).`
-- Fallback (address not found/offline): `Travel fee: $25 (estimate only — exact distance unavailable)`
-
----
-
-## 06 · Travel fee calculator (new app, /book page)
-Lives on the TanStack app (`pocket-studio-booking-10a2c4c2`), above the Cal.com iframe. Rates are editable in `src/content.ts` (`travel`: flat $25, perMile $2, maxRadiusMi 30). Backend: `POST /api/travel-fee` (Nominatim geocode + straight-line distance from Seattle, WA).
-
-- Title: `House call? Get your travel fee.`
-- Explainer: `House calls are Seattle-area only. The fee is $25 base + $2/mi from Seattle, WA, quoted before you book — never after.`
-- Input placeholder: `Your address or neighborhood (e.g. Capitol Hill, Seattle)`
-- Button: `Calculate travel fee` (while loading: `Calculating…`)
-- Loading line: `Checking the map…`
-- Result: `Distance: X mi — Travel fee: $Y`
-- Outside area: `Sorry, no house calls there (X mi) — outside service area (30 mi).`
-- Fallback (address not found/offline): `Travel fee: $25 (estimate only — exact distance unavailable)`
 
 ---
 
@@ -142,19 +116,19 @@ Lives on the TanStack app (`pocket-studio-booking-10a2c4c2`), above the Cal.com 
 - Panel title: `book with mykey`
 - Step 1: `what are we doing?` — options: `a cut` (`buzz, short, or long — clippers or scissors`) / `color` (`roots, refresh, or a full transformation`)
 - Step 2 (cut): `which cut?` — Buzz / Short / Long with times
-- Step 2 (color): `first time coloring with me?` — `yes, i'm new` (`we plan the lift, tone & maintenance first · 45 min consult · books 3 days out`) / `no, coming back` (`we already know the vibe · 3 hr (up to 5 for complex) · books 1 week out`)
+- Step 2 (color): `first time coloring with me?` — `yes, i'm new` (`we plan the lift, tone & maintenance first · 45 min consult · books 3 days out`) / `nope, coming back` (`we already know the vibe · 3 hr (up to 5 for complex) · books 1 week out`)
 - Result: `nice — you're set up for` + service name + `books X out minimum · earliest: <date>`
 - Go button: `book my appointment →`
-- Note: `opens the live calendar to pick a day & time. by booking you accept the terms & privacy policy. text 425-918-2029 if nothing fits.`
+- Note: `opens the live calendar to pick a day & time. by booking you accept the terms & privacy policy. text 425-918-2029 if nothing works.`
 - Upsell: `now that you're sorted…` / `interested in what else mykey does? add another while you're here.` / `i'm good, thanks — close`
-- All booked: `that's the whole menu` / `you've lined up everything mykey offers` / `want something custom? text 425-918-2029 and we'll figure it out.`
+- All booked: `that's the whole menu` / `you've lined up everything i offer` / `want something custom? text 425-918-2029 and we'll figure it out.`
 
 ## Emergency request modal
 - Title: `🚨 emergency request`
 - Lede: `need it sooner than the calendar allows?`
-- Hint: `tomorrow, this week, whenever — tell me and i'll try to make it work`
-- Fields: `your name` (`who am i talking to?`) · `phone or email` (`best way to reach you, fast`) · `what do you need?` (`cut? color? event hair? the whole situation?`) · `when do you need it?` (`e.g. tomorrow afternoon, before saturday…`)
+- Hint: `tomorrow, this weekend, whenever — tell me and i'll try to make it work`
+- Fields: `your name` (`who am i talking to?`) · `phone or email` (`fastest way to reach you`) · `what do you need?` (`cut? color? event hair? the whole situation?`) · `when do you need it?` (`e.g. tomorrow afternoon, before saturday…`)
 - Send button: `send emergency request →`
-- Note: `goes straight to mykey's inbox. truly urgent? text 425-918-2029.`
-- Success: `got it — request sent. 🎉 mykey will get back to you fast. if it's truly urgent, also text 425-918-2029.`
+- Note: `goes straight to my inbox. truly urgent? text 425-918-2029.`
+- Success: `got it — request sent. 🎉 i'll get back to you fast. if it's truly urgent, also text 425-918-2029.`
 - Error: `hmm, that didn't go through. text 425-918-2029 or email itspocketmykey@gmail.com instead.`
