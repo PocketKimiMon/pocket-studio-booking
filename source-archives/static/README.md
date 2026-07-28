@@ -10,7 +10,7 @@ A single-file, mobile-first site for MyKey Pocket / Pocket Studio.
 
 ## Sections
 
-- **Hero / promo:** "Spill the TEA" deal — rebook ahead and get the tea.
+- **Hero / promo:** "Spill the TEA" deal — rebook ahead and get the tea (the tea is gossip: the story of how Rudy's wrongfully fired MyKey, not a drink).
 - **House-call notice:** explains current house-call setup, no travel fee, and the search for a new chair.
 - **About the artist:** MyKey's bio, pronouns, location, contact.
 - **What's going on:** a simple blog section. Copy the `<li class="post">` block in `index.html` to add new updates.
