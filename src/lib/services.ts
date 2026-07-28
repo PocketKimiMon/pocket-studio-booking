@@ -18,7 +18,7 @@ export const SERVICES: Service[] = [
     slug: "buzz-cut",
     name: "Buzz Cut",
     duration: "30 min",
-    price: "$45",
+    price: "$50",
     accent: "var(--color-lime)",
     blurb: "Clippers all over, clean edges.",
     detail: "Clean fade or one-length buzz. In and out, sharp — back to your day.",
@@ -29,9 +29,24 @@ export const SERVICES: Service[] = [
       "Edges, neckline, and around the ears detailed clean.",
       "Style check + tips to keep it crisp until the next one.",
     ],
-    images: [
-      { src: "/work/buzz-1.jpg", alt: "Fresh fade with clean edges" },
+    images: [{ src: "/work/buzz-1.jpg", alt: "Fresh fade with clean edges" }],
+  },
+  {
+    slug: "taper-fade-cut",
+    name: "Taper/Fade Cut",
+    duration: "45 min",
+    price: "$65",
+    accent: "var(--color-lime)",
+    blurb: "Crisp taper or skin fade, blended clean.",
+    detail: "Low, mid, or high — tapered neckline or a full skin fade, dialed to your head shape.",
+    goodFor: "Skin fades, tapers, burst fades, keeping the top while the sides stay tight.",
+    whatHappens: [
+      "We pick the height and blend — bring a photo if you've got one.",
+      "Clipper work with a razor finish on the edges.",
+      "Blend check in the mirror from every angle.",
+      "Styling tips to keep it sharp between cuts.",
     ],
+    images: [{ src: "/work/buzz-1.jpg", alt: "Fresh fade with clean edges" }],
   },
   {
     slug: "short-cut",
@@ -41,7 +56,8 @@ export const SERVICES: Service[] = [
     accent: "var(--color-flush)",
     blurb: "Shaped to your head.",
     detail: "Scissor or clipper-over-comb. Precision short shapes with intention.",
-    goodFor: "Textured crops, curly shapes, pixies, mullets, anything above the shoulders with a point of view.",
+    goodFor:
+      "Textured crops, curly shapes, pixies, mullets, anything above the shoulders with a point of view.",
     whatHappens: [
       "We talk shape, texture, and how much work you want mornings to be.",
       "Scissor work or clipper-over-comb, cut to how your hair actually grows.",
@@ -58,7 +74,7 @@ export const SERVICES: Service[] = [
     slug: "long-cut",
     name: "Long Cut",
     duration: "60 min",
-    price: "$85",
+    price: "$100",
     accent: "var(--color-violet-brand)",
     blurb: "Keep the length, lose dead ends.",
     detail: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo.",
@@ -75,13 +91,33 @@ export const SERVICES: Service[] = [
     ],
   },
   {
+    slug: "curl-cut",
+    name: "Curl Cut",
+    duration: "75 min",
+    price: "$120",
+    accent: "var(--color-violet-brand)",
+    blurb: "Curl-by-curl shaping, cut dry.",
+    detail:
+      "Your curls cut the way they actually spring — dry, curl by curl, no surprises after the first wash.",
+    goodFor:
+      "Waves, curls, and coils that need shape — from loose 2s to tight 4s, first curl cuts and rescues.",
+    whatHappens: [
+      "Come with your hair how you normally wear it — we cut it dry, curl by curl.",
+      "Shape built for your curl pattern and shrinkage.",
+      "Wash, hydrate, and define so you see the real result.",
+      "A routine you can actually repeat at home.",
+    ],
+    images: [{ src: "/work/short-3.jpg", alt: "Curly short cut, natural light" }],
+  },
+  {
     slug: "hair-consultation",
     name: "New-Client Color Consult",
     duration: "45 min",
     price: "$35",
     accent: "var(--color-violet-brand)",
     blurb: "Required before new color.",
-    detail: "First time coloring with me? We plan the lift, tone, and upkeep before anything touches your head.",
+    detail:
+      "First time coloring with me? We plan the lift, tone, and upkeep before anything touches your head.",
     goodFor: "Anyone new to my chair who wants color — vivids, blondes, coverage, corrections.",
     whatHappens: [
       "We look at your hair's history — every box dye confession stays between us.",
@@ -102,7 +138,8 @@ export const SERVICES: Service[] = [
     accent: "var(--color-lime)",
     blurb: "We already know the vibe.",
     detail: "Roots, refresh, gloss, lift, tone, full transformations for returning clients.",
-    goodFor: "Returning color clients: root touch-ups, gloss refreshes, vivids, dimensional work, big changes.",
+    goodFor:
+      "Returning color clients: root touch-ups, gloss refreshes, vivids, dimensional work, big changes.",
     whatHappens: [
       "We confirm the plan from your intake — refresh or something new.",
       "Color mixed and applied in sections; complex work runs 3–5 hours, so get comfy.",
