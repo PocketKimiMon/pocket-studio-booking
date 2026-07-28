@@ -1,9 +1,9 @@
 # Deploy status
 
 ## Live now — Cloudflare Pages (permanent)
-https://pocket-studio.pages.dev
-- Project: `pocket-studio` (production branch: main)
-- Deploy: `npx wrangler pages deploy . --project-name=pocket-studio --branch=main` from a clean dir containing only index.html, privacy.html, terms.html, assets/ (see /tmp/pocket-studio-deploy pattern — do NOT deploy the repo root, it would upload node_modules)
+https://pocketstudio-ao9.pages.dev
+- Project: `pocketstudio` (pocketstudio.pages.dev was taken; -ao9 suffix is ours) (production branch: main)
+- Deploy: `npx wrangler pages deploy . --project-name=pocketstudio --branch=main` from a clean dir containing only index.html, privacy.html, terms.html, assets/ (see /tmp/pocket-studio-deploy pattern — do NOT deploy the repo root, it would upload node_modules)
 - Free tier: unlimited bandwidth, commercial use OK
 - Wrangler is logged in on this machine
 
