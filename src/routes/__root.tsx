@@ -7,11 +7,85 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { BASE_URL, DEFAULT_OG_IMAGE, HAIR_SALON_JSONLD, SEO_CONFIG } from "../lib/seo";
+import { headFor } from "../lib/seo";
+
+const SITE_URL = "https://pocketstudio.biz";
+const SITE_NAME = "Pocket Studio";
+const DEFAULT_DESC =
+  "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.";
+
+const SALON_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "HairSalon",
+  name: SITE_NAME,
+  description: DEFAULT_DESC,
+  url: SITE_URL + "/",
+  telephone: "+1-425-918-2029",
+  email: "mykeypocket@icloud.com",
+  image: SITE_URL + "/images/og-image.jpg",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Seattle",
+    addressRegion: "WA",
+    addressCountry: "US",
+  },
+  areaServed: [
+    "Capitol Hill",
+    "Ballard",
+    "Fremont",
+    "Wallingford",
+    "Queen Anne",
+    "Green Lake",
+    "Beacon Hill",
+    "Columbia City",
+    "West Seattle",
+  ],
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Thursday",
+      opens: "11:00",
+      closes: "18:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Friday",
+      opens: "12:00",
+      closes: "17:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday", "Sunday"],
+      opens: "12:00",
+      closes: "20:00",
+    },
+  ],
+  founder: {
+    "@type": "Person",
+    name: "MyKey Pocket",
+    jobTitle: "Hair Artist",
+    description: "Independent Seattle hairstylist (they/them). House calls only.",
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Hair Services",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Buzz Cut" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Short Cut" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Long Cut" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "New-Client Color Consult" } },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Existing-Client Color Appointment" },
+        description: "Priced at the chair, based on hair and complexity.",
+      },
+    ],
+  },
+};
 
 function NotFoundComponent() {
   return (
@@ -74,53 +148,36 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      // Sitewide defaults — child routes override title/description/robots/
-      // og:url via their own head (see src/lib/seo.ts + SEO-INJECTION.md).
-      { title: SEO_CONFIG["/"].title },
-      { name: "description", content: SEO_CONFIG["/"].description },
-      { name: "author", content: "MyKey Pocket" },
-      { name: "robots", content: "index, follow" },
-      { property: "og:site_name", content: "Pocket Studio" },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: `${BASE_URL}/` },
-      { property: "og:title", content: SEO_CONFIG["/"].title },
-      { property: "og:description", content: SEO_CONFIG["/"].description },
-      { property: "og:image", content: DEFAULT_OG_IMAGE },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: SEO_CONFIG["/"].title },
-      { name: "twitter:description", content: SEO_CONFIG["/"].description },
-      { name: "twitter:image", content: DEFAULT_OG_IMAGE },
-    ],
-    links: [
-      // NOTE: no root-level canonical — TanStack concatenates link tags
-      // (unlike meta, they don't override), so every leaf route emits its own
-      // canonical via buildHead() in src/lib/seo.ts. A root canonical here
-      // would render duplicate <link rel="canonical"> on every child route.
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap",
-      },
-    ],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify(HAIR_SALON_JSONLD),
-      },
-    ],
-  }),
+  head: () => {
+    // SEO contract: default head comes from src/lib/seo.ts (currently a LOCAL STUB,
+    // integrator swaps in the seo agent's real file). Route-critical links/scripts
+    // (stylesheet, fonts, icon, Salon JSON-LD) stay wired here regardless.
+    const seo = headFor("/");
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "author", content: "Pocket Studio / MyKey Pocket" },
+        { name: "theme-color", content: "#0b0b0f" },
+        ...seo.meta,
+      ],
+      links: [
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+        { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Caveat:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap",
+        },
+        ...(seo.links ?? []),
+      ],
+      scripts: [...(seo.scripts ?? [])],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -131,27 +188,11 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* Reading mode (dyslexia-friendly) — default ON; must run before paint. */}
+        <script src="/reading-mode.js" />
         <HeadContent />
       </head>
       <body>
-        {/* reading mode (OpenDyslexic) — DEFAULT ON, persisted in localStorage
-            ("ps-reading-mode": "on" | "off"; unset = on). applied pre-paint so
-            the dyslexia-friendly fonts land without a flash. guarded: works
-            even when localStorage is unavailable. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                try {
-                  var m = window.localStorage.getItem('ps-reading-mode');
-                  if (m === null || m === 'on') document.body.classList.add('reading-mode');
-                } catch (e) {
-                  if (document.body) document.body.classList.add('reading-mode');
-                }
-              })();
-            `,
-          }}
-        />
         {children}
         <Scripts />
         <script
@@ -192,57 +233,6 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      <ReadingModeToggle />
     </QueryClientProvider>
-  );
-}
-
-/**
- * Reading mode toggle — visible on every page (fixed bottom-left).
- * OpenDyslexic + open spacing is ON BY DEFAULT; persists to localStorage
- * ("ps-reading-mode"). SSR-safe: all window/localStorage/body access is
- * guarded and client-only.
- */
-function ReadingModeToggle() {
-  const [on, setOn] = useState(true);
-
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem("ps-reading-mode");
-      const next = stored === null ? true : stored === "on";
-      setOn(next);
-      document.body.classList.toggle("reading-mode", next);
-    } catch {
-      document.body.classList.add("reading-mode");
-    }
-  }, []);
-
-  const toggle = () => {
-    const next = !on;
-    setOn(next);
-    try {
-      window.localStorage.setItem("ps-reading-mode", next ? "on" : "off");
-    } catch {
-      /* storage unavailable — the class toggle still works for this session */
-    }
-    document.body.classList.toggle("reading-mode", next);
-  };
-
-  return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-pressed={on}
-      className="fixed bottom-4 left-4 z-[70] border-2 px-3 py-1.5 text-xs font-black transition-transform hover:-translate-y-0.5"
-      style={{
-        background: on ? "var(--color-lime)" : "var(--color-bone)",
-        color: "var(--color-void)",
-        borderColor: "var(--color-void)",
-        boxShadow: "3px 3px 0 var(--color-void)",
-        fontFamily: "var(--font-mono)",
-      }}
-    >
-      reading mode: {on ? "on" : "off"}
-    </button>
   );
 }

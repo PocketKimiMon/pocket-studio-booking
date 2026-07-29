@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { CAL_BASE } from "../lib/services";
+import { headFor } from "../lib/seo";
 import { BookingPopup } from "../components/BookingPopup";
+import { EmergencyModal } from "../components/EmergencyModal";
+import { ReadingModeToggle } from "../components/ReadingModeToggle";
 import { TravelFee } from "../components/TravelFee";
-import { seoHead } from "../lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: seoHead("/"),
+  head: () => headFor("/"),
   component: Page,
 });
 
@@ -15,7 +17,7 @@ const STUDIO_SERVICES = [
     name: "Buzz Cut",
     slug: "buzz-cut",
     duration: "30 MIN",
-    price: "$50",
+    price: "priced at the chair",
     desc: "clippers all over, clean edges, back to your life.",
     tag: "quick",
     accent: "var(--color-lime)",
@@ -24,7 +26,7 @@ const STUDIO_SERVICES = [
     name: "Short Cut",
     slug: "short-cut",
     duration: "45 MIN",
-    price: "$65",
+    price: "priced at the chair",
     desc: "scissor or clipper-over-comb, shaped to your actual head.",
     tag: "classic",
     accent: "var(--color-flush)",
@@ -33,7 +35,7 @@ const STUDIO_SERVICES = [
     name: "Long Cut",
     slug: "long-cut",
     duration: "60 MIN",
-    price: "$100",
+    price: "priced at the chair",
     desc: "layers, texture, cleanup. keep the length, kill the dead ends.",
     tag: "detail",
     accent: "var(--color-violet-brand)",
@@ -42,7 +44,7 @@ const STUDIO_SERVICES = [
     name: "New-Client Color Consult",
     slug: "hair-consultation",
     duration: "45 MIN",
-    price: "$35",
+    price: "priced at the chair",
     desc: "first time coloring with me? we sit down and plan everything (lift, tone, maintenance, realistic expectations) before anything touches your hair. books 3 days out.",
     tag: "required for new color",
     accent: "var(--color-violet-brand)",
@@ -51,7 +53,7 @@ const STUDIO_SERVICES = [
     name: "Existing-Client Color Appointment",
     slug: "existing-client-color-appointment",
     duration: "3 HR",
-    price: "$120+",
+    price: "priced at the chair",
     desc: "roots, refresh, full transformation. we already know the vibe. block the afternoon; complex sessions can run 3–5 hours and i'm not rushing your hair for anyone's schedule. books 1 week out.",
     tag: "color",
     accent: "var(--color-lime)",
@@ -67,7 +69,7 @@ const POLICIES = [
   {
     n: "02",
     h: "advance notice",
-    p: "haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out. color takes prep and i refuse to wing it. need it sooner? text 425-918-2029.",
+    p: "haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out. color takes prep and i refuse to wing it. need it sooner? send an emergency request.",
   },
   {
     n: "03",
@@ -116,8 +118,7 @@ function Page() {
       <TravelFee />
       <Footer />
       <BookingPopup />
-      {/* EmergencyModal intentionally NOT mounted — dormant per locked fact
-          (entry points removed 2026-07-28). Component file stays in the repo. */}
+      <EmergencyModal />
     </div>
   );
 }
@@ -143,11 +144,12 @@ function TopBar() {
         >
           <span
             className="inline-block h-2 w-2 animate-pulse rounded-full"
-            style={{ background: "var(--color-lime)" }}
+            style={{ background: "var(--color-go)" }}
           />
           booking open
         </div>
         <div className="flex items-center gap-4">
+          <ReadingModeToggle compact />
           <a
             href="tel:425-918-2029"
             className="hidden text-sm underline-offset-4 hover:underline md:block"
@@ -215,14 +217,14 @@ function Hero() {
         className="mt-6 flex flex-wrap gap-2"
         style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
       >
-        {["✂ scissors ready", "color chaos welcome", "house calls", "loyalty bribes"].map(
+        {["✂ scissors ready", "color chaos welcome", "house calls", "the tea if you rebook"].map(
           (s, i) => (
             <span
               key={s}
               className="inline-block rounded-full border-2 px-3 py-1"
               style={{
                 borderColor: "var(--color-void)",
-                background: i % 2 === 0 ? "#fff" : "rgba(95,240,200,.45)",
+                background: i % 2 === 0 ? "var(--color-card-w)" : "rgba(111,230,235,.14)",
                 transform: `rotate(${i % 2 === 0 ? -1.5 : 1.5}deg)`,
               }}
             >
@@ -254,12 +256,11 @@ function Hero() {
           className="mt-1 text-3xl font-black uppercase tracking-tight sm:text-4xl"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          rebook ahead, get the good stuff.
+          rebook ahead, get the tea.
         </h2>
         <p className="mt-3 max-w-lg text-base sm:text-lg" style={{ color: "var(--color-void)" }}>
-          book your next appointment at least 2 days out and i'll bring the extras. product recs
-          that actually fit your hair, styling tricks, honest answers. consider it a loyalty
-          bribe. ☕
+          book your next appointment at least 2 days out and i'll spill everything. why i'm not at
+          the old shop anymore, what really went down, all of it. consider it a loyalty bribe. ☕
         </p>
       </div>
 
@@ -281,7 +282,7 @@ function Hero() {
         </div>
         <div
           className="rounded-xl border p-4 text-sm"
-          style={{ background: "rgba(95,240,200,.22)", borderColor: "var(--color-violet-brand)" }}
+          style={{ background: "rgba(51,203,210,.10)", borderColor: "var(--color-violet-brand)" }}
         >
           <strong className="font-bold" style={{ color: "var(--color-violet-brand)" }}>
             house calls only right now.
@@ -292,6 +293,19 @@ function Hero() {
           i'm right there with you. we'll get back to something steady soon.
         </div>
       </div>
+
+      {/* hero image — the chair, on its way to you */}
+      <figure
+        className="mt-8 overflow-hidden rounded-2xl border-2"
+        style={{ borderColor: "var(--color-void)", boxShadow: "10px 10px 0 var(--color-lime)" }}
+      >
+        <img
+          src="/images/home-hero.jpg"
+          alt="MyKey's chair and kit, packed for a house call"
+          className="aspect-[16/9] w-full object-cover sm:aspect-[21/9]"
+          loading="eager"
+        />
+      </figure>
 
       {/* hours */}
       <div
@@ -337,7 +351,11 @@ function About() {
   return (
     <section
       className="border-y-2"
-      style={{ background: "var(--color-card-2)", borderColor: "var(--color-void)" }}
+      style={{
+        background:
+          "linear-gradient(rgba(11,11,15,.93), rgba(11,11,15,.93)), url(/images/gallery-texture-2.jpg) center/cover",
+        borderColor: "var(--color-void)",
+      }}
     >
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:grid-cols-[1.2fr_1fr] sm:py-24">
         <div>
@@ -360,8 +378,7 @@ function About() {
           <p className="mt-5 text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
             i'm MyKey: hair artist, solo operator, the whole front desk and back office in one
             neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no
-            middleman, no corporate scheduling system, just me and my booking link. clients should
-            pay for the actual work, not someone else's rent.
+            middleman, no corporate scheduling system, just me and my booking link.
           </p>
           <p className="mt-4 text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
             i cut and color all textures, but the transformations are what light me up: the grow-out
@@ -371,9 +388,7 @@ function About() {
           </p>
           <p className="mt-4 text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
             show up however you show up. reference pics, bedhead, a vague idea and a willingness to
-            talk it through. all valid. i'm not here to judge your hair crimes. expect real
-            conversation, honest recommendations, tea if you're around long enough, and a cut that
-            fits how you actually live — not how your stylist wants to instagram it.
+            talk it through. all valid. i'm not here to judge your hair crimes.
           </p>
           <p
             className="mt-6 text-sm"
@@ -456,9 +471,9 @@ function Updates() {
         <article
           className="mb-3 border-2 p-5 sm:p-6"
           style={{
-            background: "#fff",
-            borderColor: "rgba(18,14,23,.14)",
-            boxShadow: "2px 2px 0 rgba(18,14,23,.08)",
+            background: "var(--color-card-w)",
+            borderColor: "var(--border-subtle)",
+            boxShadow: "3px 3px 0 var(--color-void)",
           }}
         >
           <div
@@ -501,15 +516,10 @@ function Updates() {
         </article>
         <Link
           to="/blog"
-          className="inline-block border-2 px-5 py-2 text-sm font-black transition-transform hover:-translate-y-0.5"
-          style={{
-            background: "#fff",
-            borderColor: "var(--color-void)",
-            boxShadow: "3px 3px 0 var(--color-void)",
-            color: "var(--color-void)",
-          }}
+          className="inline-block text-sm font-bold underline underline-offset-4"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-violet-brand)" }}
         >
-          ALL DISPATCHES →
+          all dispatches →
         </Link>
       </div>
     </section>
@@ -589,9 +599,9 @@ function Services() {
                   {s.duration}
                 </span>
                 <span
-                  className="shrink-0 text-xl font-black sm:text-2xl"
+                  className="shrink-0 text-xs sm:text-sm"
                   style={{
-                    fontFamily: "var(--font-display)",
+                    fontFamily: "var(--font-mono)",
                     color: s.accent === "var(--color-lime)" ? "var(--color-void)" : s.accent,
                   }}
                 >
@@ -645,7 +655,7 @@ function Services() {
                       rel="noreferrer"
                       className="inline-block border-2 px-5 py-2 text-sm font-black transition-transform hover:-translate-y-0.5"
                       style={{
-                        background: "#fff",
+                        background: "var(--color-card-w)",
                         borderColor: "var(--color-void)",
                         boxShadow: "3px 3px 0 var(--color-void)",
                         color: "var(--color-void)",
@@ -757,29 +767,40 @@ function Book() {
           >
             LET'S BOOK IT →
           </Link>
-          {/* emergency request entry point stays removed — the modal is dormant
-              (locked fact, 2026-07-28). need it sooner? text 425-918-2029. */}
+          <button
+            type="button"
+            data-emergency
+            className="inline-block border-2 px-8 py-4 text-base font-black transition-transform hover:-translate-y-0.5"
+            style={{
+              background: "var(--color-flush)",
+              borderColor: "var(--color-flush)",
+              boxShadow: "4px 4px 0 var(--color-violet-brand)",
+              color: "#fff",
+            }}
+          >
+            🚨 need it sooner? emergency request
+          </button>
         </div>
         <p className="mx-auto mt-6 max-w-xl text-sm" style={{ color: "var(--color-ash)" }}>
           calendar is live. real time, instant confirmation. house calls only right now.
         </p>
         <p className="mx-auto mt-2 max-w-xl text-sm" style={{ color: "var(--color-ash)" }}>
           by booking you agree to the{" "}
-          <a
-            href="/classic/terms.html"
+          <Link
+            to="/terms"
             className="underline underline-offset-4"
             style={{ color: "var(--color-lime)" }}
           >
             terms of service
-          </a>{" "}
+          </Link>{" "}
           and{" "}
-          <a
-            href="/classic/privacy.html"
+          <Link
+            to="/privacy"
             className="underline underline-offset-4"
             style={{ color: "var(--color-lime)" }}
           >
             privacy policy
-          </a>
+          </Link>
           , including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call
           terms. booking runs on cal.com.
         </p>
@@ -832,13 +853,17 @@ function Footer() {
           className="mt-5 text-xs"
           style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
         >
-          <a href="/classic/privacy.html" className="underline-offset-4 hover:underline">
+          <Link to="/privacy" className="underline-offset-4 hover:underline">
             privacy policy
-          </a>{" "}
+          </Link>{" "}
           ·{" "}
-          <a href="/classic/terms.html" className="underline-offset-4 hover:underline">
+          <Link to="/terms" className="underline-offset-4 hover:underline">
             terms of service
-          </a>{" "}
+          </Link>{" "}
+          ·{" "}
+          <Link to="/blog" className="underline-offset-4 hover:underline">
+            dispatches
+          </Link>{" "}
           · © pocket studio / mykey pocket · not affiliated with Rudy's Barbershop
         </p>
       </div>
