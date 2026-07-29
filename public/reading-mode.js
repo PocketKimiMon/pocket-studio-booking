@@ -1,11 +1,12 @@
-/* PocketStudio — Reading Mode (dyslexia) helper. DEFAULT ON, persisted. */
+/* PocketStudio — Reading Mode (dyslexia) helper. DEFAULT OFF, persisted.
+ * (Was default ON; users reported the OpenDyslexic face was HARDER to read.) */
 (function () {
   var KEY = 'ps-reading-mode';
   var VALUE = 'dyslexic';
   var OFF = 'off';
   var ATTR = 'data-reading-mode';
   function read() {
-    try { return localStorage.getItem(KEY) !== OFF; } catch (e) { return true; }
+    try { return localStorage.getItem(KEY) === VALUE; } catch (e) { return false; }
   }
   function write(on) {
     try { on ? localStorage.setItem(KEY, VALUE) : localStorage.setItem(KEY, OFF); } catch (e) {}

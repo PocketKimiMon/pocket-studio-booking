@@ -404,6 +404,13 @@ function About() {
             </a>
           </p>
         </div>
+        <div className="space-y-6 self-start">
+          <img
+            src="/work/mykey.jpg"
+            alt="MyKey — hair artist, Seattle"
+            className="w-full rounded-2xl object-cover"
+            style={{ aspectRatio: "4/5", boxShadow: "10px 10px 0 var(--color-flush)" }}
+          />
         <div
           className="relative self-start rounded-2xl p-6"
           style={{
@@ -441,6 +448,7 @@ function About() {
               rotating cast of receptionists who've never seen your hair.
             </li>
           </ul>
+        </div>
         </div>
       </div>
     </section>
