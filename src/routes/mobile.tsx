@@ -1,318 +1,261 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type CSSProperties } from "react";
-import { UPDATES_NEWEST_FIRST } from "../lib/updates";
-import { seoHead } from "../lib/seo";
+import { useState } from "react";
+import { CAL_BASE } from "../lib/services";
+import { headFor } from "../lib/seo";
+import { EmergencyModal } from "../components/EmergencyModal";
 
 export const Route = createFileRoute("/mobile")({
-  head: seoHead("/mobile"),
-  component: PocketStudio,
+  head: () => headFor("/mobile"),
+  component: MobilePage,
 });
 
-const styles = `
-:root{--bone:#F3ECDE;--void:#120E17;--lime:#FF6A00;--flush:#E85D04;--violet:#0FA3A3;--aqua:#5FF0C8;--ash:#6F6878;--mist:#5A5460}
-*{box-sizing:border-box}
-.ps{background:var(--bone);color:var(--void);font-family:'Inter',system-ui,sans-serif;font-weight:400;line-height:1.55;min-height:100vh;overflow-x:hidden}
-.ps a{color:var(--violet);text-decoration:none}
-.ps a:hover{text-decoration:underline}
-.ps .mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
-.ps .serif{font-family:'Bricolage Grotesque',serif;font-weight:600;letter-spacing:-.02em}
-.ps .hand{font-family:'Caveat',cursive;font-weight:600}
-.ps .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
-
-/* top bar */
-.ps-top{position:sticky;top:0;z-index:50;background:rgba(243,236,222,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(18,14,23,.12)}
-.ps-top-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 22px;max-width:1100px;margin:0 auto}
-.ps-avail{display:flex;align-items:center;gap:8px;min-width:0}
-.ps-avail .mono{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ps-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);position:relative;flex-shrink:0}
-.ps-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--lime);animation:ps-pulse 2.2s infinite ease-out}
-@keyframes ps-pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.5);opacity:0}}
-.ps-top-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.ps-top-right a.tel{color:var(--void);font-weight:600;font-size:13px}
-.ps-btn{display:inline-block;background:var(--lime);color:var(--void);font-weight:700;padding:9px 16px;border-radius:999px;font-size:13px;border:1.5px solid var(--void);box-shadow:2px 2px 0 var(--void);transition:transform .12s ease,box-shadow .12s ease}
-.ps-btn:hover{text-decoration:none;transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--void)}
-
-/* hero */
-.ps-hero{padding:44px 0 30px;position:relative}
-.ps-scissors{filter:drop-shadow(3px 3px 0 rgba(18,14,23,.18));margin-bottom:18px}
-.ps-kicker{color:var(--mist);margin-bottom:14px}
-.ps-word{font-family:'Bricolage Grotesque',serif;font-weight:750;font-size:clamp(42px,9vw,96px);line-height:.95;letter-spacing:-.03em;margin:0 0 18px}
-.ps-word span.hl{background:var(--lime);padding:.02em .08em .04em;border-radius:.08em;box-shadow:3px 3px 0 var(--void);display:inline-block}
-.ps-tag{font-family:'Bricolage Grotesque',serif;font-weight:500;font-size:clamp(18px,2.6vw,24px);line-height:1.35;max-width:640px;color:var(--void);margin:0 0 26px}
-.ps-promo{position:relative;border:2px solid var(--void);background:var(--lime);border-radius:16px;box-shadow:7px 7px 0 var(--void);padding:22px 24px;max-width:560px;overflow:hidden}
-.ps-promo .blob{position:absolute;top:-30px;left:-30px;width:120px;height:120px;background:#a8e030;border-radius:50%;filter:blur(20px);opacity:.6;pointer-events:none}
-.ps-promo .arrow{position:absolute;top:8px;right:14px;font-family:'Caveat',cursive;font-size:36px;font-weight:700;color:var(--void);transform:rotate(15deg)}
-.ps-promo .k{color:var(--void);font-weight:600;margin-bottom:6px;position:relative}
-.ps-promo h3{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:22px;margin:0 0 8px;position:relative}
-.ps-promo p{margin:0;font-size:14.5px;position:relative;max-width:420px}
-
-/* notice bands */
-.ps-band{border-radius:12px;padding:16px 20px;margin:16px 0;font-size:15px}
-.ps-band b{font-weight:700}
-.ps-band.violet{border:1.5px solid rgba(15,163,163,.35);border-left:4px solid var(--violet);background:rgba(95,240,200,.22)}
-.ps-band.flush{border:1.5px solid rgba(232,93,4,.3);border-left:4px solid var(--flush);background:rgba(232,93,4,.07)}
-
-/* marquee */
-.ps-marquee{overflow:hidden;border-top:1.5px solid var(--void);border-bottom:1.5px solid var(--void);background:var(--void);color:var(--bone);margin:36px 0}
-.ps-marquee-track{display:flex;white-space:nowrap;animation:ps-scroll 28s linear infinite;padding:12px 0;gap:40px}
-.ps-marquee-track span{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:22px;letter-spacing:-.01em}
-.ps-marquee-track span::after{content:'✦';color:var(--lime);margin-left:40px}
-@keyframes ps-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* section headers */
-.ps-section{padding:36px 0}
-.ps-shead{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
-.ps-shead .num{font-family:'IBM Plex Mono',monospace;color:var(--flush);font-size:14px;font-weight:600}
-.ps-shead h2{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:clamp(28px,5vw,42px);letter-spacing:-.02em;margin:0}
-
-/* about */
-.ps-about{display:grid;grid-template-columns:1.2fr .85fr;gap:32px}
-@media(max-width:760px){.ps-about{grid-template-columns:1fr}}
-.ps-about .lede{font-family:'Bricolage Grotesque',serif;font-weight:500;font-size:clamp(19px,2.4vw,22px);line-height:1.4;margin:0 0 14px}
-.ps-about p{color:var(--mist);font-size:15.5px;margin:0 0 12px}
-.ps-darkcard{background:var(--void);color:var(--bone);border:2px solid var(--void);border-radius:16px;box-shadow:7px 7px 0 var(--lime);padding:26px;position:relative}
-.ps-darkcard h3{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:22px;margin:0 0 14px;color:var(--bone)}
-.ps-darkcard ul{list-style:none;padding:0;margin:0}
-.ps-darkcard li{position:relative;padding-left:22px;margin:8px 0;font-size:15px;color:#e7dfcf}
-.ps-darkcard li::before{content:'✦';position:absolute;left:0;color:var(--lime);font-weight:700}
-.ps-darkcard .heart{position:absolute;bottom:14px;right:20px;font-family:'Caveat',cursive;font-size:34px;color:var(--flush);transform:rotate(-8deg)}
-
-/* services */
-.ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.ps-card{background:#fff;border:1.5px solid rgba(18,14,23,.14);border-radius:16px;padding:24px;position:relative;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;overflow:hidden}
-.ps-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--lime))}
-.ps-card:hover{transform:translateY(-4px);border-color:var(--void);box-shadow:6px 6px 0 var(--void)}
-.ps-card:focus-within{outline:3px solid var(--violet);outline-offset:3px}
-.ps-card h3{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:20px;margin:0 0 4px}
-.ps-card .time{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ash);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-.ps-card p{margin:0 0 14px;color:var(--mist);font-size:14.5px}
-.ps-tag-pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;padding:5px 10px;border-radius:999px;letter-spacing:.08em;text-transform:uppercase;background:var(--void);color:var(--bone)}
-.ps-tag-pill.violet{background:var(--violet);color:#fff}
-.ps-tag-pill.lime{background:var(--lime);color:var(--void)}
-.ps-sticker{position:absolute;top:-10px;right:-10px;background:var(--flush);color:#fff;font-family:'Caveat',cursive;font-weight:700;font-size:18px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--void);box-shadow:3px 3px 0 var(--void);z-index:2}
-
-/* policies */
-.ps-pcard{background:#fff;border:1.5px solid rgba(18,14,23,.14);border-radius:14px;padding:20px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
-.ps-pcard:hover{transform:translateY(-2px);border-color:var(--void);box-shadow:4px 4px 0 var(--void)}
-.ps-pcard h4{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:17px;margin:0 0 6px}
-.ps-pcard p{margin:0;font-size:14px;color:var(--mist)}
-.ps-pcard .n{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--flush);margin-bottom:6px}
-
-/* updates */
-.ps-post{background:#fff;border:1.5px solid rgba(18,14,23,.14);border-radius:16px;padding:22px 24px;margin-bottom:14px;box-shadow:2px 2px 0 rgba(18,14,23,.08);transition:box-shadow .15s ease}
-.ps-post:hover{box-shadow:5px 5px 0 var(--void)}
-.ps-post .date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.ps-post h4{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:20px;margin:0 0 6px}
-.ps-post p{margin:0 0 8px;color:var(--mist);font-size:14.5px}
-.ps-post .lnk{font-family:'Caveat',cursive;font-weight:700;font-size:20px;color:var(--violet)}
-
-/* book */
-.ps-embed{position:relative;border:2px solid var(--void);border-radius:16px;overflow:hidden;min-height:700px;box-shadow:6px 6px 0 var(--void);background:#fff}
-.ps-embed iframe{width:100%;min-height:700px;border:0;display:block}
-.ps-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#fff;z-index:1}
-.ps-loading.hidden{display:none}
-.ps-spinner{width:32px;height:32px;border-radius:50%;border:2px solid rgba(18,14,23,.14);border-top-color:var(--lime);animation:ps-spin 1s linear infinite}
-@keyframes ps-spin{to{transform:rotate(360deg)}}
-.ps-book-terms{margin-top:14px;font-size:13px;color:var(--mist);line-height:1.5}
-
-/* footer */
-.ps-footer{border-top:1px solid rgba(18,14,23,.15);margin-top:48px;padding:32px 0 40px}
-.ps-footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-@media(max-width:600px){.ps-footer-grid{grid-template-columns:1fr}}
-.ps-footer h5{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:20px;margin:0 0 6px}
-.ps-footer p,.ps-footer a{font-size:14px;color:var(--mist)}
-.ps-footer a{display:block;margin:2px 0}
-.ps-copy{margin-top:24px;padding-top:16px;border-top:1px dashed rgba(18,14,23,.2);color:var(--ash)}
-`;
-
-function Scissors() {
-  return (
-    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <circle cx="14" cy="44" r="8" stroke="#120E17" strokeWidth="2.5" fill="#F3ECDE"/>
-      <circle cx="46" cy="44" r="8" stroke="#120E17" strokeWidth="2.5" fill="#F3ECDE"/>
-      <path d="M20 38 L52 8 M40 38 L8 8" stroke="#120E17" strokeWidth="2.5" strokeLinecap="round"/>
-      <circle cx="30" cy="30" r="2" fill="#FF6A00"/>
-    </svg>
-  );
-}
-
-const services = [
-  { name: "Buzz Cut", time: "30 MIN · $50", desc: "clippers all over, clean edges, back to your life.", accent: "var(--lime)", tag: null },
-  { name: "Taper/Fade Cut", time: "45 MIN · $65", desc: "crisp taper or a clean fade, blended right — edges that hold for weeks.", accent: "var(--lime)", tag: null },
-  { name: "Short Cut", time: "45 MIN · $65", desc: "scissor or clipper-over-comb, shaped to your actual head.", accent: "var(--flush)", tag: null },
-  { name: "Long Cut", time: "60 MIN · $100", desc: "layers, texture, cleanup — keep the length, kill the dead ends.", accent: "var(--violet)", tag: null },
-  { name: "Curl Cut", time: "75 MIN · $120", desc: "curl-by-curl shaping for coils and waves — dry cut, defined, finished. bring your curls as they are.", accent: "var(--violet)", tag: null },
-  { name: "New-Client Color Consult", time: "45 MIN · $35", desc: "first time coloring with me? we plan everything — lift, tone, maintenance, realistic expectations — before anything touches your hair. books 3 days out.", accent: "var(--violet)", tag: { label: "REQUIRED FOR NEW COLOR", cls: "violet" } },
-  { name: "Existing-Client Color", time: "3–5 HR · $120+", desc: "roots, refresh, full transformation. block the afternoon — i'm not rushing your hair for anyone's schedule. books 1 week out.", accent: "var(--lime)", tag: { label: "2+ DAYS OUT = LOYALTY BRIBE", cls: "lime" } },
+const SERVICES = [
+  { name: "Buzz Cut", slug: "buzz-cut", duration: "30 MIN", price: "at the chair", emoji: "✂" },
+  { name: "Short Cut", slug: "short-cut", duration: "45 MIN", price: "at the chair", emoji: "💇" },
+  { name: "Long Cut", slug: "long-cut", duration: "60 MIN", price: "at the chair", emoji: "🦁" },
+  { name: "New-Client Color Consult", slug: "hair-consultation", duration: "45 MIN", price: "at the chair", emoji: "🎨" },
+  { name: "Existing-Client Color Appointment", slug: "existing-client-color-appointment", duration: "3 HR / UP TO 5 HR", price: "at the chair", emoji: "🌈" },
 ];
 
-const policies = [
-  { n: "01", h: "24-hour cancellation", p: "cancel or reschedule with at least 24 hours notice. emergencies are real — text or call as soon as you can — but my time is literally how i pay rent." },
-  { n: "02", h: "no-call-no-show = charged", p: "miss a confirmed appointment with no heads-up and you may be charged up to the full service amount. fairness goes both ways." },
-  { n: "03", h: "2-hour confirmation", p: "you'll get a text or email 2 hours before. a quick \"yep\" is all that's needed — otherwise the slot may be released." },
-  { n: "04", h: "house-call space", p: "seattle area only. a safe, workable spot and an accurate address — and let me know about allergies and any prior chemical work so i don't fry your hair." },
+const POSTS = [
+  {
+    date: "JUL 21, 2026",
+    title: "former rudy's clients: this is where you book now",
+    body: "i'm not at rudy's anymore. same hands, same energy, way fewer hoops. book direct, i come to you, done.",
+  },
+  {
+    date: "JUL 14, 2026",
+    title: "house calls + the hunt for a new chair",
+    body: "house calls only right now — i show up, set up wherever works, and get you sorted. no travel fee for now. call it a thank-you while i figure out my next spot.",
+  },
 ];
 
+function MobilePage() {
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
 
-
-function PocketStudio() {
-  const [iframeLoaded, setIframeLoaded] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setIframeLoaded(true), 6000);
-    return () => clearTimeout(t);
-  }, []);
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <div className="ps">
-        <div className="ps-top">
-          <div className="ps-top-inner">
-            <div className="ps-avail">
-              <span className="ps-dot" />
-              <span className="mono">AVAILABLE FOR BOOKINGS</span>
-            </div>
-            <div className="ps-top-right">
-              <a href="tel:425-918-2029" className="tel">425-918-2029</a>
-              <a href="#book" className="ps-btn">BOOK NOW</a>
-            </div>
-          </div>
+    <div className="min-h-screen" style={{ background: "var(--color-bone)", color: "var(--color-void)", fontFamily: "var(--font-sans)" }}>
+      <style>{`
+        @media (prefers-reduced-motion: reduce) {
+          .psm-pulse { animation: none !important; }
+        }
+        .psm-pulse { animation: psm-pulse 1.6s ease-in-out infinite; }
+        @keyframes psm-pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+      `}</style>
+
+      {/* sticky top bar */}
+      <header
+        className="sticky top-0 z-40 border-b-2 px-4 py-3"
+        style={{ background: "var(--color-bone)", borderColor: "var(--color-void)" }}
+      >
+        <div className="mx-auto flex max-w-md items-center justify-between">
+          <span className="flex items-center gap-2" style={{ fontFamily: "var(--font-mono)", fontSize: 11 }}>
+            <span className="psm-pulse inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-go)" }} />
+            BOOKING OPEN
+          </span>
+          <a
+            href="tel:425-918-2029"
+            className="text-sm font-black underline underline-offset-4"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
+            425-918-2029
+          </a>
         </div>
+      </header>
 
-        <main className="wrap">
-          <section className="ps-hero">
-            <div className="ps-scissors"><Scissors /></div>
-            <div className="mono ps-kicker">SEATTLE HAIR ARTIST · HOUSE CALLS · FORMER RUDY'S CLIENTS WELCOME</div>
-            <h1 className="ps-word">POCKET / <span className="hl">STUDIO</span></h1>
-            <p className="ps-tag">cuts &amp; color at your place.<br/>bold looks, zero salon attitude.</p>
-            <div className="ps-promo">
-              <div className="blob" />
-              <div className="arrow">→</div>
-              <div className="mono k">CURRENT DEAL</div>
-              <h3>rebook ahead, get the good stuff.</h3>
-              <p>book your next appointment at least 2 days out and i'll bring the extras — product recs that actually fit your hair, styling tricks, honest answers. consider it a loyalty bribe.</p>
-            </div>
-          </section>
+      <main className="mx-auto max-w-md px-4 pb-24">
+        {/* hero */}
+        <section className="pt-10 pb-8 text-center">
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "var(--color-flush)" }}>
+            YOUR CHAIR MOVED
+          </p>
+          <h1
+            className="mt-2 text-6xl font-black leading-[0.9] tracking-tight"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            pocket
+            <br />
+            <span
+              className="inline-block rounded-full px-4"
+              style={{ background: "var(--color-lime)", color: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)" }}
+            >
+              studio
+            </span>
+          </h1>
+          <p className="mt-5 text-base leading-relaxed" style={{ color: "var(--color-mist)" }}>
+            cuts + color with mykey. i come to you — house calls only, seattle area. no travel fee
+            right now.
+          </p>
+          <p className="mt-4 text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+            THU 11–6 · FRI 12–5 · SAT–SUN 12–8
+          </p>
+        </section>
 
-          <section className="ps-band violet">
-            <b>booking runs on cal.com.</b> the calendar opens on the 1st for the full month ahead — cuts book at least 2 days out, color longer. a $25 deposit holds your slot and comes off your total.
-          </section>
-          <section className="ps-band flush">
-            <b>house calls only right now — i come to you, no travel fee yet.</b> i'll need a safe, reasonably private workspace and an accurate address. i may decline or end a visit if the location isn't workable — nothing personal.
-          </section>
-        </main>
+        {/* tea promo */}
+        <section
+          className="rounded-2xl border-2 p-5"
+          style={{ background: "var(--color-lime)", borderColor: "var(--color-void)", boxShadow: "6px 6px 0 var(--color-void)" }}
+        >
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em" }}>CURRENT DEAL</p>
+          <h2 className="mt-1 text-2xl font-black uppercase" style={{ fontFamily: "var(--font-display)" }}>
+            spill the tea ☕
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-void)" }}>
+            book 2+ days out and you get the full story of why i left the old shop — plus product
+            recs — during your appointment.
+          </p>
+        </section>
 
-        <div className="ps-marquee" aria-hidden>
-          <div className="ps-marquee-track">
-            <span>POCKET STUDIO</span><span>SEATTLE HAIR</span><span>HOUSE CALLS</span><span>CUTS &amp; COLOR</span>
-            <span>POCKET STUDIO</span><span>SEATTLE HAIR</span><span>HOUSE CALLS</span><span>CUTS &amp; COLOR</span>
-          </div>
-        </div>
-
-        <main className="wrap">
-          <section className="ps-section" id="about">
-            <div className="ps-shead"><span className="num">00</span><h2>about</h2></div>
-            <div className="ps-about">
-              <div>
-                <p className="lede">hi, i'm MyKey. i cut and color hair in seattle out of a mobile setup — your kitchen, your bathroom, your patio, whatever works.</p>
-                <p>i worked the salon floor for years, most recently at Rudy's, and i loved the people and hated the overhead. pocket studio is what happened when i decided clients should pay for the actual work, not someone else's rent.</p>
-                <p>expect real conversation, honest recommendations, tea if you're around long enough, and a cut that fits how you actually live — not how your stylist wants to instagram it.</p>
-              </div>
-              <div className="ps-darkcard">
-                <h3>why book direct?</h3>
-                <ul>
-                  <li>no front-desk telephone game</li>
-                  <li>your space, your music, your rules</li>
-                  <li>real color consults, not upsells</li>
-                  <li>tea + product recs when you rebook ahead</li>
-                  <li>former Rudy's clients — you already know</li>
-                </ul>
-                <div className="heart">♡ seattle</div>
-              </div>
-            </div>
-          </section>
-
-          <section className="ps-section" id="services">
-            <div className="ps-shead"><span className="num">01</span><h2>services + pricing</h2></div>
-            <div className="ps-grid">
-              {services.map((s) => (
-                <div className="ps-card" key={s.name} style={{ ["--accent" as string]: s.accent } as CSSProperties}>
-                  {s.name === "Existing-Client Color" && <div className="ps-sticker" style={{ transform: "rotate(-3deg)" }}>loyalty bribe!</div>}
-                  <h3>{s.name}</h3>
-                  <div className="time">{s.time}</div>
-                  <p>{s.desc}</p>
-                  {s.tag ? <span className={`ps-tag-pill ${s.tag.cls}`}>{s.tag.label}</span> : <a href="#book" className="ps-tag-pill">BOOK</a>}
+        {/* services */}
+        <section className="mt-10">
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "var(--color-ash)" }}>
+            PICK A SERVICE
+          </p>
+          <div className="mt-3 space-y-3">
+            {SERVICES.map((s) => {
+              const open = openSlug === s.slug;
+              return (
+                <div
+                  key={s.slug}
+                  className="overflow-hidden rounded-2xl border-2"
+                  style={{ borderColor: "var(--color-void)", background: "var(--color-card-w)", boxShadow: "4px 4px 0 var(--color-void)" }}
+                >
+                  <button
+                    type="button"
+                    aria-expanded={open}
+                    onClick={() => setOpenSlug(open ? null : s.slug)}
+                    className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left"
+                  >
+                    <span>
+                      <span className="block text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>
+                        {s.emoji} {s.name}
+                      </span>
+                      <span className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+                        {s.duration}
+                      </span>
+                    </span>
+                    <span className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-violet-brand)" }}>
+                      {s.price}
+                    </span>
+                  </button>
+                  {open && (
+                    <div className="border-t-2 px-4 py-4" style={{ borderColor: "var(--color-void)" }}>
+                      <div className="flex gap-2">
+                        <a
+                          href={`${CAL_BASE}${s.slug}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex-1 rounded-xl border-2 px-4 py-3 text-center text-sm font-black"
+                          style={{ background: "var(--color-lime)", borderColor: "var(--color-void)", color: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}
+                        >
+                          BOOK →
+                        </a>
+                        <Link
+                          to="/services/$slug"
+                          params={{ slug: s.slug }}
+                          className="flex-1 rounded-xl border-2 px-4 py-3 text-center text-sm font-black"
+                          style={{ borderColor: "var(--color-void)", color: "var(--color-void)" }}
+                        >
+                          DETAILS
+                        </Link>
+                      </div>
+                      <p className="mt-3 text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+                        {s.slug === "existing-client-color-appointment"
+                          ? "books 1 week out"
+                          : s.slug === "hair-consultation"
+                            ? "books 3 days out"
+                            : "books 2 days out"}{" "}
+                        · one month at a time
+                      </p>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="ps-section" id="policies">
-            <div className="ps-shead"><span className="num">02</span><h2>policies</h2></div>
-            <div className="ps-grid">
-              {policies.map(p => (
-                <div className="ps-pcard" key={p.h}>
-                  <div className="n">{p.n}</div>
-                  <h4>{p.h}</h4>
-                  <p>{p.p}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="ps-section" id="updates">
-            <div className="ps-shead"><span className="num">03</span><h2>updates — dispatches from the chair</h2></div>
-            <div>
-              {UPDATES_NEWEST_FIRST.map(p => (
-                <article className="ps-post" key={p.slug}>
-                  <div className="date">{p.displayDate}</div>
-                  <h4>{p.title}</h4>
-                  <p>{p.excerpt}</p>
-                  <Link to="/blog" className="lnk">read the dispatch →</Link>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="ps-section" id="book">
-            <div className="ps-shead"><span className="num">04</span><h2>book</h2></div>
-            <div className="ps-embed">
-              <div className={`ps-loading ${iframeLoaded ? "hidden" : ""}`}>
-                <div className="ps-spinner" />
-                <div className="mono" style={{ color: "var(--ash)" }}>LOADING CALENDAR…</div>
-              </div>
-              <iframe
-                src="https://cal.com/maneautoimation/"
-                title="Book with Pocket Studio on Cal.com"
-                loading="lazy"
-                onLoad={() => setIframeLoaded(true)}
-              />
-            </div>
-            <p className="ps-book-terms">
-              by booking you agree to the <a href="/terms">terms of service</a> and <a href="/privacy">privacy policy</a>, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.
-            </p>
-          </section>
-        </main>
-
-        <footer className="ps-footer">
-          <div className="wrap">
-            <div className="ps-footer-grid">
-              <div>
-                <h5>pocket studio</h5>
-                <p>seattle hair artist. house calls. cuts &amp; color at your place.</p>
-              </div>
-              <div>
-                <h5>contact</h5>
-                <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a>
-                <a href="tel:425-918-2029">425-918-2029</a>
-                <a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
-                <a href="/terms">Terms</a>
-                <a href="/privacy">Privacy</a>
-              </div>
-            </div>
-            <div className="ps-copy mono">© pocket studio / mykey pocket · seattle, wa · not affiliated with Rudy's Barbershop</div>
+              );
+            })}
           </div>
-        </footer>
-      </div>
-    </>
+        </section>
+
+        {/* emergency */}
+        <button
+          type="button"
+          data-emergency
+          className="mt-6 w-full rounded-2xl border-2 px-4 py-4 text-sm font-black"
+          style={{ background: "var(--color-flush)", borderColor: "var(--color-flush)", color: "#fff", boxShadow: "4px 4px 0 var(--color-violet-brand)" }}
+        >
+          🚨 need it sooner? emergency request
+        </button>
+
+        {/* dispatches */}
+        <section className="mt-12">
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "var(--color-ash)" }}>
+            DISPATCHES FROM THE CHAIR
+          </p>
+          <div className="mt-3 space-y-3">
+            {POSTS.map((p) => (
+              <article
+                key={p.title}
+                className="rounded-2xl border-2 p-4"
+                style={{ borderColor: "var(--color-void)", background: "var(--color-card-w)", boxShadow: "3px 3px 0 var(--color-void)" }}
+              >
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--color-ash)", letterSpacing: "0.1em" }}>
+                  {p.date}
+                </p>
+                <h3 className="mt-1 text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>
+                  {p.title}
+                </h3>
+                <p className="mt-1 text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
+                  {p.body}
+                </p>
+              </article>
+            ))}
+            <Link
+              to="/blog"
+              className="block text-center text-sm underline underline-offset-4"
+              style={{ color: "var(--color-violet-brand)", fontFamily: "var(--font-mono)" }}
+            >
+              all dispatches →
+            </Link>
+          </div>
+        </section>
+
+        {/* policies mini */}
+        <section className="mt-12">
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.2em", color: "var(--color-ash)" }}>
+            THE SHORT RULES
+          </p>
+          <ul className="mt-3 space-y-2 text-sm" style={{ color: "var(--color-mist)" }}>
+            <li>· one month at a time, first come first serve</li>
+            <li>· cuts book 2 days out · consult 3 · existing color 1 week</li>
+            <li>· 24-hour cancellation — emergencies are real, ghosting isn't</li>
+            <li>· no-call-no-show = charged up to the full amount</li>
+            <li>· 2-hour verification text — reply to hold your slot</li>
+            <li>· house calls: safe space, pets secured if we haven't met them</li>
+          </ul>
+        </section>
+      </main>
+
+      {/* footer */}
+      <footer className="border-t-2 px-4 py-8 text-center" style={{ borderColor: "var(--color-void)", background: "var(--color-card-2)" }}>
+        <p className="text-sm">
+          <a href="tel:425-918-2029" className="underline underline-offset-4" style={{ color: "var(--color-lime)" }}>
+            425-918-2029
+          </a>{" "}
+          ·{" "}
+          <a href="mailto:mykeypocket@icloud.com" className="underline underline-offset-4" style={{ color: "var(--color-lime)" }}>
+            mykeypocket@icloud.com
+          </a>
+        </p>
+        <p className="mt-3 text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          <Link to="/" className="underline-offset-4 hover:underline">full site</Link> ·{" "}
+          <Link to="/privacy" className="underline-offset-4 hover:underline">privacy</Link> ·{" "}
+          <Link to="/terms" className="underline-offset-4 hover:underline">terms</Link>
+        </p>
+        <p className="mt-3 text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          © pocket studio / mykey pocket · seattle, wa · not affiliated with rudy's barbershop
+        </p>
+      </footer>
+
+      <EmergencyModal />
+    </div>
   );
 }
