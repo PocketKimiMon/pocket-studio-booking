@@ -13,12 +13,15 @@ export type Service = {
 
 export const CAL_BASE = "https://cal.com/maneautoimation/";
 
+/* $25 deposit holds the slot — applied to the total at the chair. */
+export const STRIPE_DEPOSIT_LINK = "https://buy.stripe.com/eVqfZg2B26Nb3554NH9Zm05";
+
 export const SERVICES: Service[] = [
   {
     slug: "buzz-cut",
     name: "Buzz Cut",
     duration: "30 min",
-    price: "$50",
+    price: "priced at the chair",
     accent: "var(--color-lime)",
     blurb: "Clippers all over, clean edges.",
     detail: "Clean fade or one-length buzz. In and out, sharp — back to your day.",
@@ -32,27 +35,10 @@ export const SERVICES: Service[] = [
     images: [{ src: "/work/buzz-1.jpg", alt: "Fresh fade with clean edges" }],
   },
   {
-    slug: "taper-fade-cut",
-    name: "Taper/Fade Cut",
-    duration: "45 min",
-    price: "$65",
-    accent: "var(--color-lime)",
-    blurb: "Crisp taper or skin fade, blended clean.",
-    detail: "Low, mid, or high — tapered neckline or a full skin fade, dialed to your head shape.",
-    goodFor: "Skin fades, tapers, burst fades, keeping the top while the sides stay tight.",
-    whatHappens: [
-      "We pick the height and blend — bring a photo if you've got one.",
-      "Clipper work with a razor finish on the edges.",
-      "Blend check in the mirror from every angle.",
-      "Styling tips to keep it sharp between cuts.",
-    ],
-    images: [{ src: "/work/buzz-1.jpg", alt: "Fresh fade with clean edges" }],
-  },
-  {
     slug: "short-cut",
     name: "Short Cut",
     duration: "45 min",
-    price: "$65",
+    price: "priced at the chair",
     accent: "var(--color-flush)",
     blurb: "Shaped to your head.",
     detail: "Scissor or clipper-over-comb. Precision short shapes with intention.",
@@ -74,7 +60,7 @@ export const SERVICES: Service[] = [
     slug: "long-cut",
     name: "Long Cut",
     duration: "60 min",
-    price: "$100",
+    price: "priced at the chair",
     accent: "var(--color-violet-brand)",
     blurb: "Keep the length, lose dead ends.",
     detail: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo.",
@@ -91,29 +77,10 @@ export const SERVICES: Service[] = [
     ],
   },
   {
-    slug: "curl-cut",
-    name: "Curl Cut",
-    duration: "75 min",
-    price: "$120",
-    accent: "var(--color-violet-brand)",
-    blurb: "Curl-by-curl shaping, cut dry.",
-    detail:
-      "Your curls cut the way they actually spring — dry, curl by curl, no surprises after the first wash.",
-    goodFor:
-      "Waves, curls, and coils that need shape — from loose 2s to tight 4s, first curl cuts and rescues.",
-    whatHappens: [
-      "Come with your hair how you normally wear it — we cut it dry, curl by curl.",
-      "Shape built for your curl pattern and shrinkage.",
-      "Wash, hydrate, and define so you see the real result.",
-      "A routine you can actually repeat at home.",
-    ],
-    images: [{ src: "/work/short-3.jpg", alt: "Curly short cut, natural light" }],
-  },
-  {
     slug: "hair-consultation",
     name: "New-Client Color Consult",
     duration: "45 min",
-    price: "$35",
+    price: "priced at the chair",
     accent: "var(--color-violet-brand)",
     blurb: "Required before new color.",
     detail:
@@ -132,9 +99,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: "existing-client-color-appointment",
-    name: "Existing-Client Color",
-    duration: "3–5 hr",
-    price: "$120+",
+    name: "Existing-Client Color Appointment",
+    duration: "3 hr / up to 5 hr",
+    price: "priced at the chair",
     accent: "var(--color-lime)",
     blurb: "We already know the vibe.",
     detail: "Roots, refresh, gloss, lift, tone, full transformations for returning clients.",
@@ -142,7 +109,7 @@ export const SERVICES: Service[] = [
       "Returning color clients: root touch-ups, gloss refreshes, vivids, dimensional work, big changes.",
     whatHappens: [
       "We confirm the plan from your intake — refresh or something new.",
-      "Color mixed and applied in sections; complex work runs 3–5 hours, so get comfy.",
+      "Color mixed and applied in sections; complex work runs up to 5 hours, so get comfy.",
       "Processing, rinse, gloss/tone as the formula needs.",
       "Cut-in or style finish, plus home-care notes to keep it alive longer.",
     ],

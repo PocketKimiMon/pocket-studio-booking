@@ -1,223 +1,122 @@
 /**
- * src/lib/seo.ts — per-route SEO config for the TanStack Start app.
+ * Central SEO head management for the Pocket Studio site (TanStack Start SSR).
  *
- * Replaces the source repo's client-side `useSeo` hook with SSR head config
- * (TanStack Start route `head` options). Titles/descriptions are the approved
- * strings from the source repo (`src/hooks/useSeo.ts` calls + docs/seo/audit.md
- * T1) — stored VERBATIM as full titles (brand suffix already applied).
+ * Every route wires its head via:
  *
- * Single source of truth for BASE_URL: change it here and every canonical,
- * og:url, and the JSON-LD update together.
- */
-
-import { SERVICES, type Service } from "./services";
-
-export const SITE_NAME = "Pocket Studio";
-/** Production origin (no trailing slash). Used for canonicals, og:url, JSON-LD. */
-export const BASE_URL = "https://pocketstudio.biz";
-/**
- * Sitewide share image. Absolute URL — scrapers reject relative og:image.
- * Points at an existing repo asset (`/og-image.jpg` does not exist and would 404).
- */
-export const DEFAULT_OG_IMAGE = `${BASE_URL}/work/long-1.jpg`;
-
-export type SeoEntry = {
-  /** Full <title> text, brand suffix already included (verbatim approved copy). */
-  title: string;
-  /** meta description (aim ≤160 chars). */
-  description: string;
-  /** Absolute URL override for og:image / twitter:image. Defaults to DEFAULT_OG_IMAGE. */
-  ogImage?: string;
-  /** Utility/duplicate pages stay out of the index (audit T8). */
-  noindex?: boolean;
-};
-
-/**
- * Brand-suffix helper for any future route that needs a new title:
- * `pageTitle("Some Page")` → `"Some Page · Pocket Studio"` (same pattern the
- * source `useSeo` hook applied).
- */
-export const pageTitle = (title: string): string => `${title} · ${SITE_NAME}`;
-
-export const SEO_CONFIG: Record<string, SeoEntry> = {
-  // Home — copy-deck title already live in src/routes/index.tsx; description
-  // likewise approved there (audit T1 home variant uses the same facts).
-  "/": {
-    title: "Pocket Studio — book with MyKey",
-    description:
-      "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.",
-  },
-  // Audit T1 /Booking — verbatim, noindex (utility page, audit T8).
-  "/book": {
-    title: pageTitle("Book Your Chair"),
-    description: "Pick a service, a day, and a time — a $25 deposit holds your slot.",
-    noindex: true,
-  },
-  // Audit T1 /Artist — verbatim (the /studio page is the artist/studio story).
-  "/studio": {
-    title: pageTitle("Meet MyKey — Solo Hair Artist (they/them)"),
-    description:
-      "One artist, one calendar. MyKey left Rudy's Barbershop and now books directly — cuts + color for all textures, house calls in Seattle, WA.",
-  },
-  // /classic — preserved legacy static page in an iframe; duplicate of the
-  // booking flow, so keep it out of the index. No audit copy exists for it.
-  "/classic": {
-    title: "Classic — Pocket Studio",
-    description:
-      "The preserved classic Pocket Studio booking page, kept intact as an archive.",
-    noindex: true,
-  },
-  // /mobile — alternate full-page variant of the site; near-duplicate of /
-  // for crawlers, so noindex + self canonical. No audit copy exists for it.
-  "/mobile": {
-    title: "Pocket Studio — book with MyKey",
-    description:
-      "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.",
-    noindex: true,
-  },
-  // Legal pages — approved titles/descriptions already live in the target routes.
-  "/privacy": {
-    title: "Privacy Policy — Pocket Studio",
-    description:
-      "Privacy Policy for Pocket Studio (MyKey Pocket), an independent Seattle hair studio.",
-  },
-  "/terms": {
-    title: "Terms of Service — Pocket Studio",
-    description:
-      "Terms of Service for Pocket Studio (MyKey Pocket), an independent Seattle hair studio.",
-  },
-  // Audit T1 /Blog — verbatim.
-  "/blog": {
-    title: pageTitle("Updates — Dispatches from the Chair"),
-    description:
-      "Dated notes from one chair and one brain: house-call updates, the hunt for a new chair, and color-correction stories. Signed, always, — mykey.",
-  },
-};
-
-/** Fallback used when a path or slug has no config (keeps <head> valid). */
-export const FALLBACK_SEO: SeoEntry = {
-  title: SITE_NAME,
-  description: SEO_CONFIG["/"].description,
-};
-
-// ---------------------------------------------------------------------------
-// Dynamic: /services/$slug (generated from src/lib/services.ts — never drift)
-// ---------------------------------------------------------------------------
-
-export function serviceSeo(slug: string): SeoEntry {
-  const svc = SERVICES.find((s) => s.slug === slug);
-  if (!svc) return FALLBACK_SEO;
-  // e.g. "Buzz Cut — $50 · 30 min · Seattle · Pocket Studio"
-  const title = pageTitle(`${svc.name} — ${svc.price} · ${svc.duration} · Seattle`);
-  const suffix = ` ${svc.price}, ${svc.duration}, house calls across Seattle — $25 deposit holds your slot.`;
-  // Prefer the richer `detail`; fall back to the short `blurb` when the
-  // detail would push the description past ~160 chars (SERP truncation).
-  const lead = svc.detail.length + suffix.length <= 160 ? svc.detail : svc.blurb;
-  return { title, description: `${lead}${suffix}` };
-}
-
-// ---------------------------------------------------------------------------
-// Head builders — TanStack Start route `head` compatible
-// ---------------------------------------------------------------------------
-
-export type SeoMetaTag =
-  | { title: string }
-  | { charSet: string }
-  | { name: string; content: string }
-  | { property: string; content: string };
-
-export type SeoHeadObject = {
-  meta: SeoMetaTag[];
-  links: { rel: string; href: string }[];
-};
-
-function absoluteUrl(path: string): string {
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  return `${BASE_URL}${normalized}`;
-}
-
-/** Build the head object for a resolved entry + canonical path. */
-export function buildHead(entry: SeoEntry, path: string): SeoHeadObject {
-  const url = absoluteUrl(path);
-  const image = entry.ogImage ?? DEFAULT_OG_IMAGE;
-  return {
-    meta: [
-      { title: entry.title },
-      { name: "description", content: entry.description },
-      {
-        name: "robots",
-        content: entry.noindex ? "noindex, follow" : "index, follow",
-      },
-      { property: "og:title", content: entry.title },
-      { property: "og:description", content: entry.description },
-      { property: "og:url", content: url },
-      { property: "og:image", content: image },
-      { name: "twitter:title", content: entry.title },
-      { name: "twitter:description", content: entry.description },
-      { name: "twitter:image", content: image },
-    ],
-    links: [{ rel: "canonical", href: url }],
-  };
-}
-
-/**
- * seoHead — drop-in for static routes:
- *
- *   import { seoHead } from "../lib/seo";
- *   export const Route = createFileRoute("/studio")({
- *     head: seoHead("/studio"),
- *     component: StudioPage,
+ *   import { headFor } from "../lib/seo";
+ *   export const Route = createFileRoute("/book")({
+ *     head: () => headFor("/book"),
+ *     ...
  *   });
  *
- * Throws at module load if the path has no SEO_CONFIG entry — a missing
- * route config should fail loudly in dev, not silently ship default tags.
+ * Dynamic routes pass the concrete path, e.g. headFor(`/blog/${slug}`) —
+ * this module resolves the slug against src/lib/posts.ts / src/lib/services.ts.
+ *
+ * Per-route titles/descriptions follow the SEO audit quick wins
+ * (/mnt/agents/output/seo/audit.md, findings T1/T4/T6). Locked business facts
+ * (name, contact, hours, Rudy's line) come from the final booking-page copy
+ * doc and are used verbatim — do not editorialize them here.
  */
-export function seoHead(path: string): () => SeoHeadObject {
-  const entry = SEO_CONFIG[path];
-  if (!entry) {
-    throw new Error(`seoHead: no SEO_CONFIG entry for path "${path}"`);
-  }
-  return () => buildHead(entry, path);
-}
+
+import { POSTS, getPost } from "./posts";
+import { SERVICES } from "./services";
 
 /**
- * serviceHead — for /services/$slug, whose head receives loader data:
- *
- *   head: ({ loaderData }) => serviceHead(loaderData),
+ * Canonical origin for the site. Used to build absolute canonical/OG URLs.
+ * Change this one constant if the production domain changes.
  */
-export function serviceHead(service: Service | undefined): SeoHeadObject {
-  if (!service) return buildHead(FALLBACK_SEO, "/services");
-  return buildHead(serviceSeo(service.slug), `/services/${service.slug}`);
-}
+export const SITE_URL = "https://pocketstudio.biz";
 
-// ---------------------------------------------------------------------------
-// Structured data (audit T6) — HairSalon, rendered once in __root.tsx.
-// Facts verified against LOCKED FACTS + target src/lib/services.ts:
-// Seattle WA · 425-918-2029 · mykeypocket@icloud.com · they/them
-// thu 11–18 · fri 12–17 · sat–sun 12–20 · prices $35–$120+
-// OfferCatalog is GENERATED from SERVICES so it can never drift from the menu.
-// ---------------------------------------------------------------------------
+export const SITE_NAME = "Pocket Studio";
 
-const FIXED_PRICE = /^\$(\d+)$/;
+/** Share image — keep a 1200×630 asset at this public path. */
+export const OG_IMAGE = "/images/og-image.jpg";
 
-export const HAIR_SALON_JSONLD = {
-  "@context": "https://schema.org",
-  "@type": "HairSalon",
-  "@id": `${BASE_URL}/#business`,
-  name: "Pocket Studio",
-  description:
-    "Solo house-call hair artist in Seattle, WA. Cuts $50–$120, color by consult, priced at the chair. $25 booking deposit.",
-  url: `${BASE_URL}/`,
+export type SeoHead = {
+  meta: any[];
+  links?: any[];
+  scripts?: any[];
+};
+
+/* ------------------------------------------------------------------ */
+/* Business facts (locked — used verbatim in JSON-LD + meta)           */
+/* ------------------------------------------------------------------ */
+
+const BUSINESS = {
+  name: SITE_NAME,
   telephone: "+1-425-918-2029",
   email: "mykeypocket@icloud.com",
-  image: DEFAULT_OG_IMAGE,
-  priceRange: "$35–$120+",
+  locality: "Seattle",
+  region: "WA",
+  country: "US",
+  founderName: "MyKey Pocket",
+} as const;
+
+/* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
+
+const MONTHS: Record<string, string> = {
+  JAN: "01",
+  FEB: "02",
+  MAR: "03",
+  APR: "04",
+  MAY: "05",
+  JUN: "06",
+  JUL: "07",
+  AUG: "08",
+  SEP: "09",
+  OCT: "10",
+  NOV: "11",
+  DEC: "12",
+};
+
+/** "JUL 28, 2026" -> "2026-07-28" (falls back to the raw string). */
+function isoDate(display: string): string {
+  const m = display.match(/^([A-Z]{3})\s+(\d{1,2}),\s*(\d{4})$/);
+  if (!m) return display;
+  const [, mon, day, year] = m;
+  const mm = MONTHS[mon];
+  if (!mm) return display;
+  return `${year}-${mm}-${day.padStart(2, "0")}`;
+}
+
+function absoluteUrl(path: string): string {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return `${SITE_URL}${p === "/" ? "/" : p.replace(/\/+$/, "")}`;
+}
+
+function jsonLd(data: object) {
+  return { type: "application/ld+json", children: JSON.stringify(data) };
+}
+
+/* ------------------------------------------------------------------ */
+/* JSON-LD blocks                                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * HairSalon / LocalBusiness schema — ported from the audited reference
+ * (app/index.html, audit finding T6). Services are intentionally listed
+ * without prices: everything is priced at the chair (canonical pricing
+ * rule), so no dollar amounts or priceRange appear here.
+ */
+const HAIR_SALON_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "HairSalon",
+  "@id": `${SITE_URL}/#business`,
+  name: BUSINESS.name,
+  description:
+    "Solo house-call hair artist in Seattle, WA. Cuts and color, all priced at the chair. $25 booking deposit holds your slot.",
+  url: `${SITE_URL}/`,
+  telephone: BUSINESS.telephone,
+  email: BUSINESS.email,
+  image: `${SITE_URL}${OG_IMAGE}`,
   currenciesAccepted: "USD",
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Seattle",
-    addressRegion: "WA",
-    addressCountry: "US",
+    addressLocality: BUSINESS.locality,
+    addressRegion: BUSINESS.region,
+    addressCountry: BUSINESS.country,
   },
   areaServed: [
     { "@type": "City", name: "Seattle, WA" },
@@ -252,28 +151,252 @@ export const HAIR_SALON_JSONLD = {
   ],
   founder: {
     "@type": "Person",
-    name: "MyKey Pocket",
+    name: BUSINESS.founderName,
     alternateName: "MyKey",
     jobTitle: "Hair artist, solo operator",
     pronouns: "they/them",
-    worksFor: { "@id": `${BASE_URL}/#business` },
+    worksFor: { "@id": `${SITE_URL}/#business` },
   },
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Cuts + color",
-    itemListElement: SERVICES.map((svc) => {
-      const fixed = svc.price.match(FIXED_PRICE);
-      return {
+    itemListElement: [
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Buzz Cut" },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Short Cut" },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "Long Cut" },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: "New-Client Color Consult" },
+      },
+      {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: svc.name,
-          description: svc.blurb,
+          name: "Existing-Client Color Appointment",
         },
-        ...(fixed
-          ? { price: fixed[1], priceCurrency: "USD" }
-          : {}),
-      };
-    }),
+        description:
+          "Priced at the chair, based on hair and complexity.",
+      },
+    ],
   },
-} as const;
+};
+
+/** Blog schema for the updates index (audit T6 covers BlogPosting per post). */
+const BLOG_JSONLD = {
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": `${SITE_URL}/blog#blog`,
+  name: "Updates — dispatches from the chair",
+  description:
+    "Dated notes from one chair and one brain: house-call updates, the hunt for a new chair, and color stories.",
+  url: `${SITE_URL}/blog`,
+  author: {
+    "@type": "Person",
+    name: BUSINESS.founderName,
+    alternateName: "MyKey",
+  },
+  publisher: { "@id": `${SITE_URL}/#business` },
+  blogPost: POSTS.map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.title,
+    datePublished: isoDate(post.date),
+    url: `${SITE_URL}/blog/${post.slug}`,
+  })),
+};
+
+function blogPostingJsonLd(slug: string) {
+  const post = getPost(slug);
+  if (!post) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: isoDate(post.date),
+    author: {
+      "@type": "Person",
+      name: BUSINESS.founderName,
+      alternateName: "MyKey",
+    },
+    publisher: { "@id": `${SITE_URL}/#business` },
+    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+  };
+}
+
+type RouteSeo = {
+  /** Full <title> including brand. */
+  title: string;
+  description: string;
+  /** og:type — defaults to "website". */
+  type?: string;
+  /** Set true for utility/unknown pages that should stay out of the index. */
+  noindex?: boolean;
+  /** Extra JSON-LD blocks for this route. */
+  jsonLd?: object[];
+};
+
+function buildHead(path: string, seo: RouteSeo): SeoHead {
+  const url = absoluteUrl(path);
+  const image = `${SITE_URL}${OG_IMAGE}`;
+  const type = seo.type ?? "website";
+
+  const meta: any[] = [
+    { title: seo.title },
+    { name: "description", content: seo.description },
+    {
+      name: "robots",
+      content: seo.noindex ? "noindex, nofollow" : "index, follow",
+    },
+    { property: "og:type", content: type },
+    { property: "og:site_name", content: SITE_NAME },
+    { property: "og:url", content: url },
+    { property: "og:title", content: seo.title },
+    { property: "og:description", content: seo.description },
+    { property: "og:image", content: image },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: seo.title },
+    { name: "twitter:description", content: seo.description },
+    { name: "twitter:image", content: image },
+  ];
+
+  const head: SeoHead = {
+    meta,
+    links: [{ rel: "canonical", href: url }],
+  };
+
+  if (seo.jsonLd && seo.jsonLd.length > 0) {
+    head.scripts = seo.jsonLd.map(jsonLd);
+  }
+
+  return head;
+}
+
+/* ------------------------------------------------------------------ */
+/* Static route table (titles/descriptions per SEO audit quick wins)   */
+/* ------------------------------------------------------------------ */
+
+const STATIC_ROUTES: Record<string, RouteSeo> = {
+  "/": {
+    title: "House-Call Haircuts & Color in Seattle · Pocket Studio",
+    // Verbatim from the final booking-page copy (browser tab / seo section).
+    description:
+      "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.",
+    jsonLd: [HAIR_SALON_JSONLD],
+  },
+  "/book": {
+    title: "Book a Cut or Color — Seattle House Calls · Pocket Studio",
+    description:
+      "Pick a service, a day, and a time — a $25 deposit holds your slot and comes off your total. Real calendar, instant confirmation, house calls across Seattle.",
+  },
+  "/studio": {
+    title: "Meet MyKey — Solo Hair Artist in Seattle (they/them) · Pocket Studio",
+    description:
+      "One artist, one calendar. MyKey left Rudy's Barbershop and now books directly — cuts + color for all textures, house calls in Seattle, WA.",
+  },
+  "/classic": {
+    title: "The Classic Pocket Studio Booking Page · Pocket Studio",
+    description:
+      "The original Pocket Studio booking page, preserved. Book cuts + color directly with MyKey, a solo house-call hair artist in Seattle, WA.",
+  },
+  "/mobile": {
+    title: "Mobile Booking — Cuts & Color in Seattle · Pocket Studio",
+    description:
+      "Book cuts and color with MyKey Pocket in Seattle. House calls only. Tap a service, pick a slot, done.",
+  },
+  "/blog": {
+    title: "Updates — Dispatches from the Chair · Pocket Studio",
+    description:
+      "Dated notes from one chair and one brain: house-call updates, the hunt for a new chair, and color stories. Signed, always, — mykey.",
+    jsonLd: [BLOG_JSONLD],
+  },
+  "/privacy": {
+    title: "Privacy Policy · Pocket Studio",
+    description:
+      "How Pocket Studio collects, uses, and protects your information when you book cuts + color with MyKey in Seattle.",
+  },
+  "/terms": {
+    title: "Terms of Service · Pocket Studio",
+    description:
+      "The fine print: 24-hour cancellation, no-show policy, deposits, house-call terms, and booking rules for Pocket Studio, Seattle.",
+  },
+};
+
+const DEFAULT_SEO: RouteSeo = {
+  title: "Pocket Studio — book with MyKey · Seattle house-call hair",
+  description:
+    "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.",
+  jsonLd: [HAIR_SALON_JSONLD],
+};
+
+/* ------------------------------------------------------------------ */
+/* Public API                                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Build the TanStack Start `head` payload for a route path.
+ *
+ * Supported:
+ *   '/', '/book', '/studio', '/classic', '/mobile', '/privacy', '/terms',
+ *   '/blog', '/blog/<slug>', '/services/<slug>'
+ * Unknown paths get the site default title/description (noindex is NOT set —
+ * real 404 handling happens at the router level).
+ */
+export function headFor(route: string): SeoHead {
+  // Normalize: strip query/hash and trailing slash (except root).
+  const path = (route.split(/[?#]/)[0] || "/").replace(/\/+$/, "") || "/";
+
+  const staticSeo = STATIC_ROUTES[path];
+  if (staticSeo) return buildHead(path, staticSeo);
+
+  if (path.startsWith("/services/")) {
+    const slug = path.slice("/services/".length);
+    const service = SERVICES.find((s) => s.slug === slug);
+    if (service) {
+      return buildHead(path, {
+        title: `${service.name} in Seattle — House Calls · ${SITE_NAME}`,
+        description:
+          `${service.blurb} ${service.name} — ${service.duration}, ${service.price}. ` +
+          `Book direct with MyKey, house-call hair artist in Seattle, WA.`,
+      });
+    }
+    return buildHead(path, {
+      title: `Service Not Found · ${SITE_NAME}`,
+      description:
+        "That service isn't on the menu. Cuts and color house calls across Seattle — the full menu lives on the booking page.",
+      noindex: true,
+    });
+  }
+
+  if (path.startsWith("/blog/")) {
+    const slug = path.slice("/blog/".length);
+    const post = getPost(slug);
+    if (post) {
+      const posting = blogPostingJsonLd(slug);
+      return buildHead(path, {
+        title: `${post.title} · ${SITE_NAME}`,
+        description: post.excerpt,
+        type: "article",
+        jsonLd: posting ? [posting] : undefined,
+      });
+    }
+    return buildHead(path, {
+      title: `Dispatch Not Found · ${SITE_NAME}`,
+      description:
+        "That dispatch doesn't exist — all updates live on the updates page.",
+      noindex: true,
+    });
+  }
+
+  return buildHead(path, DEFAULT_SEO);
+}
