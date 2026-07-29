@@ -1,8 +1,9 @@
 import { n as require_jsx_runtime } from "../_libs/react+tanstack__react-query.mjs";
+import { t as ReadingModeToggle } from "./ReadingModeToggle-DTkXsAiK.mjs";
 import { h as Link } from "../_libs/@tanstack/react-router+[...].mjs";
-import { n as SERVICES, t as CAL_BASE } from "./services-DG2tVleS.mjs";
-import { i as Route } from "./services._slug-CfgdBA4k.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/services._slug-B6cC5sR-.js
+import { n as SERVICES, r as STRIPE_DEPOSIT_LINK, t as CAL_BASE } from "./services-CC8WogQK.mjs";
+import { t as Route } from "./services._slug-DdWsLMU6.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/services._slug-CtXjFfId.js
 var import_jsx_runtime = require_jsx_runtime();
 function ServicePage() {
 	const svc = Route.useLoaderData();
@@ -31,24 +32,29 @@ function ServicePage() {
 						children: "✂ POCKET STUDIO"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "flex items-center gap-4",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-							to: "/",
-							hash: "services",
-							className: "hidden text-sm underline-offset-4 hover:underline sm:block",
-							style: { fontFamily: "var(--font-mono)" },
-							children: "← all services"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-							href: `${CAL_BASE}${svc.slug}`,
-							target: "_blank",
-							rel: "noreferrer",
-							className: "border-2 px-4 py-1.5 text-sm font-black transition-transform hover:-translate-y-0.5",
-							style: {
-								background: "var(--color-lime)",
-								borderColor: "var(--color-void)",
-								boxShadow: "3px 3px 0 var(--color-void)"
-							},
-							children: "BOOK"
-						})]
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReadingModeToggle, { compact: true }),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/",
+								hash: "services",
+								className: "hidden text-sm underline-offset-4 hover:underline sm:block",
+								style: { fontFamily: "var(--font-mono)" },
+								children: "← all services"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+								href: `${CAL_BASE}${svc.slug}`,
+								target: "_blank",
+								rel: "noreferrer",
+								className: "border-2 px-4 py-1.5 text-sm font-black transition-transform hover:-translate-y-0.5",
+								style: {
+									background: "var(--color-lime)",
+									color: "var(--color-void)",
+									borderColor: "var(--color-void)",
+									boxShadow: "3px 3px 0 var(--color-void)"
+								},
+								children: "BOOK"
+							})
+						]
 					})]
 				})
 			}),
@@ -88,7 +94,7 @@ function ServicePage() {
 								className: "border-2 px-3 py-1",
 								style: {
 									borderColor: "var(--color-void)",
-									background: "#fff"
+									background: "var(--color-card-w)"
 								},
 								children: svc.duration
 							}),
@@ -103,7 +109,7 @@ function ServicePage() {
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 								style: { color: "var(--color-ash)" },
-								children: "house call · Seattle"
+								children: "house call · Seattle · no travel fee right now"
 							})
 						]
 					}),
@@ -117,47 +123,54 @@ function ServicePage() {
 					})
 				]
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("section", {
-				className: "mx-auto max-w-6xl px-5 pb-12",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: `grid gap-4 ${svc.images.length === 1 ? "sm:grid-cols-[2fr_1fr]" : svc.images.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`,
-					children: [svc.images.map((img, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("figure", {
-						className: `overflow-hidden border-2 ${i % 2 === 1 ? "sm:translate-y-4" : ""}`,
-						style: {
-							borderColor: "var(--color-void)",
-							boxShadow: "6px 6px 0 var(--color-void)",
-							background: "#fff"
-						},
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-							src: img.src,
-							alt: img.alt,
-							className: "aspect-[4/5] w-full object-cover",
-							loading: i === 0 ? "eager" : "lazy"
-						})
-					}, img.src)), svc.images.length === 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						className: "flex items-center border-2 p-6",
-						style: {
-							borderColor: "var(--color-void)",
-							background: "var(--color-card-2)",
-							boxShadow: "6px 6px 0 var(--color-void)"
-						},
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							className: "rotate-[-3deg] text-3xl leading-snug",
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
+				className: "border-y-2 px-5 py-12",
+				style: {
+					background: "linear-gradient(rgba(11,11,15,.95), rgba(11,11,15,.95)), url(/images/gallery-texture-1.jpg) center/cover",
+					borderColor: "var(--color-void)"
+				},
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					className: "mx-auto max-w-6xl",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: `grid gap-4 ${svc.images.length === 1 ? "sm:grid-cols-[2fr_1fr]" : svc.images.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`,
+						children: [svc.images.map((img, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("figure", {
+							className: `overflow-hidden border-2 ${i % 2 === 1 ? "sm:translate-y-4" : ""}`,
 							style: {
-								fontFamily: "var(--font-hand)",
-								color: "var(--color-flush)"
+								borderColor: "var(--color-void)",
+								boxShadow: "6px 6px 0 var(--color-void)",
+								background: "var(--color-card-w)"
 							},
-							children: "fresh out of the chair — more coming to the wall soon ~"
-						})
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
+								src: img.src,
+								alt: img.alt,
+								className: "aspect-[4/5] w-full object-cover",
+								loading: i === 0 ? "eager" : "lazy"
+							})
+						}, img.src)), svc.images.length === 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "flex items-center border-2 p-6",
+							style: {
+								borderColor: "var(--color-void)",
+								background: "var(--color-card-2)",
+								boxShadow: "6px 6px 0 var(--color-void)"
+							},
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								className: "rotate-[-3deg] text-3xl leading-snug",
+								style: {
+									fontFamily: "var(--font-hand)",
+									color: "var(--color-flush)"
+								},
+								children: "fresh out of the chair — more coming to the wall soon!"
+							})
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+						className: "mt-4 text-xs",
+						style: {
+							fontFamily: "var(--font-mono)",
+							color: "var(--color-ash)"
+						},
+						children: "real clients, real couches · shared with permission"
 					})]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					className: "mt-4 text-xs",
-					style: {
-						fontFamily: "var(--font-mono)",
-						color: "var(--color-ash)"
-					},
-					children: "real clients, real couches · shared with permission"
-				})]
+				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("section", {
 				className: "border-y-2",
@@ -170,7 +183,7 @@ function ServicePage() {
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 						className: "text-3xl font-black",
 						style: { fontFamily: "var(--font-display)" },
-						children: "what happens"
+						children: "What happens"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ol", {
 						className: "mt-6 space-y-4",
 						children: svc.whatHappens.map((step, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("li", {
@@ -179,7 +192,7 @@ function ServicePage() {
 								className: "flex h-8 w-8 shrink-0 items-center justify-center border-2 text-sm font-black",
 								style: {
 									borderColor: "var(--color-void)",
-									background: i === 0 ? svc.accent : "#fff",
+									background: i === 0 ? svc.accent : "var(--color-card-w)",
 									fontFamily: "var(--font-mono)"
 								},
 								children: i + 1
@@ -201,7 +214,7 @@ function ServicePage() {
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
 								className: "text-lg font-black",
 								style: { fontFamily: "var(--font-display)" },
-								children: "good for"
+								children: "Good for"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								className: "mt-3 text-sm leading-relaxed",
@@ -210,8 +223,8 @@ function ServicePage() {
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 								className: "mt-5 text-xs leading-relaxed",
-								style: { color: "var(--color-ash)" },
-								children: "every appointment is a house call — i bring the chair, tools, and the gossip. you bring decent light and an outlet."
+								style: { color: "#3d3d47" },
+								children: "Every appointment is a house call — I bring the chair, tools, and the gossip. You bring decent light and an outlet."
 							})
 						]
 					})]
@@ -223,7 +236,7 @@ function ServicePage() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
 						className: "text-3xl font-black sm:text-5xl",
 						style: { fontFamily: "var(--font-display)" },
-						children: "want this one?"
+						children: "Want this one?"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 						className: "mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row",
@@ -247,12 +260,33 @@ function ServicePage() {
 							to: "/book",
 							className: "border-2 px-8 py-3 text-base font-black transition-transform hover:-translate-y-0.5",
 							style: {
-								background: "#fff",
+								background: "var(--color-card-w)",
 								borderColor: "var(--color-void)",
 								boxShadow: "4px 4px 0 var(--color-void)"
 							},
 							children: "SEE ALL SLOTS"
 						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
+						className: "mx-auto mt-6 max-w-md text-sm leading-relaxed",
+						style: { color: "var(--color-ash)" },
+						children: [
+							"a ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("strong", {
+								style: { color: "var(--color-void)" },
+								children: "$25 deposit"
+							}),
+							" holds your slot — applied to your total at the chair.",
+							" ",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
+								href: STRIPE_DEPOSIT_LINK,
+								target: "_blank",
+								rel: "noreferrer",
+								className: "underline underline-offset-2",
+								style: { color: "var(--color-violet-brand)" },
+								children: "pay deposit →"
+							})
+						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
 						className: "mt-8 text-sm",
@@ -274,7 +308,7 @@ function ServicePage() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("footer", {
 				className: "border-t px-5 py-8",
 				style: {
-					background: "var(--color-void)",
+					background: "var(--color-card-2)",
 					borderColor: "var(--color-ash)"
 				},
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
@@ -295,13 +329,13 @@ function ServicePage() {
 								className: "underline-offset-4 hover:underline",
 								children: "Home"
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								href: "/classic/terms.html",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/terms",
 								className: "underline-offset-4 hover:underline",
 								children: "Terms"
 							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("a", {
-								href: "/classic/privacy.html",
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
+								to: "/privacy",
 								className: "underline-offset-4 hover:underline",
 								children: "Privacy"
 							})

@@ -1,12 +1,14 @@
 import { r as __toESM } from "../_runtime.mjs";
 import { n as require_jsx_runtime, r as require_react, t as QueryClientProvider } from "../_libs/react+tanstack__react-query.mjs";
 import { c as HeadContent, d as Outlet, f as lazyRouteComponent, g as useRouter, h as Link, m as createRootRouteWithContext, p as createFileRoute, s as Scripts, u as createRouter } from "../_libs/@tanstack/react-router+[...].mjs";
-import { a as SEO_CONFIG, i as Route$10, n as DEFAULT_OG_IMAGE, o as seoHead, r as HAIR_SALON_JSONLD, t as BASE_URL } from "./services._slug-CfgdBA4k.mjs";
+import { t as headFor } from "./seo-BWfvIjKe.mjs";
+import { t as Route$10 } from "./blog._slug-Bzl75u77.mjs";
+import { t as Route$11 } from "./services._slug-DdWsLMU6.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-CDuRxad_.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router-DpwsDIar.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
-var styles_default = "/assets/styles-BdTdHguF.css";
+var styles_default = "/assets/styles-BRycC2sN.css";
 function reportLovableError(error, context = {}) {
 	if (typeof window === "undefined") return;
 	window.__lovableEvents?.captureException?.(error, {
@@ -94,104 +96,53 @@ function ErrorComponent({ error, reset }) {
 	});
 }
 var Route$9 = createRootRouteWithContext()({
-	head: () => ({
-		meta: [
-			{ charSet: "utf-8" },
-			{
-				name: "viewport",
-				content: "width=device-width, initial-scale=1"
-			},
-			{ title: SEO_CONFIG["/"].title },
-			{
-				name: "description",
-				content: SEO_CONFIG["/"].description
-			},
-			{
-				name: "author",
-				content: "MyKey Pocket"
-			},
-			{
-				name: "robots",
-				content: "index, follow"
-			},
-			{
-				property: "og:site_name",
-				content: "Pocket Studio"
-			},
-			{
-				property: "og:type",
-				content: "website"
-			},
-			{
-				property: "og:url",
-				content: `${BASE_URL}/`
-			},
-			{
-				property: "og:title",
-				content: SEO_CONFIG["/"].title
-			},
-			{
-				property: "og:description",
-				content: SEO_CONFIG["/"].description
-			},
-			{
-				property: "og:image",
-				content: DEFAULT_OG_IMAGE
-			},
-			{
-				property: "og:image:width",
-				content: "1200"
-			},
-			{
-				property: "og:image:height",
-				content: "630"
-			},
-			{
-				name: "twitter:card",
-				content: "summary_large_image"
-			},
-			{
-				name: "twitter:title",
-				content: SEO_CONFIG["/"].title
-			},
-			{
-				name: "twitter:description",
-				content: SEO_CONFIG["/"].description
-			},
-			{
-				name: "twitter:image",
-				content: DEFAULT_OG_IMAGE
-			}
-		],
-		links: [
-			{
-				rel: "stylesheet",
-				href: styles_default
-			},
-			{
-				rel: "icon",
-				href: "/favicon.ico",
-				type: "image/x-icon"
-			},
-			{
-				rel: "preconnect",
-				href: "https://fonts.googleapis.com"
-			},
-			{
-				rel: "preconnect",
-				href: "https://fonts.gstatic.com",
-				crossOrigin: "anonymous"
-			},
-			{
-				rel: "stylesheet",
-				href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap"
-			}
-		],
-		scripts: [{
-			type: "application/ld+json",
-			children: JSON.stringify(HAIR_SALON_JSONLD)
-		}]
-	}),
+	head: () => {
+		const seo = headFor("/");
+		return {
+			meta: [
+				{ charSet: "utf-8" },
+				{
+					name: "viewport",
+					content: "width=device-width, initial-scale=1"
+				},
+				{
+					name: "author",
+					content: "Pocket Studio / MyKey Pocket"
+				},
+				{
+					name: "theme-color",
+					content: "#0b0b0f"
+				},
+				...seo.meta
+			],
+			links: [
+				{
+					rel: "stylesheet",
+					href: styles_default
+				},
+				{
+					rel: "icon",
+					href: "/favicon.ico",
+					type: "image/x-icon"
+				},
+				{
+					rel: "preconnect",
+					href: "https://fonts.googleapis.com"
+				},
+				{
+					rel: "preconnect",
+					href: "https://fonts.gstatic.com",
+					crossOrigin: "anonymous"
+				},
+				{
+					rel: "stylesheet",
+					href: "https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Caveat:wght@500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+				},
+				...seo.links ?? []
+			],
+			scripts: [...seo.scripts ?? []]
+		};
+	},
 	shellComponent: RootShell,
 	component: RootComponent,
 	notFoundComponent: NotFoundComponent,
@@ -200,17 +151,7 @@ var Route$9 = createRootRouteWithContext()({
 function RootShell({ children }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("html", {
 		lang: "en",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("head", { children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeadContent, {}) }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("body", { children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("script", { dangerouslySetInnerHTML: { __html: `
-              (function () {
-                try {
-                  var m = window.localStorage.getItem('ps-reading-mode');
-                  if (m === null || m === 'on') document.body.classList.add('reading-mode');
-                } catch (e) {
-                  if (document.body) document.body.classList.add('reading-mode');
-                }
-              })();
-            ` } }),
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("head", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("script", { src: "/reading-mode.js" }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HeadContent, {})] }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("body", { children: [
 			children,
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Scripts, {}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("script", { dangerouslySetInnerHTML: { __html: `
@@ -240,122 +181,49 @@ function RootShell({ children }) {
 }
 function RootComponent() {
 	const { queryClient } = Route$9.useRouteContext();
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(QueryClientProvider, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(QueryClientProvider, {
 		client: queryClient,
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ReadingModeToggle, {})]
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Outlet, {})
 	});
 }
-/**
-* Reading mode toggle — visible on every page (fixed bottom-left).
-* OpenDyslexic + open spacing is ON BY DEFAULT; persists to localStorage
-* ("ps-reading-mode"). SSR-safe: all window/localStorage/body access is
-* guarded and client-only.
-*/
-function ReadingModeToggle() {
-	const [on, setOn] = (0, import_react.useState)(true);
-	(0, import_react.useEffect)(() => {
-		try {
-			const stored = window.localStorage.getItem("ps-reading-mode");
-			const next = stored === null ? true : stored === "on";
-			setOn(next);
-			document.body.classList.toggle("reading-mode", next);
-		} catch {
-			document.body.classList.add("reading-mode");
-		}
-	}, []);
-	const toggle = () => {
-		const next = !on;
-		setOn(next);
-		try {
-			window.localStorage.setItem("ps-reading-mode", next ? "on" : "off");
-		} catch {}
-		document.body.classList.toggle("reading-mode", next);
-	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("button", {
-		type: "button",
-		onClick: toggle,
-		"aria-pressed": on,
-		className: "fixed bottom-4 left-4 z-[70] border-2 px-3 py-1.5 text-xs font-black transition-transform hover:-translate-y-0.5",
-		style: {
-			background: on ? "var(--color-lime)" : "var(--color-bone)",
-			color: "var(--color-void)",
-			borderColor: "var(--color-void)",
-			boxShadow: "3px 3px 0 var(--color-void)",
-			fontFamily: "var(--font-mono)"
-		},
-		children: ["reading mode: ", on ? "on" : "off"]
-	});
-}
-var $$splitComponentImporter$7 = () => import("./terms-DeY4LN_g.mjs");
+var $$splitComponentImporter$7 = () => import("./terms-DUQZDnKi.mjs");
 var Route$8 = createFileRoute("/terms")({
-	head: () => ({ meta: [{ title: "Terms of Service — Pocket Studio" }, {
-		name: "description",
-		content: "Terms of Service for Pocket Studio (MyKey Pocket), an independent Seattle hair studio."
-	}] }),
+	head: () => headFor("/terms"),
 	component: lazyRouteComponent($$splitComponentImporter$7, "component")
 });
-var $$splitComponentImporter$6 = () => import("./studio-BzTRYn5h.mjs");
+var $$splitComponentImporter$6 = () => import("./studio-BEMhvTSH.mjs");
 var Route$7 = createFileRoute("/studio")({
-	head: seoHead("/studio"),
+	head: () => headFor("/studio"),
 	component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
-var $$splitComponentImporter$5 = () => import("./privacy-D7NYkW93.mjs");
+var $$splitComponentImporter$5 = () => import("./privacy-B5G6jBm_.mjs");
 var Route$6 = createFileRoute("/privacy")({
-	head: () => ({ meta: [{ title: "Privacy Policy — Pocket Studio" }, {
-		name: "description",
-		content: "Privacy Policy for Pocket Studio (MyKey Pocket), an independent Seattle hair studio."
-	}] }),
+	head: () => headFor("/privacy"),
 	component: lazyRouteComponent($$splitComponentImporter$5, "component")
 });
-var $$splitComponentImporter$4 = () => import("./mobile-DdtCarYQ.mjs");
+var $$splitComponentImporter$4 = () => import("./mobile-4KqnxHst.mjs");
 var Route$5 = createFileRoute("/mobile")({
-	head: seoHead("/mobile"),
+	head: () => headFor("/mobile"),
 	component: lazyRouteComponent($$splitComponentImporter$4, "component")
 });
 var $$splitComponentImporter$3 = () => import("./classic-CJP0Y1lo.mjs");
 var Route$4 = createFileRoute("/classic")({
-	head: seoHead("/classic"),
+	head: () => headFor("/classic"),
 	component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-var $$splitComponentImporter$2 = () => import("./book-CKTyXcX6.mjs");
+var $$splitComponentImporter$2 = () => import("./book-CtR-exQo.mjs");
 var Route$3 = createFileRoute("/book")({
-	head: seoHead("/book"),
+	head: () => headFor("/book"),
 	component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-var $$splitComponentImporter$1 = () => import("./blog-CzXb5Ke8.mjs");
+var $$splitComponentImporter$1 = () => import("./blog-KqvdlG1O.mjs");
 var Route$2 = createFileRoute("/blog")({
-	head: seoHead("/blog"),
+	head: () => headFor("/blog"),
 	component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-var $$splitComponentImporter = () => import("./routes-ZEgg3Qk0.mjs");
+var $$splitComponentImporter = () => import("./routes-BEolqZCA.mjs");
 var Route$1 = createFileRoute("/")({
-	head: () => ({ meta: [
-		{ title: "Pocket Studio — book with MyKey" },
-		{
-			name: "description",
-			content: "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now."
-		},
-		{
-			name: "author",
-			content: "MyKey Pocket"
-		},
-		{
-			name: "robots",
-			content: "index, follow"
-		},
-		{
-			property: "og:type",
-			content: "website"
-		},
-		{
-			property: "og:title",
-			content: "Pocket Studio — book with MyKey"
-		},
-		{
-			property: "og:description",
-			content: "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now."
-		}
-	] }),
+	head: () => headFor("/"),
 	component: lazyRouteComponent($$splitComponentImporter, "component")
 });
 var TRAVEL = {
@@ -464,25 +332,32 @@ var IndexRoute = Route$1.update({
 	path: "/",
 	getParentRoute: () => Route$9
 });
-var ServicesSlugRoute = Route$10.update({
+var ServicesSlugRoute = Route$11.update({
 	id: "/services/$slug",
 	path: "/services/$slug",
 	getParentRoute: () => Route$9
 });
+var BlogSlugRoute = Route$10.update({
+	id: "/$slug",
+	path: "/$slug",
+	getParentRoute: () => BlogRoute
+});
+var ApiTravelFeeRoute = Route.update({
+	id: "/api/travel-fee",
+	path: "/api/travel-fee",
+	getParentRoute: () => Route$9
+});
+var BlogRouteChildren = { BlogSlugRoute };
 var rootRouteChildren = {
 	IndexRoute,
-	BlogRoute,
+	BlogRoute: BlogRoute._addFileChildren(BlogRouteChildren),
 	BookRoute,
 	ClassicRoute,
 	MobileRoute,
 	PrivacyRoute,
 	StudioRoute,
 	TermsRoute,
-	ApiTravelFeeRoute: Route.update({
-		id: "/api/travel-fee",
-		path: "/api/travel-fee",
-		getParentRoute: () => Route$9
-	}),
+	ApiTravelFeeRoute,
 	ServicesSlugRoute
 };
 var routeTree = Route$9._addFileChildren(rootRouteChildren)._addFileTypes();

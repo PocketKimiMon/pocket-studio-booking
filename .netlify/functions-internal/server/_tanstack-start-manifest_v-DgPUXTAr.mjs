@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-C1ZX20Mc.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-DgPUXTAr.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/__root.tsx",
@@ -14,57 +14,66 @@ var tsrStartManifest = () => ({ routes: {
 			"/api/travel-fee",
 			"/services/$slug"
 		],
-		preloads: ["/assets/index-BgfpTqmp.js", "/assets/jsx-runtime-DGeXAQPT.js"],
+		preloads: ["/assets/index-BG1SeztM.js", "/assets/link-Cgu-qitC.js"],
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-BgfpTqmp.js"
+			src: "/assets/index-BG1SeztM.js"
 		} }]
 	},
 	"/": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/index.tsx",
 		children: void 0,
-		preloads: ["/assets/routes-Mo7KzAZ-.js", "/assets/updates-ldm8LxMT.js"]
+		preloads: [
+			"/assets/routes-CaoM5vfj.js",
+			"/assets/EmergencyModal-BKD9aJMI.js",
+			"/assets/ReadingModeToggle-BLwMFXDr.js"
+		]
 	},
 	"/blog": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/blog.tsx",
-		children: void 0,
-		preloads: ["/assets/blog-BZm50y3a.js", "/assets/updates-ldm8LxMT.js"]
+		children: ["/blog/$slug"],
+		preloads: ["/assets/blog-Clq2RmPZ.js", "/assets/ReadingModeToggle-BLwMFXDr.js"]
 	},
 	"/book": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/book.tsx",
 		children: void 0,
-		preloads: ["/assets/book-CGQcTHhE.js"]
+		preloads: ["/assets/book-DiHyCaUV.js", "/assets/ReadingModeToggle-BLwMFXDr.js"]
 	},
 	"/classic": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/classic.tsx",
 		children: void 0,
-		preloads: ["/assets/classic-Cuj9yWvQ.js"]
+		preloads: ["/assets/classic-D_hAh_iq.js"]
 	},
 	"/mobile": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/mobile.tsx",
 		children: void 0,
-		preloads: ["/assets/mobile-Dyb4e1_P.js"]
+		preloads: ["/assets/mobile-D8GMpR3J.js", "/assets/EmergencyModal-BKD9aJMI.js"]
 	},
 	"/privacy": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/privacy.tsx",
 		children: void 0,
-		preloads: ["/assets/privacy-BzgoHKG-.js"]
+		preloads: ["/assets/privacy-5cIElOJd.js", "/assets/LegalLayout-DM6xn-Y_.js"]
 	},
 	"/studio": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/studio.tsx",
 		children: void 0,
-		preloads: ["/assets/studio-6kquMvH6.js"]
+		preloads: ["/assets/studio-D8k8yScQ.js"]
 	},
 	"/terms": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/terms.tsx",
 		children: void 0,
-		preloads: ["/assets/terms-BErUIWA7.js"]
+		preloads: ["/assets/terms-_Y5ZjOAz.js", "/assets/LegalLayout-DM6xn-Y_.js"]
+	},
+	"/blog/$slug": {
+		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/blog.$slug.tsx",
+		children: void 0,
+		preloads: ["/assets/blog._slug-BTAGh-JE.js", "/assets/blog._slug-DtkiekvD.js"]
 	},
 	"/services/$slug": {
 		filePath: "/home/mykey/pocket-studio-booking-10a2c4c2/src/routes/services.$slug.tsx",
 		children: void 0,
-		preloads: ["/assets/services._slug-DAmq7lnB.js"]
+		preloads: ["/assets/services._slug-DkaLArh1.js", "/assets/ReadingModeToggle-BLwMFXDr.js"]
 	}
 } });
 //#endregion
