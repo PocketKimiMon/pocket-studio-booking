@@ -11,5 +11,12 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+    router: {
+      // The route generator writes its temp file via rename(2); the default
+      // .tanstack/tmp dir sits on a different mount than src/ in this sandbox,
+      // which fails with EXDEV and silently breaks the SSR start-manifest build.
+      // Keeping the tmp dir inside src/ avoids the cross-device rename.
+      tmpDir: "src/.tsr-tmp",
+    },
   },
 });

@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /book
-Disallow: /classic
-Disallow: /mobile
 
 Sitemap: https://pocketstudio.biz/sitemap.xml
