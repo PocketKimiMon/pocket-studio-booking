@@ -1,31 +1,12 @@
 @import "tailwindcss" source(none);
+
 @source "../src";
+
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -45,7 +26,6 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -59,204 +39,234 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --color-lime: #FF6A00;
-  --color-void: #120E17;
-  --color-flush: #E85D04;
-  --color-violet-brand: #0FA3A3;
-  --color-aqua: #5FF0C8;
-  --color-bone: #F3ECDE;
-  --color-ash: #6F6878;
-  --color-mist: #5A5460;
-  --color-card-2: #F7F2E9;
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-ring-offset: var(--ring-offset);
+
+  /* ── Pocket Studio brand tokens · Neurospicy Edition ──────────────────
+     Token NAMES kept for compatibility with every page; VALUES now point
+     at the dark Neurospicy design system (2026-07-29 unified merge).
+       bone        → ink-900 canvas        (was warm cream)
+       card-2      → ink-850 raised bg     (was alt cream)
+       card-w      → ink-800 card surface  (replaces hardcoded #fff)
+       void        → bone fg / borders     (was ink text)
+       lime        → oxblood studio lead   (primary CTA)
+       go          → hazard lime           (booking open / confirmed)
+       flush       → coral urgency         (cancel / errors)
+       violet-brand→ cyan interactive      (links / focus)
+       aqua        → cyan-bright tints
+  ─────────────────────────────────────────────────────────────────────── */
+  --color-bone: #0b0b0f;
+  --color-card-2: #101015;
+  --color-card-w: #16161d;
+  --color-void: #f4efe6;
+  --color-mist: #adb0bd;
+  --color-ash: #797c8a;
+  --color-lime: #c53b38;
+  --color-go: #b6f23a;
+  --color-flush: #e8483f;
+  --color-violet-brand: #33cbd2;
+  --color-aqua: #6fe6eb;
+
+  --font-display: "Archivo", "Arial Black", system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, monospace;
   --font-hand: "Caveat", cursive;
+  --font-dyslexic: "OpenDyslexic", "Hanken Grotesk", system-ui, sans-serif;
+  --font-dyslexic-mono: "OpenDyslexic Mono", "Space Mono", ui-monospace, monospace;
 }
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+
+  /* shadcn semantic tokens — dark by default (Neurospicy is the default theme) */
+  --background: #0b0b0f;
+  --foreground: #f4efe6;
+  --card: #16161d;
+  --card-foreground: #f4efe6;
+  --popover: #16161d;
+  --popover-foreground: #f4efe6;
+  --primary: #c53b38;
+  --primary-foreground: #f4efe6;
+  --secondary: #101015;
+  --secondary-foreground: #f4efe6;
+  --muted: #101015;
+  --muted-foreground: #797c8a;
+  --accent: #33cbd2;
+  --accent-foreground: #0b0b0f;
+  --destructive: #e8483f;
+  --destructive-foreground: #f4efe6;
+  --border: rgba(244, 239, 230, 0.14);
+  --input: rgba(244, 239, 230, 0.14);
+  --ring: #33cbd2;
+  --chart-1: #c53b38;
+  --chart-2: #33cbd2;
+  --chart-3: #b6f23a;
+  --chart-4: #6fe6eb;
+  --chart-5: #e8483f;
+  --sidebar: #101015;
+  --sidebar-foreground: #f4efe6;
+  --sidebar-primary: #c53b38;
+  --sidebar-primary-foreground: #f4efe6;
+  --sidebar-accent: #16161d;
+  --sidebar-accent-foreground: #f4efe6;
+  --sidebar-border: rgba(244, 239, 230, 0.14);
+  --sidebar-ring: #33cbd2;
+  --ring-offset: #0b0b0f;
+
+  /* semantic vars for the reading-mode toggle + small ui atoms */
+  --fg1: #f4efe6;
+  --fg2: #adb0bd;
+  --surface: #16161d;
+  --surface-hover: #1d1d26;
+  --ink-600: #2a2a36;
+  --cyan: #33cbd2;
+  --on-neon: #0b0b0f;
+  --border-subtle: rgba(244, 239, 230, 0.12);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --glow-cyan: 0 0 0 3px rgba(51, 203, 210, 0.35);
+  --radius-pill: 100px;
+  --dur-fast: 0.12s;
+  --dur-base: 0.2s;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --background: #0b0b0f;
+  --foreground: #f4efe6;
+  --card: #16161d;
+  --card-foreground: #f4efe6;
+  --popover: #16161d;
+  --popover-foreground: #f4efe6;
+  --primary: #c53b38;
+  --primary-foreground: #f4efe6;
+  --secondary: #101015;
+  --secondary-foreground: #f4efe6;
+  --muted: #101015;
+  --muted-foreground: #797c8a;
+  --accent: #33cbd2;
+  --accent-foreground: #0b0b0f;
+  --destructive: #e8483f;
+  --destructive-foreground: #f4efe6;
+  --border: rgba(244, 239, 230, 0.14);
+  --input: rgba(244, 239, 230, 0.14);
+  --ring: #33cbd2;
+  --chart-1: #c53b38;
+  --chart-2: #33cbd2;
+  --chart-3: #b6f23a;
+  --chart-4: #6fe6eb;
+  --chart-5: #e8483f;
+  --sidebar: #101015;
+  --sidebar-foreground: #f4efe6;
+  --sidebar-primary: #c53b38;
+  --sidebar-primary-foreground: #f4efe6;
+  --sidebar-accent: #16161d;
+  --sidebar-accent-foreground: #f4efe6;
+  --sidebar-border: rgba(244, 239, 230, 0.14);
+  --sidebar-ring: #33cbd2;
+  --ring-offset: #0b0b0f;
+}
+
+/* ── OpenDyslexic (dyslexia-friendly reading mode — default ON) ── */
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src: url("/fonts/OpenDyslexic-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
 }
 
 @layer base {
   * {
-    border-color: var(--color-border);
+    @apply border-border;
   }
-
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background: var(--color-bone);
+    color: var(--color-void);
+    font-family: var(--font-sans);
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Pocket Studio — brand texture (extended, not replaced).
-   dark-ink base tokens + oxblood accent + subtle grain overlay.
---------------------------------------------------------------------------- */
-@theme inline {
-  --color-ink-deep: #120E17; /* dark-ink editorial base (matches --color-void) */
-  --color-oxblood: #C53B38; /* oxblood accent — studio lead */
-  --color-oxblood-deep: #7E211F; /* oxblood, pressed */
+/* ── Neurospicy globals ─────────────────────────────────────────── */
+
+/* film grain over everything (static, non-interactive) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 
-@layer base {
-  /* grain — warm, low-saturation SVG noise over the whole canvas */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIyIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjE2MCIgaGVpZ2h0PSIxNjAiIGZpbHRlcj0idXJsKCNuKSIgb3BhY2l0eT0iMC40Ii8+PC9zdmc+");
+::selection {
+  background: #c53b38;
+  color: #f4efe6;
+}
+
+/* visible, consistent focus states */
+:focus-visible {
+  outline: 2px solid #33cbd2;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(51, 203, 210, 0.25);
+}
+
+/* reduced motion — honor it everywhere */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Reading mode (OpenDyslexic) — body.reading-mode, DEFAULT ON.
-   Toggled by the root-layout control, persisted in localStorage
-   ("ps-reading-mode": "on" | "off"; unset = on). Applied pre-paint by the
-   inline script in src/routes/__root.tsx.
-
-   Fonts load from jsDelivr (no npm dep, no binary in repo):
-   primary  = @fontsource/opendyslexic (npm package, verified 200)
-   fallback = antijingoist/opendyslexic (official repo via jsDelivr gh)
-   final    = dyslexia-friendly system stack (Verdana/Tahoma) — the
-              letter/word/line spacing below still applies either way.
---------------------------------------------------------------------------- */
-@font-face {
-  font-family: "OpenDyslexic";
-  src:
-    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-400-normal.woff2") format("woff2"),
-    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+/* ── Reading mode (dyslexia-friendly) — default ON via /reading-mode.js ──
+   Beats inline fontFamily styles with !important so every page inherits it. */
+html[data-reading-mode="dyslexic"] *:not(code):not(pre):not(kbd):not(samp) {
+  font-family: var(--font-dyslexic) !important;
 }
-@font-face {
-  font-family: "OpenDyslexic";
-  src:
-    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-700-normal.woff2") format("woff2"),
-    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+html[data-reading-mode="dyslexic"] code,
+html[data-reading-mode="dyslexic"] pre,
+html[data-reading-mode="dyslexic"] kbd,
+html[data-reading-mode="dyslexic"] samp {
+  font-family: var(--font-dyslexic-mono) !important;
 }
-@font-face {
-  font-family: "OpenDyslexic";
-  src:
-    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-400-italic.woff2") format("woff2"),
-    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-Italic.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+html[data-reading-mode="dyslexic"] body {
+  letter-spacing: 0.02em;
+  word-spacing: 0.06em;
 }
-@font-face {
-  font-family: "OpenDyslexic";
-  src:
-    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-700-italic.woff2") format("woff2"),
-    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-BoldItalic.woff2") format("woff2");
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
-:root {
-  --ps-reading-font: "OpenDyslexic", "Comic Sans MS", Verdana, Tahoma, sans-serif;
-}
-
-/* swap every brand type stack — routes consume these vars (and the /mobile
-   page's .ps classes are covered by the !important rule below) */
-body.reading-mode {
-  --font-display: var(--ps-reading-font);
-  --font-sans: var(--ps-reading-font);
-  --font-mono: var(--ps-reading-font);
-  --font-hand: var(--ps-reading-font);
-  line-height: 1.9;
-  letter-spacing: 0.012em;
-  word-spacing: 0.1em;
-}
-body.reading-mode,
-body.reading-mode * {
-  font-family: var(--ps-reading-font) !important;
-}
-body.reading-mode p,
-body.reading-mode li,
-body.reading-mode dd,
-body.reading-mode blockquote {
-  text-align: left;
-  line-height: 1.9;
-  letter-spacing: 0.012em;
-  word-spacing: 0.1em;
-}
-/* calm the grain a touch while reading */
-body.reading-mode::after {
-  opacity: 0.03;
+html[data-reading-mode="dyslexic"] p,
+html[data-reading-mode="dyslexic"] li {
+  line-height: 1.7;
 }

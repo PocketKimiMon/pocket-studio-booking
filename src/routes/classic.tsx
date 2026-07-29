@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { seoHead } from "../lib/seo";
+import { headFor } from "../lib/seo";
 
 export const Route = createFileRoute("/classic")({
-  head: seoHead("/classic"),
+  head: () => headFor("/classic"),
   component: Classic,
 });
 

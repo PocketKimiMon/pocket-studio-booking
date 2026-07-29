@@ -18,6 +18,7 @@ import { Route as BookRouteImport } from './routes/book'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ApiTravelFeeRouteImport } from './routes/api/travel-fee'
 
 const TermsRoute = TermsRouteImport.update({
@@ -65,6 +66,11 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
   id: '/api/travel-fee',
   path: '/api/travel-fee',
@@ -73,7 +79,7 @@ const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/classic': typeof ClassicRoute
   '/mobile': typeof MobileRoute
@@ -81,11 +87,12 @@ export interface FileRoutesByFullPath {
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
   '/api/travel-fee': typeof ApiTravelFeeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/classic': typeof ClassicRoute
   '/mobile': typeof MobileRoute
@@ -93,12 +100,13 @@ export interface FileRoutesByTo {
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
   '/api/travel-fee': typeof ApiTravelFeeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/book': typeof BookRoute
   '/classic': typeof ClassicRoute
   '/mobile': typeof MobileRoute
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
   '/api/travel-fee': typeof ApiTravelFeeRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/studio'
     | '/terms'
     | '/api/travel-fee'
+    | '/blog/$slug'
     | '/services/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/studio'
     | '/terms'
     | '/api/travel-fee'
+    | '/blog/$slug'
     | '/services/$slug'
   id:
     | '__root__'
@@ -144,12 +155,13 @@ export interface FileRouteTypes {
     | '/studio'
     | '/terms'
     | '/api/travel-fee'
+    | '/blog/$slug'
     | '/services/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   BookRoute: typeof BookRoute
   ClassicRoute: typeof ClassicRoute
   MobileRoute: typeof MobileRoute
@@ -225,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/api/travel-fee': {
       id: '/api/travel-fee'
       path: '/api/travel-fee'
@@ -235,9 +254,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   BookRoute: BookRoute,
   ClassicRoute: ClassicRoute,
   MobileRoute: MobileRoute,

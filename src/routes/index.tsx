@@ -1,32 +1,104 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef } from "react";
-import { CAL_BASE, SERVICES, type Service } from "../lib/services";
-import { UPDATES_NEWEST_FIRST } from "../lib/updates";
+import { useState } from "react";
+import { CAL_BASE } from "../lib/services";
+import { headFor } from "../lib/seo";
+import { BookingPopup } from "../components/BookingPopup";
+import { EmergencyModal } from "../components/EmergencyModal";
+import { ReadingModeToggle } from "../components/ReadingModeToggle";
+import { TravelFee } from "../components/TravelFee";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Pocket Studio — book with MyKey" },
-      {
-        name: "description",
-        content:
-          "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.",
-      },
-      { name: "author", content: "MyKey Pocket" },
-      { name: "robots", content: "index, follow" },
-      { property: "og:type", content: "website" },
-      { property: "og:title", content: "Pocket Studio — book with MyKey" },
-      {
-        property: "og:description",
-        content:
-          "Book cuts and color directly with MyKey Pocket, Seattle hair artist. House calls only, no front desk in the way. Former Rudy's clients: this is where you book now.",
-      },
-    ],
-  }),
-  component: Index,
+  head: () => headFor("/"),
+  component: Page,
 });
 
-function Index() {
+const STUDIO_SERVICES = [
+  {
+    name: "Buzz Cut",
+    slug: "buzz-cut",
+    duration: "30 MIN",
+    price: "priced at the chair",
+    desc: "clippers all over, clean edges, back to your life.",
+    tag: "quick",
+    accent: "var(--color-lime)",
+  },
+  {
+    name: "Short Cut",
+    slug: "short-cut",
+    duration: "45 MIN",
+    price: "priced at the chair",
+    desc: "scissor or clipper-over-comb, shaped to your actual head.",
+    tag: "classic",
+    accent: "var(--color-flush)",
+  },
+  {
+    name: "Long Cut",
+    slug: "long-cut",
+    duration: "60 MIN",
+    price: "priced at the chair",
+    desc: "layers, texture, cleanup. keep the length, kill the dead ends.",
+    tag: "detail",
+    accent: "var(--color-violet-brand)",
+  },
+  {
+    name: "New-Client Color Consult",
+    slug: "hair-consultation",
+    duration: "45 MIN",
+    price: "priced at the chair",
+    desc: "first time coloring with me? we sit down and plan everything (lift, tone, maintenance, realistic expectations) before anything touches your hair. books 3 days out.",
+    tag: "required for new color",
+    accent: "var(--color-violet-brand)",
+  },
+  {
+    name: "Existing-Client Color Appointment",
+    slug: "existing-client-color-appointment",
+    duration: "3 HR",
+    price: "priced at the chair",
+    desc: "roots, refresh, full transformation. we already know the vibe. block the afternoon; complex sessions can run 3–5 hours and i'm not rushing your hair for anyone's schedule. books 1 week out.",
+    tag: "color",
+    accent: "var(--color-lime)",
+  },
+];
+
+const POLICIES = [
+  {
+    n: "01",
+    h: "one month at a time",
+    p: "calendar opens on the 1st for the full month ahead. first come, first serve, and i don't hold slots.",
+  },
+  {
+    n: "02",
+    h: "advance notice",
+    p: "haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out. color takes prep and i refuse to wing it. need it sooner? send an emergency request.",
+  },
+  {
+    n: "03",
+    h: "24-hour cancellation",
+    p: "cancel or reschedule? 24 hours notice. emergencies are real and i'm reasonable, but my time is literally how i pay rent, so please don't ghost me.",
+  },
+  {
+    n: "04",
+    h: "no-call-no-show = charged",
+    p: "miss a confirmed appointment with no heads-up and you'll be charged up to the full service amount. i'll invoice you if there's no card on file. fairness goes both ways. full terms on the terms page.",
+  },
+  {
+    n: "05",
+    h: "2-hour confirmation",
+    p: "you'll get a text or email 2 hours before your appointment. if i don't hear back, i may give your slot to someone else. just a quick \"yep\" is all i need.",
+  },
+  {
+    n: "06",
+    h: "pricing & payment",
+    p: "prices are quoted before or at the chair. they vary by hair and complexity because hair isn't one-size-fits-all. payment is due at the appointment unless we work something out.",
+  },
+  {
+    n: "07",
+    h: "house-call space",
+    p: "give me a safe, ready spot and an accurate address. i may leave if the situation isn't workable; nothing personal. let me know about allergies and any prior chemical work so i don't fry your hair.",
+  },
+];
+
+function Page() {
   return (
     <div
       style={{
@@ -35,42 +107,55 @@ function Index() {
         fontFamily: "var(--font-sans)",
       }}
     >
+      <TopBar />
       <Hero />
-      <ServiceWall />
+      <Marquee />
       <About />
-      <LatestDispatch />
-      <BookingCard />
-      <Faq />
-      <Policies />
+      <Updates />
+      <Services />
+      <Rules />
+      <Book />
+      <TravelFee />
       <Footer />
+      <BookingPopup />
+      <EmergencyModal />
     </div>
   );
 }
 
-/* ── hero ─────────────────────────────────────────────── */
-function Hero() {
+/* ── top bar ─────────────────────────────────────────── */
+function TopBar() {
   return (
-    <section
-      className="flex min-h-[100svh] flex-col justify-between px-5 pb-6 pt-4"
-      style={{
-        background:
-          "radial-gradient(60% 42% at 14% 12%, rgba(255,106,0,.32), transparent 62%), radial-gradient(46% 38% at 88% 20%, rgba(15,163,163,.18), transparent 65%), var(--color-bone)",
-      }}
+    <header
+      className="sticky top-0 z-50 border-b-2"
+      style={{ background: "var(--color-bone)", borderColor: "var(--color-void)" }}
     >
-      <header className="flex items-center justify-between gap-3">
-        <p
-          className="text-sm font-black tracking-tight sm:text-base"
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
+        <a
+          href="#top"
+          className="flex items-center gap-2 text-sm font-black tracking-tight"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          ✂ POCKET STUDIO
-        </p>
-        <div className="flex items-center gap-3">
+          ✂ pocket studio · seattle
+        </a>
+        <div
+          className="hidden items-center gap-2 sm:flex"
+          style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
+        >
+          <span
+            className="inline-block h-2 w-2 animate-pulse rounded-full"
+            style={{ background: "var(--color-go)" }}
+          />
+          booking open
+        </div>
+        <div className="flex items-center gap-4">
+          <ReadingModeToggle compact />
           <a
-            href="/classic"
-            className="hidden text-xs underline-offset-4 hover:underline sm:block"
-            style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+            href="tel:425-918-2029"
+            className="hidden text-sm underline-offset-4 hover:underline md:block"
+            style={{ fontFamily: "var(--font-mono)" }}
           >
-            classic version →
+            425-918-2029
           </a>
           <Link
             to="/book"
@@ -84,678 +169,703 @@ function Hero() {
             BOOK
           </Link>
         </div>
-      </header>
+      </div>
+    </header>
+  );
+}
 
-      <div className="mx-auto w-full max-w-6xl">
-        <div className="mt-6 grid items-center gap-8 sm:grid-cols-[1.2fr_.8fr]">
-          <div>
-            <p
+/* ── hero ────────────────────────────────────────────── */
+function Hero() {
+  return (
+    <section id="top" className="mx-auto max-w-6xl px-5 pb-16 pt-14 sm:pb-20 sm:pt-20">
+      <p
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 13,
+          letterSpacing: "0.2em",
+          color: "var(--color-flush)",
+        }}
+      >
+        YOUR CHAIR MOVED
+      </p>
+      <h1
+        className="mt-3 text-[15vw] font-extrabold leading-[0.9] tracking-tight sm:text-[96px] md:text-[112px]"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        mykey{" "}
+        <span
+          className="inline-block rounded-full px-4 py-1 align-baseline"
+          style={{
+            background: "var(--color-lime)",
+            color: "var(--color-void)",
+            boxShadow: "6px 6px 0 var(--color-void)",
+          }}
+        >
+          pocket
+        </span>
+      </h1>
+      <p
+        className="mt-8 max-w-xl text-xl leading-relaxed sm:text-2xl"
+        style={{ fontFamily: "Georgia, serif", color: "var(--color-mist)" }}
+      >
+        book cuts + color directly. no front desk, no phone tag, no wondering if the message went
+        through.
+      </p>
+
+      {/* stickers */}
+      <div
+        className="mt-6 flex flex-wrap gap-2"
+        style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
+      >
+        {["✂ scissors ready", "color chaos welcome", "house calls", "the tea if you rebook"].map(
+          (s, i) => (
+            <span
+              key={s}
+              className="inline-block rounded-full border-2 px-3 py-1"
               style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: 13,
-                letterSpacing: "0.2em",
-                color: "var(--color-flush)",
+                borderColor: "var(--color-void)",
+                background: i % 2 === 0 ? "var(--color-card-w)" : "rgba(111,230,235,.14)",
+                transform: `rotate(${i % 2 === 0 ? -1.5 : 1.5}deg)`,
               }}
             >
-              MYKEY POCKET — SEATTLE HAIR ARTIST (THEY/THEM)
-            </p>
-            <h1
-              className="mt-3 text-[13vw] font-extrabold leading-[0.9] tracking-tight sm:text-[88px]"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              your chair
-              <br />
-              moved.{" "}
-              <span
-                className="inline-block rounded-full px-4 py-1 align-baseline"
-                style={{
-                  background: "var(--color-lime)",
-                  color: "var(--color-void)",
-                  boxShadow: "6px 6px 0 var(--color-void)",
-                }}
-              >
-                catch up.
-              </span>
-            </h1>
-            <p
-              className="mt-8 max-w-xl text-xl leading-relaxed sm:text-2xl"
-              style={{ fontFamily: "Georgia, serif", color: "var(--color-mist)" }}
-            >
-              i'm not at rudy's anymore — same hands, same energy, way fewer hoops. cuts + color
-              booked directly with me, house calls across seattle while i hunt for a new chair.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                to="/book"
-                className="border-2 px-7 py-3 text-base font-black transition-transform hover:-translate-y-0.5"
-                style={{
-                  background: "var(--color-void)",
-                  color: "var(--color-bone)",
-                  borderColor: "var(--color-void)",
-                  boxShadow: "4px 4px 0 var(--color-flush)",
-                }}
-              >
-                BOOK A HOUSE CALL →
-              </Link>
-              <a
-                href="#services"
-                className="border-b-2 pb-0.5 text-base font-bold"
-                style={{ borderColor: "var(--color-flush)", color: "var(--color-flush)" }}
-              >
-                see the menu ↓
-              </a>
-            </div>
-          </div>
-          <HeroCollage />
+              {s}
+            </span>
+          ),
+        )}
+      </div>
+
+      {/* spill the tea promo */}
+      <div
+        className="relative mt-10 rounded-2xl border-2 p-6 sm:p-8"
+        style={{
+          background: "var(--color-lime)",
+          borderColor: "var(--color-void)",
+          boxShadow: "10px 10px 0 var(--color-void)",
+        }}
+      >
+        <span
+          className="absolute -top-4 -left-2 -rotate-6 text-2xl sm:text-3xl"
+          style={{ fontFamily: "var(--font-hand)", color: "var(--color-violet-brand)" }}
+        >
+          spill the tea ~
+        </span>
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.15em" }}>
+          CURRENT DEAL
+        </p>
+        <h2
+          className="mt-1 text-3xl font-black uppercase tracking-tight sm:text-4xl"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          rebook ahead, get the tea.
+        </h2>
+        <p className="mt-3 max-w-lg text-base sm:text-lg" style={{ color: "var(--color-void)" }}>
+          book your next appointment at least 2 days out and i'll spill everything. why i'm not at
+          the old shop anymore, what really went down, all of it. consider it a loyalty bribe. ☕
+        </p>
+      </div>
+
+      {/* notice bands */}
+      <div className="mt-6 grid gap-3">
+        <div
+          className="rounded-xl border-2 p-4 text-sm"
+          style={{
+            background: "var(--color-void)",
+            borderColor: "var(--color-void)",
+            color: "var(--color-bone)",
+          }}
+        >
+          <strong className="font-bold" style={{ color: "var(--color-lime)" }}>
+            former Rudy's clients:
+          </strong>{" "}
+          i'm not at Rudy's anymore. this is where you book now. same hands, same energy, way fewer
+          hoops.
+        </div>
+        <div
+          className="rounded-xl border p-4 text-sm"
+          style={{ background: "rgba(51,203,210,.10)", borderColor: "var(--color-violet-brand)" }}
+        >
+          <strong className="font-bold" style={{ color: "var(--color-violet-brand)" }}>
+            house calls only right now.
+          </strong>{" "}
+          i come to you, no travel fee yet, but that won't last forever. i'm between chairs and
+          figuring out where to land next. thank you for rolling with it. i know shaking up your
+          routine is a lot, especially if you're neurodivergent and changes hit different. i get it,
+          i'm right there with you. we'll get back to something steady soon.
         </div>
       </div>
 
-      <div
-        className="mt-10 flex flex-wrap items-center justify-between gap-2 text-xs"
-        style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+      {/* hero image — the chair, on its way to you */}
+      <figure
+        className="mt-8 overflow-hidden rounded-2xl border-2"
+        style={{ borderColor: "var(--color-void)", boxShadow: "10px 10px 0 var(--color-lime)" }}
       >
-        <span>thu–sun · seattle, wa · house calls only</span>
-        <span className="hidden sm:block">scroll for the good stuff ↓</span>
+        <img
+          src="/images/home-hero.jpg"
+          alt="MyKey's chair and kit, packed for a house call"
+          className="aspect-[16/9] w-full object-cover sm:aspect-[21/9]"
+          loading="eager"
+        />
+      </figure>
+
+      {/* hours */}
+      <div
+        className="mt-8 flex flex-wrap items-center gap-4 text-sm"
+        style={{ fontFamily: "var(--font-mono)", color: "var(--color-mist)" }}
+      >
+        <span>HOURS</span>
+        <span>THU 11–6</span>
+        <span>FRI 12–5</span>
+        <span>SAT–SUN 12–8</span>
+        <span>Seattle, WA</span>
       </div>
     </section>
   );
 }
 
-function HeroCollage() {
+/* ── marquee ─────────────────────────────────────────── */
+function Marquee() {
+  const items = "YOUR CHAIR MOVED ✦ HOUSE CALLS ✦ CUTS & COLOR ✦ THE TEA IF YOU REBOOK ✦ ";
   return (
-    <div className="relative mx-auto hidden h-[460px] w-full max-w-[400px] sm:block">
-      <figure
-        className="absolute left-2 top-2 w-[58%] rotate-[-5deg] border-2 p-2"
-        style={{
-          background: "#fff",
-          borderColor: "var(--color-void)",
-          boxShadow: "6px 6px 0 var(--color-void)",
-        }}
-      >
-        <img
-          src="/work/curl-1.jpg"
-          alt="Curly cut fresh out of the chair"
-          className="aspect-[3/4] w-full object-cover"
-        />
-        <figcaption
-          className="pt-2 text-lg leading-none"
-          style={{ fontFamily: "var(--font-hand)", color: "var(--color-mist)" }}
-        >
-          the curls showed UP
-        </figcaption>
-      </figure>
-      <figure
-        className="absolute right-0 top-24 w-[52%] rotate-[4deg] border-2 p-2"
-        style={{
-          background: "#fff",
-          borderColor: "var(--color-void)",
-          boxShadow: "6px 6px 0 var(--color-void)",
-        }}
-      >
-        <img
-          src="/work/fade-1.jpg"
-          alt="Taper fade, clean line-up"
-          className="aspect-[3/4] w-full object-cover"
-        />
-        <figcaption
-          className="pt-2 text-lg leading-none"
-          style={{ fontFamily: "var(--font-hand)", color: "var(--color-mist)" }}
-        >
-          taper tuesday
-        </figcaption>
-      </figure>
-      <figure
-        className="absolute bottom-2 left-[18%] w-[46%] rotate-[-2deg] border-2 p-2"
-        style={{
-          background: "#fff",
-          borderColor: "var(--color-void)",
-          boxShadow: "6px 6px 0 var(--color-void)",
-        }}
-      >
-        <img
-          src="/work/short-1.jpg"
-          alt="Short textured cut"
-          className="aspect-[3/4] w-full object-cover"
-        />
-        <figcaption
-          className="pt-2 text-lg leading-none"
-          style={{ fontFamily: "var(--font-hand)", color: "var(--color-mist)" }}
-        >
-          short + sweet
-        </figcaption>
-      </figure>
+    <div
+      className="overflow-hidden border-y-2 py-2"
+      style={{ background: "var(--color-void)", borderColor: "var(--color-void)" }}
+      aria-hidden
+    >
       <div
-        className="absolute -right-3 bottom-24 rotate-[8deg] rounded-full px-4 py-2 text-sm font-black"
-        style={{
-          background: "var(--color-flush)",
-          color: "var(--color-bone)",
-          boxShadow: "3px 3px 0 var(--color-void)",
-          fontFamily: "var(--font-display)",
-        }}
+        className="marquee whitespace-nowrap text-sm font-bold tracking-widest"
+        style={{ color: "var(--color-lime)", fontFamily: "var(--font-mono)" }}
       >
-        house calls!
+        {items.repeat(6)}
       </div>
-      <p
-        className="absolute -left-2 bottom-40 rotate-[-10deg] text-2xl"
-        style={{ fontFamily: "var(--font-hand)", color: "var(--color-flush)" }}
-      >
-        real clients, real couches →
-      </p>
+      <style>{`
+        .marquee { display:inline-block; animation: ps-marquee 30s linear infinite; }
+        @keyframes ps-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
+      `}</style>
     </div>
   );
 }
 
-/* ── service wall ─────────────────────────────────────── */
-function ServiceWall() {
-  return (
-    <section id="services" className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2
-          className="text-4xl font-extrabold tracking-tight sm:text-6xl"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          the menu.
-        </h2>
-        <p
-          className="max-w-sm text-sm"
-          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
-        >
-          tap a card — each service gets its own page with the full rundown + photos.
-        </p>
-      </div>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map((svc, i) => (
-          <ServiceCard key={svc.slug} svc={svc} index={i} />
-        ))}
-      </div>
-      <p
-        className="mt-8 text-sm"
-        style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
-      >
-        all appointments are house calls right now — i bring the chair, the tools, and the gossip.
-      </p>
-    </section>
-  );
-}
-
-function ServiceCard({ svc, index }: { svc: Service; index: number }) {
-  const rotations = [-1.5, 1, -0.5, 1.5, -1, 0.5, -1.5];
-  const rot = rotations[index % rotations.length];
-  return (
-    <Link
-      to="/services/$slug"
-      params={{ slug: svc.slug }}
-      className="group block border-2 p-5 transition-transform hover:-translate-y-1"
-      style={{
-        background: "var(--color-card-2)",
-        borderColor: "var(--color-void)",
-        boxShadow: "5px 5px 0 var(--color-void)",
-        transform: `rotate(${rot}deg)`,
-      }}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <span
-          className="inline-block rounded-full px-3 py-1 text-sm font-black"
-          style={{ background: svc.accent, color: "var(--color-void)" }}
-        >
-          {svc.price}
-        </span>
-        <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--color-ash)" }}>
-          {svc.duration}
-        </span>
-      </div>
-      <h3
-        className="mt-5 text-2xl font-black leading-tight tracking-tight"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        {svc.name}
-      </h3>
-      <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
-        {svc.blurb}
-      </p>
-      <p
-        className="mt-4 text-sm font-bold transition-transform group-hover:translate-x-1"
-        style={{ color: "var(--color-flush)" }}
-      >
-        the full rundown →
-      </p>
-    </Link>
-  );
-}
-
-/* ── about / the artist ───────────────────────────────── */
+/* ── 01 · about the artist ───────────────────────────── */
 function About() {
   return (
     <section
       className="border-y-2"
-      style={{ background: "var(--color-void)", borderColor: "var(--color-void)" }}
+      style={{
+        background:
+          "linear-gradient(rgba(11,11,15,.93), rgba(11,11,15,.93)), url(/images/gallery-texture-2.jpg) center/cover",
+        borderColor: "var(--color-void)",
+      }}
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 sm:grid-cols-[.9fr_1.1fr] sm:py-24">
-        <div className="relative mx-auto w-full max-w-sm">
-          <figure
-            className="rotate-[-3deg] border-2 p-2"
-            style={{
-              background: "#fff",
-              borderColor: "var(--color-bone)",
-              boxShadow: "6px 6px 0 var(--color-lime)",
-            }}
-          >
-            <img
-              src="/work/mykey.jpg"
-              alt="MyKey Pocket, Seattle hair artist"
-              className="aspect-[4/5] w-full object-cover"
-            />
-            <figcaption
-              className="pt-2 text-lg leading-none"
-              style={{ fontFamily: "var(--font-hand)", color: "var(--color-mist)" }}
-            >
-              hi, it's me — mykey
-            </figcaption>
-          </figure>
-          <div
-            className="absolute -right-4 -top-4 rotate-[10deg] rounded-full px-3 py-1 text-xs font-black"
-            style={{
-              background: "var(--color-lime)",
-              color: "var(--color-void)",
-              boxShadow: "3px 3px 0 var(--color-void)",
-            }}
-          >
-            they/them
-          </div>
-        </div>
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:grid-cols-[1.2fr_1fr] sm:py-24">
         <div>
           <p
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 13,
-              letterSpacing: "0.2em",
-              color: "var(--color-lime)",
+              fontSize: 12,
+              letterSpacing: "0.15em",
+              color: "var(--color-flush)",
             }}
           >
-            THE ARTIST
+            01 · ABOUT THE ARTIST
           </p>
           <h2
-            className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl"
-            style={{ fontFamily: "var(--font-display)", color: "var(--color-bone)" }}
+            className="mt-2 text-4xl font-black leading-tight sm:text-5xl"
+            style={{ fontFamily: "var(--font-display)" }}
           >
-            one brain. whole front desk.
+            the human behind the chair
           </h2>
-          <div
-            className="mt-6 space-y-4 text-base leading-relaxed"
-            style={{ color: "var(--color-ash)" }}
+          <p className="mt-5 text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
+            i'm MyKey: hair artist, solo operator, the whole front desk and back office in one
+            neurodivergent brain. i just left Rudy's and i'm taking clients directly now. no
+            middleman, no corporate scheduling system, just me and my booking link.
+          </p>
+          <p className="mt-4 text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
+            i cut and color all textures, but the transformations are what light me up: the grow-out
+            rescue, the "i need to feel like a different person by friday" moment, the color
+            correction that takes six hours and a dangerous amount of trust. hair is the one kind of
+            magic i actually believe in.
+          </p>
+          <p className="mt-4 text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
+            show up however you show up. reference pics, bedhead, a vague idea and a willingness to
+            talk it through. all valid. i'm not here to judge your hair crimes.
+          </p>
+          <p
+            className="mt-6 text-sm"
+            style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
           >
-            <p>
-              i'm mykey. i spent years cutting at rudy's barbershop, and i just left — which means
-              if you sat in my chair there, this is where you book me now. same hands, same
-              energy, way fewer hoops.
-            </p>
-            <p>
-              pocket studio is one person: me. you text me, i text you back. no front desk, no
-              phone tag, no "let me check with my manager." house calls only while i hunt for the
-              next chair — and honestly? i'm bringing the good scissors to your couch.
-            </p>
-            <p>
-              every texture, every length, every "i did something to my hair at 2am" emergency.
-              color especially — new color clients start with a consult so we plan it right
-              instead of apologizing later.
-            </p>
-          </div>
-          <div className="mt-6 flex flex-wrap gap-3" style={{ fontFamily: "var(--font-mono)", fontSize: 13 }}>
-            <span className="border px-3 py-1" style={{ borderColor: "var(--color-ash)", color: "var(--color-bone)" }}>seattle, wa</span>
-            <span className="border px-3 py-1" style={{ borderColor: "var(--color-ash)", color: "var(--color-bone)" }}>house calls only rn</span>
-            <span className="border px-3 py-1" style={{ borderColor: "var(--color-ash)", color: "var(--color-bone)" }}>no travel fee yet</span>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <a
-              href="tel:425-918-2029"
-              className="border-2 px-6 py-2.5 text-sm font-black transition-transform hover:-translate-y-0.5"
-              style={{
-                background: "var(--color-lime)",
-                borderColor: "var(--color-lime)",
-                color: "var(--color-void)",
-                boxShadow: "3px 3px 0 var(--color-violet-brand)",
-              }}
-            >
-              CALL/TEXT 425-918-2029
+            pronouns: they/them · seattle, wa ·{" "}
+            <a href="tel:425-918-2029" className="underline underline-offset-4">
+              425-918-2029
+            </a>{" "}
+            ·{" "}
+            <a href="mailto:mykeypocket@icloud.com" className="underline underline-offset-4">
+              mykeypocket@icloud.com
             </a>
-            <Link
-              to="/book"
-              className="border-2 px-6 py-2.5 text-sm font-black transition-transform hover:-translate-y-0.5"
-              style={{
-                borderColor: "var(--color-bone)",
-                color: "var(--color-bone)",
-              }}
-            >
-              BOOK ONLINE →
-            </Link>
-          </div>
+          </p>
+        </div>
+        <div
+          className="relative self-start rounded-2xl p-6"
+          style={{
+            background: "var(--color-void)",
+            color: "var(--color-bone)",
+            boxShadow: "10px 10px 0 var(--color-violet-brand)",
+          }}
+        >
+          <span
+            className="absolute -top-4 -right-2 rotate-6 text-2xl"
+            style={{ fontFamily: "var(--font-hand)", color: "var(--color-lime)" }}
+          >
+            see you in the chair ~
+          </span>
+          <p
+            className="text-sm uppercase tracking-widest"
+            style={{ fontFamily: "var(--font-mono)", color: "var(--color-lime)" }}
+          >
+            why book direct?
+          </p>
+          <ul className="mt-5 space-y-4 text-sm leading-relaxed">
+            <li className="flex gap-3">
+              <span style={{ color: "var(--color-lime)" }}>▍</span> no front-desk telephone game
+            </li>
+            <li className="flex gap-3">
+              <span style={{ color: "var(--color-lime)" }}>▍</span> you know exactly who's holding
+              the scissors
+            </li>
+            <li className="flex gap-3">
+              <span style={{ color: "var(--color-lime)" }}>▍</span> rebooking reminders from a real
+              human, not an auto-drip
+            </li>
+            <li className="flex gap-3">
+              <span style={{ color: "var(--color-lime)" }}>▍</span> your notes live with me. no
+              rotating cast of receptionists who've never seen your hair.
+            </li>
+          </ul>
         </div>
       </div>
     </section>
   );
 }
 
-/* ── latest dispatch (from /blog data) ────────────────── */
-function LatestDispatch() {
-  const latest = UPDATES_NEWEST_FIRST[0];
-  const rest = UPDATES_NEWEST_FIRST.slice(1);
-  if (!latest) return null;
+/* ── 02 · what's going on ────────────────────────────── */
+function Updates() {
   return (
     <section className="mx-auto max-w-6xl px-5 py-16 sm:py-24">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2
-          className="text-4xl font-extrabold tracking-tight sm:text-6xl"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          from the chair.
-        </h2>
-        <Link
-          to="/blog"
-          className="text-sm font-bold underline-offset-4 hover:underline"
-          style={{ color: "var(--color-flush)", fontFamily: "var(--font-mono)" }}
-        >
-          all updates →
-        </Link>
-      </div>
-
-      <article
-        className="mt-10 rotate-[-0.5deg] border-2 p-6 sm:p-10"
+      <p
         style={{
-          background: "var(--color-card-2)",
-          borderColor: "var(--color-void)",
-          boxShadow: "8px 8px 0 var(--color-void)",
+          fontFamily: "var(--font-mono)",
+          fontSize: 12,
+          letterSpacing: "0.15em",
+          color: "var(--color-ash)",
         }}
       >
-        <div className="flex flex-wrap items-baseline gap-3">
-          <span
-            className="rounded-full px-3 py-1 text-xs font-black"
-            style={{ background: "var(--color-lime)", color: "var(--color-void)" }}
-          >
-            LATEST
-          </span>
-          <time
-            dateTime={latest.dateISO}
+        02 · WHAT'S GOING ON
+      </p>
+      <h2
+        className="mt-2 text-4xl font-black leading-tight sm:text-5xl"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        dispatches from the chair
+      </h2>
+      <div className="mt-8">
+        <article
+          className="mb-3 border-2 p-5 sm:p-6"
+          style={{
+            background: "var(--color-card-w)",
+            borderColor: "var(--border-subtle)",
+            boxShadow: "3px 3px 0 var(--color-void)",
+          }}
+        >
+          <div
+            className="mb-1"
             style={{
               fontFamily: "var(--font-mono)",
-              fontSize: 12,
+              fontSize: 11,
               color: "var(--color-ash)",
               textTransform: "uppercase",
               letterSpacing: "0.1em",
             }}
           >
-            {latest.displayDate}
-          </time>
-        </div>
-        <h3
-          className="mt-4 text-2xl font-black leading-tight tracking-tight sm:text-4xl"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          {latest.title}
-        </h3>
-        <p className="mt-3 max-w-2xl text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
-          {latest.excerpt}
-        </p>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed" style={{ color: "var(--color-mist)" }}>
-          {latest.body[0]}
-        </p>
-        <div className="mt-6 flex items-center justify-between gap-4">
-          <Link
-            to="/blog"
-            className="border-b-2 pb-0.5 text-base font-bold"
-            style={{ borderColor: "var(--color-flush)", color: "var(--color-flush)" }}
+            JUL 14, 2026
+          </div>
+          <h4 className="text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>
+            house calls + the hunt for a new chair
+          </h4>
+          <p
+            className="mt-2 text-sm leading-relaxed sm:text-base"
+            style={{ color: "var(--color-mist)" }}
           >
-            read the dispatch →
-          </Link>
-          <span className="text-2xl" style={{ fontFamily: "var(--font-hand)", color: "var(--color-flush)" }}>
+            doing house calls only right now. i show up, set up wherever works, and get you sorted.
+            no travel fee for now. call it a thank-you for sticking around while i figure out my
+            next spot.
+          </p>
+          <p
+            className="mt-2 text-sm leading-relaxed sm:text-base"
+            style={{ color: "var(--color-mist)" }}
+          >
+            i know it's chaotic. i know routine changes are hard. believe me, my brain runs on
+            routine too. i'm working on locking down a chair so we can both stop improvising.
+            genuinely appreciate you riding this out with me.
+          </p>
+          <p
+            className="mt-3 text-lg"
+            style={{ fontFamily: "var(--font-hand)", color: "var(--color-flush)" }}
+          >
             — mykey
-          </span>
-        </div>
-      </article>
-
-      {rest.length > 0 && (
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {rest.map((post) => (
-            <Link
-              key={post.slug}
-              to="/blog"
-              className="block border-2 p-5 transition-transform hover:-translate-y-0.5"
-              style={{
-                background: "#fff",
-                borderColor: "var(--color-void)",
-                boxShadow: "4px 4px 0 var(--color-void)",
-              }}
-            >
-              <time
-                dateTime={post.dateISO}
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 11,
-                  color: "var(--color-ash)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                }}
-              >
-                {post.displayDate}
-              </time>
-              <h4
-                className="mt-2 text-xl font-black leading-snug"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                {post.title}
-              </h4>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
-                {post.excerpt}
-              </p>
-            </Link>
-          ))}
-        </div>
-      )}
+          </p>
+        </article>
+        <Link
+          to="/blog"
+          className="inline-block text-sm font-bold underline underline-offset-4"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-violet-brand)" }}
+        >
+          all dispatches →
+        </Link>
+      </div>
     </section>
   );
 }
 
-/* ── booking card ─────────────────────────────────────── */
-function BookingCard() {
-  const mini = [
-    { q: "house calls only right now — i come to you." },
-    { q: "no travel fee for now — that'll change later, plenty of notice first." },
-    { q: "$25 deposit, applied to your total." },
-    { q: "calendar opens on the 1st for the full month ahead." },
-  ];
+/* ── 03 · services ledger ────────────────────────────── */
+function Services() {
+  const [open, setOpen] = useState<string | null>(null);
+
   return (
-    <section className="mx-auto max-w-6xl px-5 pb-16 sm:pb-24">
-      <div
-        className="rotate-[0.5deg] border-2 p-6 sm:p-10"
+    <section id="services" className="mx-auto max-w-6xl px-5 pb-16 sm:pb-24">
+      <p
         style={{
-          background: "var(--color-card-2)",
-          borderColor: "var(--color-void)",
-          boxShadow: "8px 8px 0 var(--color-void)",
+          fontFamily: "var(--font-mono)",
+          fontSize: 12,
+          letterSpacing: "0.15em",
+          color: "var(--color-ash)",
         }}
       >
-        <h2
-          className="text-3xl font-black tracking-tight sm:text-5xl"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          booking with me =
-        </h2>
-        <ul className="mt-8 space-y-4">
-          {mini.map((x, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <span
-                className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black"
-                style={{ background: "var(--color-lime)", color: "var(--color-void)" }}
+        03 · PICK A SERVICE
+      </p>
+      <h2
+        className="mt-2 text-4xl font-black leading-tight sm:text-6xl"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        tap one to book
+      </h2>
+
+      <div className="mt-10 border-t-2" style={{ borderColor: "var(--color-void)" }}>
+        {STUDIO_SERVICES.map((s, i) => {
+          const isOpen = open === s.slug;
+          return (
+            <div
+              key={s.slug}
+              className="group border-b-2"
+              style={{ borderColor: "var(--color-void)" }}
+            >
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                onClick={() => setOpen(isOpen ? null : s.slug)}
+                className="flex w-full items-baseline gap-4 py-5 text-left transition-colors sm:gap-8"
               >
-                {i + 1}
-              </span>
-              <span className="text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
-                {x.q}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-10 flex flex-wrap gap-4">
+                <span
+                  className="w-8 shrink-0 text-sm"
+                  style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+                >
+                  0{i + 1}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span
+                    className="block text-2xl font-black tracking-tight sm:text-4xl"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {s.name}
+                  </span>
+                  <span className="mt-1 block text-sm" style={{ color: "var(--color-mist)" }}>
+                    {s.desc}
+                  </span>
+                  <span
+                    className="mt-2 inline-block rounded-full border px-2.5 py-0.5"
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: 11,
+                      borderColor: s.accent,
+                      color: "var(--color-mist)",
+                    }}
+                  >
+                    {s.tag}
+                  </span>
+                </span>
+                <span
+                  className="hidden shrink-0 text-sm sm:block"
+                  style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+                >
+                  {s.duration}
+                </span>
+                <span
+                  className="shrink-0 text-xs sm:text-sm"
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    color: s.accent === "var(--color-lime)" ? "var(--color-void)" : s.accent,
+                  }}
+                >
+                  {s.price}
+                </span>
+                <span
+                  className="hidden h-8 w-8 shrink-0 items-center justify-center border-2 text-lg transition-transform group-hover:rotate-45 sm:flex"
+                  style={{ borderColor: "var(--color-void)", background: s.accent }}
+                  aria-hidden
+                >
+                  +
+                </span>
+              </button>
+
+              <div
+                className={`grid transition-all duration-200 sm:max-h-0 sm:opacity-0 sm:group-hover:max-h-40 sm:group-hover:opacity-100 ${
+                  isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                } overflow-hidden`}
+              >
+                <div className="flex flex-col gap-3 pb-6 pl-12 pr-2 sm:flex-row sm:items-center sm:justify-between sm:pl-16">
+                  <p
+                    className="max-w-xl text-sm leading-relaxed"
+                    style={{ color: "var(--color-mist)" }}
+                  >
+                    {s.desc}
+                    <span
+                      className="sm:hidden"
+                      style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+                    >
+                      {" "}
+                      · {s.duration}
+                    </span>
+                  </p>
+                  <span className="flex shrink-0 flex-wrap items-center gap-3">
+                    <Link
+                      to="/services/$slug"
+                      params={{ slug: s.slug }}
+                      className="inline-block border-2 px-5 py-2 text-sm font-black transition-transform hover:-translate-y-0.5"
+                      style={{
+                        background: s.accent,
+                        borderColor: "var(--color-void)",
+                        boxShadow: "3px 3px 0 var(--color-void)",
+                        color: "var(--color-void)",
+                      }}
+                    >
+                      SEE THE WORK →
+                    </Link>
+                    <a
+                      href={`${CAL_BASE}${s.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-block border-2 px-5 py-2 text-sm font-black transition-transform hover:-translate-y-0.5"
+                      style={{
+                        background: "var(--color-card-w)",
+                        borderColor: "var(--color-void)",
+                        boxShadow: "3px 3px 0 var(--color-void)",
+                        color: "var(--color-void)",
+                      }}
+                    >
+                      BOOK →
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/* ── 04 · the fine print ─────────────────────────────── */
+function Rules() {
+  return (
+    <section className="mx-auto max-w-6xl px-5 pb-16 sm:pb-24">
+      <p
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 12,
+          letterSpacing: "0.15em",
+          color: "var(--color-ash)",
+        }}
+      >
+        04 · THE FINE PRINT
+      </p>
+      <h2
+        className="mt-2 text-4xl font-black leading-tight sm:text-5xl"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        so nobody gets surprised
+      </h2>
+      <ol className="mt-10 border-t" style={{ borderColor: "var(--color-ash)" }}>
+        {POLICIES.map((p) => (
+          <li
+            key={p.h}
+            className="grid gap-1 border-b py-5 sm:grid-cols-[64px_240px_1fr] sm:gap-6"
+            style={{ borderColor: "var(--color-ash)" }}
+          >
+            <span
+              style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)", fontSize: 13 }}
+            >
+              {p.n}
+            </span>
+            <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>
+              {p.h}
+            </h3>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
+              {p.p}
+            </p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+/* ── 05 · book it ────────────────────────────────────── */
+function Book() {
+  return (
+    <section
+      id="book"
+      className="border-t-2"
+      style={{ background: "var(--color-void)", borderColor: "var(--color-void)" }}
+    >
+      <div className="mx-auto max-w-6xl px-5 py-16 text-center sm:py-24">
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 12,
+            letterSpacing: "0.15em",
+            color: "var(--color-lime)",
+          }}
+        >
+          05 · BOOK IT
+        </p>
+        <h2
+          className="mt-2 text-4xl font-black leading-tight sm:text-6xl"
+          style={{ fontFamily: "var(--font-display)", color: "var(--color-bone)" }}
+        >
+          let's book it →
+        </h2>
+        <p className="mx-auto mt-4 max-w-md text-lg" style={{ color: "var(--color-ash)" }}>
+          answer a couple quick questions and i'll point you to the right slot. no guesswork, no
+          booking the wrong thing and having to start over.
+        </p>
+        <p
+          className="mx-auto mt-3 text-sm"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+        >
+          thu 11am–6pm · fri 12pm–5pm · sat–sun 12pm–8pm
+        </p>
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
             to="/book"
-            className="border-2 px-7 py-3 text-base font-black transition-transform hover:-translate-y-0.5"
+            className="inline-block border-2 px-10 py-4 text-lg font-black transition-transform hover:-translate-y-0.5"
             style={{
-              background: "var(--color-void)",
-              color: "var(--color-bone)",
-              borderColor: "var(--color-void)",
-              boxShadow: "4px 4px 0 var(--color-flush)",
-            }}
-          >
-            BOOK NOW →
-          </Link>
-          <a
-            href={CAL_BASE}
-            target="_blank"
-            rel="noreferrer"
-            className="border-2 px-7 py-3 text-base font-black transition-transform hover:-translate-y-0.5"
-            style={{
-              background: "transparent",
-              borderColor: "var(--color-void)",
+              background: "var(--color-lime)",
+              borderColor: "var(--color-lime)",
+              boxShadow: "4px 4px 0 var(--color-violet-brand)",
               color: "var(--color-void)",
             }}
           >
-            CAL.COM LINK ↗
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ── faq ──────────────────────────────────────────────── */
-function Faq() {
-  const faqs = [
-    {
-      q: "what exactly is a house call?",
-      a: "you pick a spot with decent light and an outlet — kitchen, bathroom, living room, wherever. i show up with a chair, a cape, and all my tools, we do the cut, and i leave no trace. no salon, no commute, no waiting room.",
-    },
-    {
-      q: "is there a travel fee?",
-      a: "not right now. while i'm hunting for a new chair, travel is on me — think of it as a thank-you for making the jump with me. when that changes, you'll hear it from me with plenty of notice.",
-    },
-    {
-      q: "how far will you come?",
-      a: "anywhere in seattle proper, and i'm flexible beyond that — text me your neighborhood and we'll figure it out. if you're way out, we might split the difference on timing.",
-    },
-    {
-      q: "what's the deposit situation?",
-      a: "$25, applied to your total. it just holds your slot — because no-shows make me sad and make other clients miss out.",
-    },
-    {
-      q: "i was your client at rudy's — how do i book now?",
-      a: "right here. this site, the book page, or just text me at 425-918-2029. nothing else about us changes.",
-    },
-    {
-      q: "new to color — where do we start?",
-      a: "with a consult, always. we talk, we look at your hair, we do a strand test if we need to. i plan color, i don't wing it — that's how you get the good outcome instead of the expensive apology.",
-    },
-  ];
-  return (
-    <section className="mx-auto max-w-6xl px-5 pb-16 sm:pb-24">
-      <h2
-        className="text-4xl font-extrabold tracking-tight sm:text-6xl"
-        style={{ fontFamily: "var(--font-display)" }}
-      >
-        probably wondering.
-      </h2>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        {faqs.map((f, i) => (
-          <div
-            key={i}
-            className="border-2 p-5"
+            LET'S BOOK IT →
+          </Link>
+          <button
+            type="button"
+            data-emergency
+            className="inline-block border-2 px-8 py-4 text-base font-black transition-transform hover:-translate-y-0.5"
             style={{
-              background: i % 2 ? "#fff" : "var(--color-card-2)",
-              borderColor: "var(--color-void)",
-              boxShadow: "4px 4px 0 var(--color-void)",
-              transform: `rotate(${i % 2 ? 0.5 : -0.5}deg)`,
+              background: "var(--color-flush)",
+              borderColor: "var(--color-flush)",
+              boxShadow: "4px 4px 0 var(--color-violet-brand)",
+              color: "#fff",
             }}
           >
-            <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>
-              {f.q}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
-              {f.a}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ── policies (marquee) ───────────────────────────────── */
-function Policies() {
-  const line =
-    "house calls only right now · no travel fee for now · $25 deposit holds your slot · calendar opens the 1st for the month ahead · cuts book 2 days out · new color = consult first · not affiliated with rudy's barbershop · ";
-  return (
-    <section className="overflow-hidden border-y-2 py-4" style={{ background: "var(--color-flush)", borderColor: "var(--color-void)" }}>
-      <div className="flex whitespace-nowrap" style={{ animation: "ps-marquee 28s linear infinite" }}>
-        {[0, 1].map((n) => (
-          <span
-            key={n}
-            className="pr-4 text-sm font-black tracking-wide"
-            style={{ fontFamily: "var(--font-mono)", color: "var(--color-bone)" }}
+            🚨 need it sooner? emergency request
+          </button>
+        </div>
+        <p className="mx-auto mt-6 max-w-xl text-sm" style={{ color: "var(--color-ash)" }}>
+          calendar is live. real time, instant confirmation. house calls only right now.
+        </p>
+        <p className="mx-auto mt-2 max-w-xl text-sm" style={{ color: "var(--color-ash)" }}>
+          by booking you agree to the{" "}
+          <Link
+            to="/terms"
+            className="underline underline-offset-4"
+            style={{ color: "var(--color-lime)" }}
           >
-            {line.repeat(2)}
-          </span>
-        ))}
+            terms of service
+          </Link>{" "}
+          and{" "}
+          <Link
+            to="/privacy"
+            className="underline underline-offset-4"
+            style={{ color: "var(--color-lime)" }}
+          >
+            privacy policy
+          </Link>
+          , including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call
+          terms. booking runs on cal.com.
+        </p>
       </div>
-      <style>{`@keyframes ps-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
     </section>
   );
 }
 
-/* ── footer ───────────────────────────────────────────── */
+/* ── footer ──────────────────────────────────────────── */
 function Footer() {
-  const ref = useRef<HTMLDivElement>(null);
   return (
-    <footer ref={ref} className="px-5 py-14" style={{ background: "var(--color-void)", color: "var(--color-bone)" }}>
-      <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-10 sm:flex-row sm:justify-between">
-          <div>
-            <p className="text-2xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
-              ✂ POCKET STUDIO
-            </p>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
-              one artist, one calendar. mykey pocket (they/them), seattle hair artist — house calls
-              only while the next chair gets hunted.
-            </p>
-            <p className="mt-4 text-2xl" style={{ fontFamily: "var(--font-hand)", color: "var(--color-lime)" }}>
-              see you in your living room ~
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-10 text-sm" style={{ fontFamily: "var(--font-mono)" }}>
-            <div>
-              <p className="text-xs tracking-widest" style={{ color: "var(--color-ash)" }}>BOOK</p>
-              <ul className="mt-3 space-y-2">
-                <li><Link to="/book" className="underline-offset-4 hover:underline">book a slot</Link></li>
-                <li><a href={CAL_BASE} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline">cal.com ↗</a></li>
-                <li><a href="tel:425-918-2029" className="underline-offset-4 hover:underline">425-918-2029</a></li>
-                <li><a href="mailto:mykeypocket@icloud.com" className="underline-offset-4 hover:underline">mykeypocket@icloud.com</a></li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-xs tracking-widest" style={{ color: "var(--color-ash)" }}>PAGES</p>
-              <ul className="mt-3 space-y-2">
-                <li><a href="#services" className="underline-offset-4 hover:underline">services</a></li>
-                <li><Link to="/blog" className="underline-offset-4 hover:underline">updates</Link></li>
-                <li><Link to="/studio" className="underline-offset-4 hover:underline">the studio</Link></li>
-                <li><a href="/classic" className="underline-offset-4 hover:underline">classic version</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="mt-12 flex flex-col gap-2 border-t pt-6 text-xs sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: "rgba(243,236,222,.15)", color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
-          <span>© pocket studio / mykey pocket · seattle, wa</span>
-          <span className="flex gap-4">
-            <a href="/classic/terms.html" className="underline-offset-4 hover:underline">terms</a>
-            <a href="/classic/privacy.html" className="underline-offset-4 hover:underline">privacy</a>
-          </span>
-          <span>not affiliated with rudy's barbershop.</span>
-        </div>
+    <footer
+      className="border-t-2 px-5 py-10"
+      style={{ background: "var(--color-void)", borderColor: "var(--color-void)" }}
+    >
+      <div className="mx-auto max-w-6xl text-center">
+        <p className="text-base" style={{ color: "var(--color-bone)" }}>
+          hit me up:{" "}
+          <a
+            href="tel:425-918-2029"
+            className="underline underline-offset-4"
+            style={{ color: "var(--color-lime)" }}
+          >
+            425-918-2029
+          </a>{" "}
+          ·{" "}
+          <a
+            href="mailto:mykeypocket@icloud.com"
+            className="underline underline-offset-4"
+            style={{ color: "var(--color-lime)" }}
+          >
+            mykeypocket@icloud.com
+          </a>{" "}
+          · popl card
+        </p>
+        <p
+          className="mt-3 text-xs"
+          style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+        >
+          the small print: pronouns: they/them / location: seattle, wa / hours: thu 11am–6pm, fri
+          12pm–5pm, sat–sun 12pm–8pm
+        </p>
+        <p
+          className="mt-5 -rotate-2 text-2xl"
+          style={{ fontFamily: "var(--font-hand)", color: "var(--color-lime)" }}
+        >
+          built by one brain, on purpose ~
+        </p>
+        <p
+          className="mt-5 text-xs"
+          style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+        >
+          <Link to="/privacy" className="underline-offset-4 hover:underline">
+            privacy policy
+          </Link>{" "}
+          ·{" "}
+          <Link to="/terms" className="underline-offset-4 hover:underline">
+            terms of service
+          </Link>{" "}
+          ·{" "}
+          <Link to="/blog" className="underline-offset-4 hover:underline">
+            dispatches
+          </Link>{" "}
+          · © pocket studio / mykey pocket · not affiliated with Rudy's Barbershop
+        </p>
       </div>
     </footer>
   );
