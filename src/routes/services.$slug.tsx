@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CAL_BASE, SERVICES } from "../lib/services";
+import { serviceHead } from "../lib/seo";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -7,12 +8,7 @@ export const Route = createFileRoute("/services/$slug")({
     if (!svc) throw notFound();
     return svc;
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData?.name ?? "Service"} — Pocket Studio` },
-      { name: "description", content: loaderData?.detail ?? "" },
-    ],
-  }),
+  head: ({ loaderData }) => serviceHead(loaderData),
   component: ServicePage,
 });
 
@@ -80,7 +76,7 @@ function ServicePage() {
           {svc.images.length === 1 && (
             <div className="flex items-center border-2 p-6" style={{ borderColor: "var(--color-void)", background: "var(--color-card-2)", boxShadow: "6px 6px 0 var(--color-void)" }}>
               <p className="rotate-[-3deg] text-3xl leading-snug" style={{ fontFamily: "var(--font-hand)", color: "var(--color-flush)" }}>
-                fresh out of the chair — more coming to the wall soon!
+                fresh out of the chair — more coming to the wall soon ~
               </p>
             </div>
           )}
@@ -94,7 +90,7 @@ function ServicePage() {
       <section className="border-y-2" style={{ background: "var(--color-card-2)", borderColor: "var(--color-void)" }}>
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-[1.3fr_1fr]">
           <div>
-            <h2 className="text-3xl font-black" style={{ fontFamily: "var(--font-display)" }}>What happens</h2>
+            <h2 className="text-3xl font-black" style={{ fontFamily: "var(--font-display)" }}>what happens</h2>
             <ol className="mt-6 space-y-4">
               {svc.whatHappens.map((step, i) => (
                 <li key={i} className="flex gap-4">
@@ -110,10 +106,10 @@ function ServicePage() {
             </ol>
           </div>
           <div className="self-start border-2 p-6" style={{ background: "var(--color-void)", color: "var(--color-bone)", borderColor: "var(--color-void)", boxShadow: "6px 6px 0 " + (svc.accent === "var(--color-lime)" ? "var(--color-lime)" : svc.accent) }}>
-            <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>Good for</h3>
+            <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>good for</h3>
             <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--color-bone)" }}>{svc.goodFor}</p>
             <p className="mt-5 text-xs leading-relaxed" style={{ color: "var(--color-ash)" }}>
-              Every appointment is a house call — I bring the chair, tools, and the gossip. You bring decent light and an outlet.
+              every appointment is a house call — i bring the chair, tools, and the gossip. you bring decent light and an outlet.
             </p>
           </div>
         </div>
@@ -122,7 +118,7 @@ function ServicePage() {
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-5 py-14 text-center sm:py-20">
         <h2 className="text-3xl font-black sm:text-5xl" style={{ fontFamily: "var(--font-display)" }}>
-          Want this one?
+          want this one?
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
