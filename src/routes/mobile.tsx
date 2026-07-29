@@ -1,318 +1,268 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type CSSProperties } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CAL_BASE, SERVICES } from "../lib/services";
+import { seoHead } from "../lib/seo";
 
 export const Route = createFileRoute("/mobile")({
+  head: seoHead("/mobile"),
   component: PocketStudio,
 });
 
-const styles = `
-:root{--bone:#F3ECDE;--void:#120E17;--lime:#FF6A00;--flush:#E85D04;--violet:#0FA3A3;--aqua:#5FF0C8;--ash:#6F6878;--mist:#5A5460}
-*{box-sizing:border-box}
-.ps{background:var(--bone);color:var(--void);font-family:'Inter',system-ui,sans-serif;font-weight:400;line-height:1.55;min-height:100vh;overflow-x:hidden}
-.ps a{color:var(--violet);text-decoration:none}
-.ps a:hover{text-decoration:underline}
-.ps .mono{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
-.ps .serif{font-family:'Bricolage Grotesque',serif;font-weight:600;letter-spacing:-.02em}
-.ps .hand{font-family:'Caveat',cursive;font-weight:600}
-.ps .wrap{max-width:1100px;margin:0 auto;padding:0 22px}
-
-/* top bar */
-.ps-top{position:sticky;top:0;z-index:50;background:rgba(243,236,222,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(18,14,23,.12)}
-.ps-top-inner{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 22px;max-width:1100px;margin:0 auto}
-.ps-avail{display:flex;align-items:center;gap:8px;min-width:0}
-.ps-avail .mono{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ps-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);position:relative;flex-shrink:0}
-.ps-dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--lime);animation:ps-pulse 2.2s infinite ease-out}
-@keyframes ps-pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.5);opacity:0}}
-.ps-top-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.ps-top-right a.tel{color:var(--void);font-weight:600;font-size:13px}
-.ps-btn{display:inline-block;background:var(--lime);color:var(--void);font-weight:700;padding:9px 16px;border-radius:999px;font-size:13px;border:1.5px solid var(--void);box-shadow:2px 2px 0 var(--void);transition:transform .12s ease,box-shadow .12s ease}
-.ps-btn:hover{text-decoration:none;transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--void)}
-
-/* hero */
-.ps-hero{padding:44px 0 30px;position:relative}
-.ps-scissors{filter:drop-shadow(3px 3px 0 rgba(18,14,23,.18));margin-bottom:18px}
-.ps-kicker{color:var(--mist);margin-bottom:14px}
-.ps-word{font-family:'Bricolage Grotesque',serif;font-weight:750;font-size:clamp(42px,9vw,96px);line-height:.95;letter-spacing:-.03em;margin:0 0 18px}
-.ps-word span.hl{background:var(--lime);padding:.02em .08em .04em;border-radius:.08em;box-shadow:3px 3px 0 var(--void);display:inline-block}
-.ps-tag{font-family:'Bricolage Grotesque',serif;font-weight:500;font-size:clamp(18px,2.6vw,24px);line-height:1.35;max-width:640px;color:var(--void);margin:0 0 26px}
-.ps-promo{position:relative;border:2px solid var(--void);background:var(--lime);border-radius:16px;box-shadow:7px 7px 0 var(--void);padding:22px 24px;max-width:560px;overflow:hidden}
-.ps-promo .blob{position:absolute;top:-30px;left:-30px;width:120px;height:120px;background:#a8e030;border-radius:50%;filter:blur(20px);opacity:.6;pointer-events:none}
-.ps-promo .arrow{position:absolute;top:8px;right:14px;font-family:'Caveat',cursive;font-size:36px;font-weight:700;color:var(--void);transform:rotate(15deg)}
-.ps-promo .k{color:var(--void);font-weight:600;margin-bottom:6px;position:relative}
-.ps-promo h3{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:22px;margin:0 0 8px;position:relative}
-.ps-promo p{margin:0;font-size:14.5px;position:relative;max-width:420px}
-
-/* notice bands */
-.ps-band{border-radius:12px;padding:16px 20px;margin:16px 0;font-size:15px}
-.ps-band b{font-weight:700}
-.ps-band.violet{border:1.5px solid rgba(15,163,163,.35);border-left:4px solid var(--violet);background:rgba(95,240,200,.22)}
-.ps-band.flush{border:1.5px solid rgba(232,93,4,.3);border-left:4px solid var(--flush);background:rgba(232,93,4,.07)}
-
-/* marquee */
-.ps-marquee{overflow:hidden;border-top:1.5px solid var(--void);border-bottom:1.5px solid var(--void);background:var(--void);color:var(--bone);margin:36px 0}
-.ps-marquee-track{display:flex;white-space:nowrap;animation:ps-scroll 28s linear infinite;padding:12px 0;gap:40px}
-.ps-marquee-track span{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:22px;letter-spacing:-.01em}
-.ps-marquee-track span::after{content:'✦';color:var(--lime);margin-left:40px}
-@keyframes ps-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* section headers */
-.ps-section{padding:36px 0}
-.ps-shead{display:flex;align-items:baseline;gap:14px;margin-bottom:24px}
-.ps-shead .num{font-family:'IBM Plex Mono',monospace;color:var(--flush);font-size:14px;font-weight:600}
-.ps-shead h2{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:clamp(28px,5vw,42px);letter-spacing:-.02em;margin:0}
-
-/* about */
-.ps-about{display:grid;grid-template-columns:1.2fr .85fr;gap:32px}
-@media(max-width:760px){.ps-about{grid-template-columns:1fr}}
-.ps-about .lede{font-family:'Bricolage Grotesque',serif;font-weight:500;font-size:clamp(19px,2.4vw,22px);line-height:1.4;margin:0 0 14px}
-.ps-about p{color:var(--mist);font-size:15.5px;margin:0 0 12px}
-.ps-darkcard{background:var(--void);color:var(--bone);border:2px solid var(--void);border-radius:16px;box-shadow:7px 7px 0 var(--lime);padding:26px;position:relative}
-.ps-darkcard h3{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:22px;margin:0 0 14px;color:var(--bone)}
-.ps-darkcard ul{list-style:none;padding:0;margin:0}
-.ps-darkcard li{position:relative;padding-left:22px;margin:8px 0;font-size:15px;color:#e7dfcf}
-.ps-darkcard li::before{content:'✦';position:absolute;left:0;color:var(--lime);font-weight:700}
-.ps-darkcard .heart{position:absolute;bottom:14px;right:20px;font-family:'Caveat',cursive;font-size:34px;color:var(--flush);transform:rotate(-8deg)}
-
-/* services */
-.ps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.ps-card{background:#fff;border:1.5px solid rgba(18,14,23,.14);border-radius:16px;padding:24px;position:relative;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease;overflow:hidden}
-.ps-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent,var(--lime))}
-.ps-card:hover{transform:translateY(-4px);border-color:var(--void);box-shadow:6px 6px 0 var(--void)}
-.ps-card:focus-within{outline:3px solid var(--violet);outline-offset:3px}
-.ps-card h3{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:20px;margin:0 0 4px}
-.ps-card .time{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ash);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
-.ps-card p{margin:0 0 14px;color:var(--mist);font-size:14.5px}
-.ps-tag-pill{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:600;padding:5px 10px;border-radius:999px;letter-spacing:.08em;text-transform:uppercase;background:var(--void);color:var(--bone)}
-.ps-tag-pill.violet{background:var(--violet);color:#fff}
-.ps-tag-pill.lime{background:var(--lime);color:var(--void)}
-.ps-sticker{position:absolute;top:-10px;right:-10px;background:var(--flush);color:#fff;font-family:'Caveat',cursive;font-weight:700;font-size:18px;padding:6px 12px;border-radius:999px;border:1.5px solid var(--void);box-shadow:3px 3px 0 var(--void);z-index:2}
-
-/* policies */
-.ps-pcard{background:#fff;border:1.5px solid rgba(18,14,23,.14);border-radius:14px;padding:20px;transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
-.ps-pcard:hover{transform:translateY(-2px);border-color:var(--void);box-shadow:4px 4px 0 var(--void)}
-.ps-pcard h4{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:17px;margin:0 0 6px}
-.ps-pcard p{margin:0;font-size:14px;color:var(--mist)}
-.ps-pcard .n{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--flush);margin-bottom:6px}
-
-/* updates */
-.ps-post{background:#fff;border:1.5px solid rgba(18,14,23,.14);border-radius:16px;padding:22px 24px;margin-bottom:14px;box-shadow:2px 2px 0 rgba(18,14,23,.08);transition:box-shadow .15s ease}
-.ps-post:hover{box-shadow:5px 5px 0 var(--void)}
-.ps-post .date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ash);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
-.ps-post h4{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:20px;margin:0 0 6px}
-.ps-post p{margin:0 0 8px;color:var(--mist);font-size:14.5px}
-.ps-post .lnk{font-family:'Caveat',cursive;font-weight:700;font-size:20px;color:var(--violet)}
-
-/* book */
-.ps-embed{position:relative;border:2px solid var(--void);border-radius:16px;overflow:hidden;min-height:700px;box-shadow:6px 6px 0 var(--void);background:#fff}
-.ps-embed iframe{width:100%;min-height:700px;border:0;display:block}
-.ps-loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#fff;z-index:1}
-.ps-loading.hidden{display:none}
-.ps-spinner{width:32px;height:32px;border-radius:50%;border:2px solid rgba(18,14,23,.14);border-top-color:var(--lime);animation:ps-spin 1s linear infinite}
-@keyframes ps-spin{to{transform:rotate(360deg)}}
-.ps-book-terms{margin-top:14px;font-size:13px;color:var(--mist);line-height:1.5}
-
-/* footer */
-.ps-footer{border-top:1px solid rgba(18,14,23,.15);margin-top:48px;padding:32px 0 40px}
-.ps-footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-@media(max-width:600px){.ps-footer-grid{grid-template-columns:1fr}}
-.ps-footer h5{font-family:'Bricolage Grotesque',serif;font-weight:600;font-size:20px;margin:0 0 6px}
-.ps-footer p,.ps-footer a{font-size:14px;color:var(--mist)}
-.ps-footer a{display:block;margin:2px 0}
-.ps-copy{margin-top:24px;padding-top:16px;border-top:1px dashed rgba(18,14,23,.2);color:var(--ash)}
-`;
-
-function Scissors() {
-  return (
-    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <circle cx="14" cy="44" r="8" stroke="#120E17" strokeWidth="2.5" fill="#F3ECDE"/>
-      <circle cx="46" cy="44" r="8" stroke="#120E17" strokeWidth="2.5" fill="#F3ECDE"/>
-      <path d="M20 38 L52 8 M40 38 L8 8" stroke="#120E17" strokeWidth="2.5" strokeLinecap="round"/>
-      <circle cx="30" cy="30" r="2" fill="#FF6A00"/>
-    </svg>
-  );
-}
-
-const services = [
-  { name: "Buzz Cut", time: "30 MIN · $50", desc: "Clean fade or one-length buzz. In and out, sharp.", accent: "var(--lime)", tag: null },
-  { name: "Short Cut", time: "45 MIN · $65", desc: "Scissor + clipper work. Shape, texture, done right.", accent: "var(--flush)", tag: null },
-  { name: "Long Cut", time: "60 MIN · $100", desc: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo.", accent: "var(--violet)", tag: null },
-  { name: "New-Client Color Consult", time: "45 MIN · $35", desc: "Sit down, talk hair history, plan the vibe. Applied to your first color booking.", accent: "var(--violet)", tag: { label: "NEW CLIENTS", cls: "violet" } },
-  { name: "Existing-Client Color", time: "90–120 MIN · $120+", desc: "Root touch-ups, gloss, lift, tone, and creative color for people I already know.", accent: "var(--lime)", tag: { label: "2+ DAYS OUT = TEA + GOODS", cls: "lime" } },
-  { name: "Add-on: Tea + Product Recs", time: "FREE · WITH 2+ DAY BOOKINGS", desc: "Book 2+ days ahead and get tea in-service plus real product recs for your hair.", accent: "var(--flush)", tag: null },
-];
-
-const policies = [
-  { n: "01", h: "Cancellation", p: "24-hour notice required. Genuine emergencies excepted — text or call as soon as you can." },
-  { n: "02", h: "No-show", p: "Miss without notice and the full quoted price may be charged. Repeat no-shows are refused future bookings." },
-  { n: "03", h: "2-Hour Verify", p: "You'll get a check-in text about 2 hours before. No response = slot released. Reply to hold your spot." },
-  { n: "04", h: "House Calls", p: "Seattle area only. Clean, private-ish, safe workspace required. Pets secured if we haven't met them." },
-];
-
-const posts = [
-  { date: "JUL 12, 2026", h: "Now taking former Rudy's clients", p: "If we used to work together at Rudy's, come on over. Same hands, better tea, your couch." },
-  { date: "JUN 28, 2026", h: "Summer color slots open", p: "Rolling one-month calendar. Book 2+ days out for the full tea + goods experience." },
-  { date: "JUN 05, 2026", h: "Why house calls, actually", p: "Fewer salon costs, more of your money into the actual work. And you don't have to leave the couch." },
-];
-
 function PocketStudio() {
-  const [iframeLoaded, setIframeLoaded] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setIframeLoaded(true), 6000);
-    return () => clearTimeout(t);
-  }, []);
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: styles }} />
-      <div className="ps">
-        <div className="ps-top">
-          <div className="ps-top-inner">
-            <div className="ps-avail">
-              <span className="ps-dot" />
-              <span className="mono">AVAILABLE FOR BOOKINGS</span>
+    <div className="ps">
+      <style>{`
+        .ps * { box-sizing: border-box; margin: 0; padding: 0; }
+        .ps { background: #FFF4E0; color: #120E17; font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; font-size: 17px; line-height: 1.6; min-height: 100vh; }
+        .ps .wrap { max-width: 1024px; margin: 0 auto; padding: 0 16px; }
+        .ps section { padding: 44px 0; border-bottom: 3px solid #120E17; }
+        .ps section:last-of-type { border-bottom: 0; }
+        .ps h1 { font-family: 'Bricolage Grotesque', 'Inter', sans-serif; font-weight: 800; line-height: 1.05; }
+        .ps h2 { font-family: 'Bricolage Grotesque', 'Inter', sans-serif; font-weight: 700; font-size: clamp(28px, 6vw, 40px); line-height: 1.1; margin-bottom: 8px; }
+        .ps .kick { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase; color: #4D6670; margin-bottom: 10px; display: block; }
+        .ps .hand { font-family: 'Caveat', cursive; font-size: 24px; color: #B3282D; }
+
+        .ps .btn { display: inline-block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 500; font-size: 16px; text-decoration: none; padding: 14px 22px; border: 3px solid #120E17; border-radius: 14px; color: #120E17; background: #fff; box-shadow: 4px 4px 0 #120E17; margin: 6px 10px 6px 0; cursor: pointer; }
+        .ps .btn.primary { background: #8ACE00; }
+        .ps .btn.alt { background: #B8A9F5; }
+        .ps .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #120E17; }
+
+        .ps header { position: sticky; top: 0; z-index: 50; background: #FFF4E0; border-bottom: 3px solid #120E17; padding: 10px 0; }
+        .ps header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .ps .logo { font-family: 'Bricolage Grotesque', 'Inter', sans-serif; font-weight: 800; font-size: 20px; text-decoration: none; color: #120E17; }
+        .ps .logo .dot { color: #8ACE00; }
+        .ps header nav { display: flex; align-items: center; gap: 14px; }
+        .ps header nav a.navlink { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #120E17; text-decoration: none; }
+        .ps header nav a.navlink:hover { text-decoration: underline; }
+        .ps .btn.small { padding: 8px 14px; font-size: 13px; margin: 0; }
+
+        .ps .hero { background: linear-gradient(135deg, #FDE68A 0%, #FFF4E0 55%, #B8A9F5 130%); }
+        .ps .hero-inner { display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: center; }
+        .ps .hero h1 { font-size: clamp(38px, 9vw, 68px); }
+        .ps .hero h1 .hl { background: #8ACE00; padding: 0 8px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+        .ps .hero p.lede { font-size: 19px; margin: 14px 0 22px; max-width: 46ch; }
+        .ps .badges { margin-top: 18px; }
+        .ps .badge { display: inline-block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; border: 2px solid #120E17; border-radius: 999px; padding: 4px 12px; margin: 4px 6px 0 0; background: #fff; }
+        .ps .hero-img { position: relative; border: 3px solid #120E17; border-radius: 18px; overflow: hidden; box-shadow: 6px 6px 0 #120E17; transform: rotate(-1.5deg); }
+        .ps .hero-img img { width: 100%; display: block; aspect-ratio: 4/3; object-fit: cover; }
+        .ps .hero-img .cap { position: absolute; left: 10px; bottom: 8px; font-family: 'Caveat', cursive; font-size: 26px; color: #fff; text-shadow: 0 2px 0 rgba(18,14,23,.55); transform: rotate(-3deg); }
+
+        .ps .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+        .ps .grid.two { grid-template-columns: repeat(2, 1fr); }
+        .ps .card { background: #fff; border: 3px solid #120E17; border-radius: 16px; padding: 18px; box-shadow: 4px 4px 0 #120E17; }
+        .ps .card h3 { font-family: 'Bricolage Grotesque', 'Inter', sans-serif; font-size: 21px; margin-bottom: 6px; }
+        .ps .card p { font-size: 15px; color: #2a2433; }
+        .ps .meta { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; margin-top: 10px; color: #4D6670; }
+        .ps .price { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 500; font-size: 20px; display: inline-block; background: #FDE68A; border: 2px solid #120E17; border-radius: 10px; padding: 2px 10px; margin-bottom: 8px; }
+        .ps .svc:nth-child(3n+1) { transform: rotate(-.8deg); }
+        .ps .svc:nth-child(3n+2) { transform: rotate(.7deg); }
+        .ps .svc:nth-child(3n) { transform: rotate(-.4deg); }
+        .ps .card .btn { font-size: 14px; padding: 10px 16px; margin-top: 12px; }
+
+        .ps .artist-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; align-items: center; }
+        .ps .artist-img { border: 3px solid #120E17; border-radius: 18px; overflow: hidden; box-shadow: 6px 6px 0 #8ACE00; transform: rotate(1.5deg); }
+        .ps .artist-img img { width: 100%; display: block; aspect-ratio: 4/5; object-fit: cover; }
+
+        .ps .steps { counter-reset: step; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+        .ps .step { background: #fff; border: 3px solid #120E17; border-radius: 16px; padding: 16px; box-shadow: 4px 4px 0 #B8A9F5; position: relative; }
+        .ps .step::before { counter-increment: step; content: counter(step); position: absolute; top: -14px; left: 14px; background: #8ACE00; border: 3px solid #120E17; border-radius: 50%; width: 34px; height: 34px; display: grid; place-items: center; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 600; }
+        .ps .step h3 { font-size: 17px; margin: 16px 0 6px; font-family: 'Bricolage Grotesque', 'Inter', sans-serif; }
+        .ps .step p { font-size: 14px; color: #2a2433; }
+
+        .ps .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+        .ps .gallery figure { border: 3px solid #120E17; border-radius: 16px; overflow: hidden; box-shadow: 4px 4px 0 #120E17; background: #fff; }
+        .ps .gallery figure:nth-child(odd) { transform: rotate(-1deg); }
+        .ps .gallery figure:nth-child(even) { transform: rotate(1deg); }
+        .ps .gallery img { width: 100%; display: block; aspect-ratio: 1/1; object-fit: cover; }
+        .ps .gallery figcaption { padding: 8px 12px; font-family: 'Caveat', cursive; font-size: 22px; }
+
+        .ps .policies { background: #120E17; color: #FFF4E0; }
+        .ps .policies h2 { color: #FFF4E0; }
+        .ps .policies .kick { color: #8ACE00; }
+        .ps .policies .card { background: #1D1726; color: #FFF4E0; border-color: #FFF4E0; box-shadow: 4px 4px 0 #8ACE00; }
+        .ps .policies .card p { color: #d9d2c0; }
+        .ps .policies ul { list-style: none; margin-top: 8px; }
+        .ps .policies li { padding: 4px 0 4px 26px; position: relative; font-size: 14px; }
+        .ps .policies li::before { content: "✂"; position: absolute; left: 0; color: #8ACE00; }
+
+        .ps .contact-list { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 16px; margin-top: 12px; }
+        .ps .contact-list a { color: #120E17; }
+        .ps .form label { display: block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; margin: 14px 0 6px; }
+        .ps .form input, .ps .form select, .ps .form textarea { width: 100%; font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; font-size: 16px; padding: 12px 14px; border: 3px solid #120E17; border-radius: 12px; background: #fff; }
+        .ps .form textarea { min-height: 110px; resize: vertical; }
+        .ps .form .btn { width: 100%; margin-top: 18px; text-align: center; }
+        .ps .fineprint { font-size: 13px; color: #4D6670; margin-top: 12px; }
+
+        .ps footer { padding: 26px 0 40px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #4D6670; }
+        .ps footer .wrap { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; }
+
+        @media (max-width: 860px) {
+          .ps .hero-inner, .ps .artist-grid { grid-template-columns: 1fr; }
+          .ps .grid, .ps .grid.two, .ps .gallery { grid-template-columns: 1fr 1fr; }
+          .ps .steps { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 560px) {
+          .ps .grid, .ps .grid.two, .ps .gallery, .ps .steps { grid-template-columns: 1fr; }
+          .ps header nav a.navlink { display: none; }
+          .ps .hero { padding-top: 24px; }
+        }
+      `}</style>
+
+      <header>
+        <div className="wrap">
+          <a className="logo" href="#top">pocket studio<span className="dot">.</span></a>
+          <nav>
+            <a className="navlink" href="#services">services</a>
+            <a className="navlink" href="#artist">the artist</a>
+            <a className="navlink" href="#policies">policies</a>
+            <a className="btn primary small" href={CAL_BASE} target="_blank" rel="noreferrer">book</a>
+          </nav>
+        </div>
+      </header>
+
+      <section className="hero" id="top">
+        <div className="wrap hero-inner">
+          <div>
+            <span className="kick">seattle · house calls only</span>
+            <h1>your chair <span className="hl">comes to you.</span></h1>
+            <p className="lede">i'm mykey (they/them) — a solo hair artist doing cuts + color in your space. no front desk, no phone tag, no fluorescent waiting room. you book, i show up, you get a great cut in your own kitchen.</p>
+            <a className="btn primary" href={CAL_BASE} target="_blank" rel="noreferrer">book a slot →</a>
+            <a className="btn" href="tel:425-918-2029">call/text 425-918-2029</a>
+            <div className="badges">
+              <span className="badge">$25 deposit</span>
+              <span className="badge">travel fee waived for now</span>
+              <span className="badge">calendar opens the 1st</span>
             </div>
-            <div className="ps-top-right">
-              <a href="tel:425-918-2029" className="tel">425-918-2029</a>
-              <a href="#book" className="ps-btn">BOOK NOW</a>
+            <p className="hand" style={{ marginTop: 14 }}>same hands, same energy, way fewer hoops ✂</p>
+          </div>
+          <div className="hero-img">
+            <img src="/classic/hero-mykey.jpg" alt="mykey mid-cut at a house call, cape on, clippers in hand" loading="lazy" />
+            <span className="cap">house call, capitol hill ~</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="services">
+        <div className="wrap">
+          <span className="kick">the menu</span>
+          <h2>cuts + color, at your place</h2>
+          <div className="grid">
+            {SERVICES.map((s) => (
+              <div className="card svc" key={s.slug}>
+                <span className="price">{s.price}</span>
+                <h3>{s.name}</h3>
+                <p>{s.blurb}</p>
+                <div className="meta">{s.duration} · house call</div>
+                <a className="btn alt" href={`${CAL_BASE}${s.slug}`} target="_blank" rel="noreferrer">book {s.name.toLowerCase()} →</a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="artist">
+        <div className="wrap artist-grid">
+          <div className="artist-img">
+            <img src="/classic/artist-mykey.jpg" alt="mykey pocket, seattle hair artist, portrait" loading="lazy" />
+          </div>
+          <div>
+            <span className="kick">the artist</span>
+            <h2>hi, i'm mykey.</h2>
+            <p>i cut hair, i answer my own phone, and i'd rather come to you than make you sit under fluorescent lights. i'm building pocket studio around one idea: getting a haircut shouldn't cost your whole afternoon or your whole nervous system.</p>
+            <p style={{ marginTop: 12 }}>quiet appointments? say the word. need the playlist off, the chat low, the lights dim? that's not an accommodation, it's just how i work. judgment-free, neurodivergent-friendly, built by one brain on purpose.</p>
+            <p className="hand" style={{ marginTop: 16 }}>— mykey</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="how">
+        <div className="wrap">
+          <span className="kick">how it works</span>
+          <h2>book → i drive → you sit</h2>
+          <div className="steps">
+            <div className="step"><h3>pick a slot</h3><p>the calendar opens the 1st for the month ahead. grab a time, pay the $25 deposit, done.</p></div>
+            <div className="step"><h3>i text you</h3><p>day-before reminder, then a 2-hour check-in on the day. reply "yep" to keep the slot.</p></div>
+            <div className="step"><h3>i show up</h3><p>cape, tools, clippers, a little mat. you point me at an outlet and decent light.</p></div>
+            <div className="step"><h3>zero cleanup</h3><p>i sweep, i pack, i go. you're left with a great cut and your own bathroom.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="gallery">
+        <div className="wrap">
+          <span className="kick">the work</span>
+          <h2>recent chairs</h2>
+          <div className="gallery">
+            <figure><img src="/classic/cut-1.jpg" alt="taper fade, fresh line-up" loading="lazy" /><figcaption>taper, ballard ~</figcaption></figure>
+            <figure><img src="/classic/cut-2.jpg" alt="curly cut, full volume" loading="lazy" /><figcaption>curls, fremont ~</figcaption></figure>
+            <figure><img src="/classic/cut-3.jpg" alt="long layers, blowout" loading="lazy" /><figcaption>long cut, queen anne ~</figcaption></figure>
+          </div>
+        </div>
+      </section>
+
+      <section className="policies" id="policies">
+        <div className="wrap">
+          <span className="kick">policies</span>
+          <h2>the fine print, minus the fine print</h2>
+          <div className="grid two">
+            <div className="card">
+              <h3>booking</h3>
+              <ul>
+                <li>$25 deposit holds your slot (stripe, comes off your total)</li>
+                <li>calendar opens the 1st for the month ahead</li>
+                <li>2-hour confirmation — reply "yep" or the slot may release</li>
+                <li>travel fee ($25 + $2/mi, 30-mi range) waived for now</li>
+              </ul>
+            </div>
+            <div className="card">
+              <h3>cancellations</h3>
+              <ul>
+                <li>free to cancel up to 24 hours out</li>
+                <li>inside 24 hours or no-show may mean a charge</li>
+                <li>manage everything on the my bookings page with your ref code</li>
+                <li>running late? just text — i'd rather know</li>
+              </ul>
             </div>
           </div>
         </div>
+      </section>
 
-        <main className="wrap">
-          <section className="ps-hero">
-            <div className="ps-scissors"><Scissors /></div>
-            <div className="mono ps-kicker">SEATTLE HAIR ARTIST · HOUSE CALLS · FORMER RUDY'S CLIENTS WELCOME</div>
-            <h1 className="ps-word">POCKET / <span className="hl">STUDIO</span></h1>
-            <p className="ps-tag">Cuts &amp; color at your place.<br/>Bold looks, zero salon attitude.</p>
-            <div className="ps-promo">
-              <div className="blob" />
-              <div className="arrow">→</div>
-              <div className="mono k">CURRENT OFFER</div>
-              <h3>Refer a friend, both get 20% off your next cut.</h3>
-              <p>Send someone new my way. When they book &amp; sit, you both get 20% off your next appointments. No limit — keep 'em coming.</p>
+      <section id="contact">
+        <div className="wrap">
+          <span className="kick">contact</span>
+          <h2>talk to a human (me)</h2>
+          <div className="grid two">
+            <div className="card">
+              <h3>fastest: text me</h3>
+              <p>questions, "are you in my neighborhood?", emergency bang situations — all fair game.</p>
+              <div className="contact-list">
+                <div>call/text · <a href="tel:425-918-2029">425-918-2029</a></div>
+                <div>email · <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a></div>
+                <div>hours · thu–sun</div>
+              </div>
             </div>
-          </section>
-
-          <section className="ps-band violet">
-            <b>Booking runs on Cal.com.</b> Calendar opens about one month at a time and needs at least 2 days' notice. Deposits or card-on-file may be enabled — disclosed at checkout if so.
-          </section>
-          <section className="ps-band flush">
-            <b>House calls, Seattle area only.</b> I'll need a safe, reasonably private workspace and an accurate address. I may decline or end a visit if the location isn't safe or suitable for professional service.
-          </section>
-        </main>
-
-        <div className="ps-marquee" aria-hidden>
-          <div className="ps-marquee-track">
-            <span>POCKET STUDIO</span><span>SEATTLE HAIR</span><span>HOUSE CALLS</span><span>CUTS &amp; COLOR</span>
-            <span>POCKET STUDIO</span><span>SEATTLE HAIR</span><span>HOUSE CALLS</span><span>CUTS &amp; COLOR</span>
+            <div className="card">
+              <h3>or send a note</h3>
+              <form className="form" onSubmit={(e) => e.preventDefault()}>
+                <label htmlFor="ps-name">name</label>
+                <input id="ps-name" name="name" autoComplete="name" required />
+                <label htmlFor="ps-email">email</label>
+                <input id="ps-email" name="email" type="email" autoComplete="email" required />
+                <label htmlFor="ps-msg">what's up?</label>
+                <textarea id="ps-msg" name="message" required />
+                <button className="btn primary" type="submit">send it →</button>
+                <p className="fineprint">goes straight to my phone. i reply myself.</p>
+              </form>
+            </div>
           </div>
         </div>
+      </section>
 
-        <main className="wrap">
-          <section className="ps-section" id="about">
-            <div className="ps-shead"><span className="num">00</span><h2>About</h2></div>
-            <div className="ps-about">
-              <div>
-                <p className="lede">Hi, I'm MyKey. I cut and color hair in Seattle out of a mobile setup — your kitchen, your bathroom, your patio, whatever works.</p>
-                <p>I worked the salon floor for years, most recently at Rudy's, and I loved the people and hated the overhead. Pocket Studio is what happened when I decided clients should pay for the actual work, not for someone else's rent.</p>
-                <p>Expect real conversation, honest recommendations, tea if you're around long enough, and a cut that fits how you actually live — not how your stylist wants to Instagram it.</p>
-              </div>
-              <div className="ps-darkcard">
-                <h3>Why Pocket Studio?</h3>
-                <ul>
-                  <li>Salon-trained, salon-free pricing</li>
-                  <li>Your space, your music, your rules</li>
-                  <li>Real color consults, not upsells</li>
-                  <li>Tea + product recs on longer bookings</li>
-                  <li>Ex-Rudy's clients — you already know</li>
-                </ul>
-                <div className="heart">♡ seattle</div>
-              </div>
-            </div>
-          </section>
-
-          <section className="ps-section" id="services">
-            <div className="ps-shead"><span className="num">01</span><h2>Services + Pricing</h2></div>
-            <div className="ps-grid">
-              {services.map((s, i) => (
-                <div className="ps-card" key={s.name} style={{ ["--accent" as string]: s.accent } as CSSProperties}>
-                  {i === 4 && <div className="ps-sticker" style={{ transform: "rotate(-3deg)" }}>tea + goods!</div>}
-                  <h3>{s.name}</h3>
-                  <div className="time">{s.time}</div>
-                  <p>{s.desc}</p>
-                  {s.tag ? <span className={`ps-tag-pill ${s.tag.cls}`}>{s.tag.label}</span> : <a href="#book" className="ps-tag-pill">BOOK</a>}
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="ps-section" id="policies">
-            <div className="ps-shead"><span className="num">02</span><h2>Policies</h2></div>
-            <div className="ps-grid">
-              {policies.map(p => (
-                <div className="ps-pcard" key={p.h}>
-                  <div className="n">{p.n}</div>
-                  <h4>{p.h}</h4>
-                  <p>{p.p}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <section className="ps-section" id="updates">
-            <div className="ps-shead"><span className="num">03</span><h2>Updates</h2></div>
-            <div>
-              {posts.map(p => (
-                <article className="ps-post" key={p.h}>
-                  <div className="date">{p.date}</div>
-                  <h4>{p.h}</h4>
-                  <p>{p.p}</p>
-                  <span className="lnk">read more →</span>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <section className="ps-section" id="book">
-            <div className="ps-shead"><span className="num">04</span><h2>Book</h2></div>
-            <div className="ps-embed">
-              <div className={`ps-loading ${iframeLoaded ? "hidden" : ""}`}>
-                <div className="ps-spinner" />
-                <div className="mono" style={{ color: "var(--ash)" }}>LOADING CALENDAR…</div>
-              </div>
-              <iframe
-                src="https://cal.com/maneautoimation/"
-                title="Book with Pocket Studio on Cal.com"
-                loading="lazy"
-                onLoad={() => setIframeLoaded(true)}
-              />
-            </div>
-            <p className="ps-book-terms">
-              by booking you agree to the <a href="/terms">terms of service</a> and <a href="/privacy">privacy policy</a>, including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call terms. booking runs on cal.com.
-            </p>
-          </section>
-        </main>
-
-        <footer className="ps-footer">
-          <div className="wrap">
-            <div className="ps-footer-grid">
-              <div>
-                <h5>Pocket Studio</h5>
-                <p>Seattle hair artist. House calls. Cuts &amp; color at your place.</p>
-              </div>
-              <div>
-                <h5>Contact</h5>
-                <a href="mailto:mykeypocket@icloud.com">mykeypocket@icloud.com</a>
-                <a href="tel:425-918-2029">425-918-2029</a>
-                <a href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
-                <a href="/terms">Terms</a>
-                <a href="/privacy">Privacy</a>
-              </div>
-            </div>
-            <div className="ps-copy mono">© pocket studio / mykey pocket · seattle, wa</div>
-          </div>
-        </footer>
-      </div>
-    </>
+      <footer>
+        <div className="wrap">
+          <span>© 2026 pocket studio · mykey pocket (they/them) · seattle, wa</span>
+          <span>house calls only · not affiliated with rudy's barbershop</span>
+        </div>
+      </footer>
+    </div>
   );
 }
