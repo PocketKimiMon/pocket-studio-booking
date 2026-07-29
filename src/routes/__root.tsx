@@ -26,7 +26,7 @@ const SALON_JSONLD = {
   url: SITE_URL + "/",
   telephone: "+1-425-918-2029",
   email: "mykeypocket@icloud.com",
-  image: SITE_URL + "/images/og-image.jpg",
+  image: SITE_URL + "/og-image.jpg",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Seattle",

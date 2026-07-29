@@ -90,7 +90,7 @@ function BookPage() {
     <div
       style={{
         background:
-          "linear-gradient(rgba(11,11,15,.94), rgba(11,11,15,.96)), url(/images/booking-bg.jpg) center/cover fixed",
+          "linear-gradient(rgba(11,11,15,.94), rgba(11,11,15,.96)), url(/booking-bg.jpg) center/cover fixed",
         color: "var(--color-void)",
         fontFamily: "var(--font-sans)",
         minHeight: "100vh",

@@ -104,7 +104,7 @@ function Page() {
             style={{ borderColor: "var(--color-void)", boxShadow: "6px 6px 0 var(--color-lime)" }}
           >
             <img
-              src="/images/blog-header.jpg"
+              src="/blog-header.jpg"
               alt="the chair, mid-house-call"
               className="aspect-[21/9] w-full object-cover"
               loading="eager"

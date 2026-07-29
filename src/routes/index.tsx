@@ -300,7 +300,7 @@ function Hero() {
         style={{ borderColor: "var(--color-void)", boxShadow: "10px 10px 0 var(--color-lime)" }}
       >
         <img
-          src="/images/home-hero.jpg"
+          src="/home-hero.jpg"
           alt="MyKey's chair and kit, packed for a house call"
           className="aspect-[16/9] w-full object-cover sm:aspect-[21/9]"
           loading="eager"
@@ -353,7 +353,7 @@ function About() {
       className="border-y-2"
       style={{
         background:
-          "linear-gradient(rgba(11,11,15,.93), rgba(11,11,15,.93)), url(/images/gallery-texture-2.jpg) center/cover",
+          "linear-gradient(rgba(11,11,15,.93), rgba(11,11,15,.93)), url(/gallery-texture-2.jpg) center/cover",
         borderColor: "var(--color-void)",
       }}
     >

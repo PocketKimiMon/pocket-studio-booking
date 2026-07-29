@@ -68,7 +68,7 @@ function ServicePage() {
         className="border-y-2 px-5 py-12"
         style={{
           background:
-            "linear-gradient(rgba(11,11,15,.95), rgba(11,11,15,.95)), url(/images/gallery-texture-1.jpg) center/cover",
+            "linear-gradient(rgba(11,11,15,.95), rgba(11,11,15,.95)), url(/gallery-texture-1.jpg) center/cover",
           borderColor: "var(--color-void)",
         }}
       >

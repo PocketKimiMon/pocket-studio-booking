@@ -30,7 +30,7 @@ export const SITE_URL = "https://pocketstudio.biz";
 export const SITE_NAME = "Pocket Studio";
 
 /** Share image — keep a 1200×630 asset at this public path. */
-export const OG_IMAGE = "/images/og-image.jpg";
+export const OG_IMAGE = "/og-image.jpg";
 
 export type SeoHead = {
   meta: any[];
