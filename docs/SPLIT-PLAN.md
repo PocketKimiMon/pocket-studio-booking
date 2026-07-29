@@ -41,3 +41,10 @@
 4. Stripe deposit webhook → booking confirmation
 
 **Done when:** build green on main, all routes render, booking end-to-end (deposit → confirmation email), both bots have reviewed every merged PR.
+
+## Toolchain (user directive 7/29)
+- **Image gen: Kimi FIRST** (image_generation plugin, brand-locked pack: og-image, home-hero, blog-header, gallery textures, booking-bg → output/images/ → repo public/), **then Grok** for anything Kimi can't nail
+- **Frontend: Qwen** (CLI `qwen` 0.21.0 on this box) — routes/components/copy per FE queue
+- **Backend: Claude Code** (CLI `claude` 2.1.220) — api/supabase/emails/stripe per BE queue
+- **Merge: Kimi Swarm** (running, chat 19fad3c6)
+- Both Hermes bots still review ALL output before merge, per the golden rule above.
