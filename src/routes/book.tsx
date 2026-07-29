@@ -1,276 +1,324 @@
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CAL_BASE, SERVICES } from "../lib/services";
+import { CAL_BASE, SERVICES, type Service } from "../lib/services";
+import { TRAVEL } from "../lib/travel";
 import { seoHead } from "../lib/seo";
 
 export const Route = createFileRoute("/book")({
   head: seoHead("/book"),
-  component: BookingPage,
+  component: BookPage,
 });
 
-function BookingPage() {
+const bySlug = (slug: string) => SERVICES.find((s) => s.slug === slug)!;
+const CUTS = ["buzz-cut", "taper-fade-cut", "short-cut", "long-cut", "curl-cut"].map(bySlug);
+const CONSULT = bySlug("hair-consultation");
+const EXISTING = bySlug("existing-client-color-appointment");
+
+type Msg =
+  | { id: number; from: "user"; text: string }
+  | { id: number; from: "bot"; text: string }
+  | { id: number; from: "bot"; card: Service };
+
+type Stage = "start" | "cut" | "color" | "done";
+
+const GREETING: Msg[] = [
+  { id: 0, from: "bot", text: "hey! I'm the booking bot ✂ I come to you — let's find your service." },
+  { id: 1, from: "bot", text: "cut or color?" },
+];
+
+function BookPage() {
+  const [messages, setMessages] = useState<Msg[]>(GREETING);
+  const [stage, setStage] = useState<Stage>("start");
+  const endRef = useRef<HTMLDivElement>(null);
+  const nextId = useRef(2);
+
+  useEffect(() => {
+    if (messages.length > GREETING.length) endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [messages]);
+
+  // Let the My Besti page pet react to booking progress.
+  useEffect(() => {
+    if (stage === "done") window.dispatchEvent(new CustomEvent("mybesti:review"));
+    else if (stage !== "start") window.dispatchEvent(new CustomEvent("mybesti:waiting"));
+  }, [stage]);
+
+  type MsgIn = { from: "user" | "bot"; text: string } | { from: "bot"; card: Service };
+  const push = (...msgs: MsgIn[]) =>
+    setMessages((m) => [...m, ...msgs.map((msg) => ({ ...msg, id: nextId.current++ }) as Msg)]);
+
+  const pickCut = () => {
+    push({ from: "user", text: "cut" }, { from: "bot", text: "love that for you. which cut are we doing?" });
+    setStage("cut");
+  };
+  const pickColor = () => {
+    push({ from: "user", text: "color" }, { from: "bot", text: "ooh, color day 🎨 have we colored together before?" });
+    setStage("color");
+  };
+  const pickService = (s: Service, userText: string) => {
+    push(
+      { from: "user", text: userText },
+      { from: "bot", text: "say less. here's the deal:" },
+      { from: "bot", card: s },
+    );
+    setStage("done");
+  };
+  const reset = () => {
+    setMessages(GREETING);
+    setStage("start");
+    nextId.current = 2;
+  };
+
+  const chips: { label: string; onClick: () => void }[] =
+    stage === "start"
+      ? [
+          { label: "CUT ✂", onClick: pickCut },
+          { label: "COLOR 🎨", onClick: pickColor },
+        ]
+      : stage === "cut"
+        ? CUTS.map((s) => ({
+            label: `${s.name} · ${s.price} · ${s.duration}`,
+            onClick: () => pickService(s, `${s.name}, please`),
+          }))
+        : stage === "color"
+          ? [
+              { label: "first time", onClick: () => pickService(CONSULT, "first time with you") },
+              { label: "returning client", onClick: () => pickService(EXISTING, "returning client, you know the vibe") },
+            ]
+          : [];
+
   return (
-    <div
-      style={{
-        background: "var(--color-bone)",
-        color: "var(--color-void)",
-        fontFamily: "var(--font-sans)",
-      }}
-    >
-      {/* top bar */}
-      <header
-        className="sticky top-0 z-50 border-b-2"
-        style={{ background: "var(--color-bone)", borderColor: "var(--color-void)" }}
-      >
+    <div style={{ background: "var(--color-void)", color: "var(--color-bone)", fontFamily: "var(--font-sans)", minHeight: "100vh" }}>
+      <style>{`
+        @keyframes msg-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+        .msg-in { animation: msg-in 0.25s ease-out both; }
+      `}</style>
+
+      <header className="sticky top-0 z-50 border-b" style={{ background: "var(--color-void)", borderColor: "var(--color-ash)" }}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
-          <Link
-            to="/"
-            className="text-sm font-black tracking-tight"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
+          <Link to="/" className="text-sm font-black tracking-tight" style={{ fontFamily: "var(--font-display)", color: "var(--color-bone)" }}>
             ✂ POCKET STUDIO
           </Link>
-          <div className="flex items-center gap-4">
-            <Link
-              to="/"
-              className="hidden text-sm underline-offset-4 hover:underline sm:block"
-              style={{ fontFamily: "var(--font-mono)" }}
-            >
-              ← home
+          <div className="flex items-center gap-4" style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full" style={{ background: "var(--color-lime)" }} />
+            <Link to="/" hash="services" className="underline-offset-4 hover:underline" style={{ color: "var(--color-bone)" }}>
+              ← services
             </Link>
-            <a
-              href="tel:425-918-2029"
-              className="border-2 px-4 py-1.5 text-sm font-black transition-transform hover:-translate-y-0.5"
-              style={{
-                background: "var(--color-lime)",
-                borderColor: "var(--color-void)",
-                boxShadow: "3px 3px 0 var(--color-void)",
-              }}
-            >
-              CALL/TEXT
-            </a>
           </div>
         </div>
       </header>
 
-      {/* hero */}
-      <section className="mx-auto max-w-6xl px-5 pb-10 pt-12 sm:pt-16">
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 13,
-            letterSpacing: "0.2em",
-            color: "var(--color-flush)",
-          }}
-        >
-          BOOKING
-        </p>
-        <h1
-          className="mt-3 text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-7xl"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          pick a slot.
-          <br />
-          <span
-            className="inline-block rounded-full px-4 py-1 align-baseline"
-            style={{
-              background: "var(--color-lime)",
-              color: "var(--color-void)",
-              boxShadow: "6px 6px 0 var(--color-void)",
-            }}
-          >
-            i come to you.
-          </span>
+      <main className="mx-auto max-w-2xl px-5 py-12 sm:py-16">
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.15em", color: "var(--color-lime)" }}>BOOK</p>
+        <h1 className="mt-2 text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ fontFamily: "var(--font-display)" }}>
+          Chat your way in<span style={{ color: "var(--color-flush)" }}>.</span>
         </h1>
-        <p
-          className="mt-6 max-w-xl text-xl leading-relaxed"
-          style={{ fontFamily: "Georgia, serif", color: "var(--color-mist)" }}
-        >
-          booking runs through cal.com — pick a service below and you'll land on my calendar. house
-          calls only right now, no travel fee for now.
+        <p className="mt-4 max-w-lg text-lg leading-relaxed" style={{ color: "var(--color-ash)" }}>
+          Two taps and you're booked. Every appointment is a house call — your couch, your mirror, your gossip.
         </p>
-      </section>
 
-      {/* how it works */}
-      <section className="mx-auto max-w-6xl px-5 pb-12">
+        {/* chat thread */}
         <div
-          className="border-2 p-6 sm:p-8"
-          style={{
-            background: "var(--color-card-2)",
-            borderColor: "var(--color-void)",
-            boxShadow: "6px 6px 0 var(--color-void)",
-          }}
+          className="mt-8 border-2 p-4 sm:p-6"
+          style={{ borderColor: "var(--color-lime)", boxShadow: "6px 6px 0 var(--color-lime)", background: "rgba(255,255,255,0.03)" }}
         >
-          <h2
-            className="text-2xl font-black tracking-tight"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            how it works
-          </h2>
-          <ol className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              "you pick a slot on cal.com",
-              "you get a confirmation + my number",
-              "$25 deposit holds your slot (applied to your total)",
-              "i show up with the chair, tools, and gossip",
-            ].map((step, i) => (
-              <li key={i} className="flex items-start gap-3">
-                <span
-                  className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-black"
-                  style={{ background: "var(--color-lime)", color: "var(--color-void)" }}
-                >
-                  {i + 1}
-                </span>
-                <span className="text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
-                  {step}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+          <div className="mb-4 flex items-center gap-2 border-b pb-3" style={{ borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-ash)" }}>
+            <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-lime)" }} />
+            BOOKING BOT · ONLINE
+          </div>
 
-      {/* the calendar */}
-      <section className="mx-auto max-w-6xl px-5 pb-16 sm:pb-24">
-        <h2
-          className="text-3xl font-black tracking-tight sm:text-5xl"
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          the calendar
-        </h2>
-        <p
-          className="mt-3 max-w-xl text-base"
-          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
-        >
-          each service has its own cal.com page. opens the 1st for the full month ahead — prime
-          slots go fast.
-        </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((svc) => (
-            <a
-              key={svc.slug}
-              href={`${CAL_BASE}${svc.slug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="group block border-2 p-5 transition-transform hover:-translate-y-1"
-              style={{
-                background: "#fff",
-                borderColor: "var(--color-void)",
-                boxShadow: "5px 5px 0 var(--color-void)",
-              }}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <span
-                  className="inline-block rounded-full px-3 py-1 text-sm font-black"
-                  style={{ background: svc.accent, color: "var(--color-void)" }}
+          <div className="flex flex-col gap-3">
+            {messages.map((m) =>
+              "card" in m ? (
+                <ServiceCard key={m.id} service={m.card} onReset={reset} />
+              ) : (
+                <div
+                  key={m.id}
+                  className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end" : "self-start"}`}
+                  style={
+                    m.from === "user"
+                      ? { background: "var(--color-lime)", color: "var(--color-void)", fontWeight: 700, border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 rgba(255,255,255,0.25)" }
+                      : { background: "var(--color-bone)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 var(--color-lime)" }
+                  }
                 >
-                  {svc.price}
-                </span>
-                <span
-                  style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--color-ash)" }}
-                >
-                  {svc.duration}
-                </span>
+                  {m.text}
+                </div>
+              ),
+            )}
+
+            {chips.length > 0 && (
+              <div className="msg-in mt-1 flex flex-wrap gap-2 self-end">
+                {chips.map((c) => (
+                  <button
+                    key={c.label}
+                    onClick={c.onClick}
+                    className="border-2 px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5"
+                    style={{
+                      borderColor: "var(--color-lime)",
+                      color: "var(--color-lime)",
+                      background: "transparent",
+                      fontFamily: "var(--font-display)",
+                      boxShadow: "3px 3px 0 var(--color-lime)",
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                ))}
               </div>
-              <h3
-                className="mt-4 text-xl font-black leading-tight"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                {svc.name}
-              </h3>
-              <p className="mt-1 text-sm" style={{ color: "var(--color-mist)" }}>
-                {svc.blurb}
-              </p>
-              <p
-                className="mt-4 text-sm font-bold transition-transform group-hover:translate-x-1"
-                style={{ color: "var(--color-flush)" }}
-              >
-                grab a slot ↗
-              </p>
-            </a>
-          ))}
+            )}
+            <div ref={endRef} />
+          </div>
         </div>
-      </section>
 
-      {/* fallback strip */}
-      <section
-        className="border-y-2 px-5 py-12 text-center"
-        style={{ background: "var(--color-void)", borderColor: "var(--color-void)" }}
-      >
-        <p
-          className="text-2xl font-black leading-snug sm:text-3xl"
-          style={{ fontFamily: "var(--font-display)", color: "var(--color-bone)" }}
-        >
-          cal.com being weird? just text me —{" "}
-          <a href="tel:425-918-2029" className="underline" style={{ color: "var(--color-lime)" }}>
-            425-918-2029
+        <TravelFeeCalculator />
+
+        <p className="mt-6 text-sm" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
+          prefer the full calendar?{" "}
+          <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-bone)" }}>
+            open cal.com →
           </a>
+          <br />
+          Calendar not showing a slot soon enough? Text{" "}
+          <a href="sms:+14259182029" className="underline underline-offset-4" style={{ color: "var(--color-lime)" }}>425-918-2029</a>.
         </p>
-        <p className="mt-3 text-sm" style={{ color: "var(--color-ash)" }}>
-          i answer my own phone. thu–sun, seattle.
-        </p>
-      </section>
+      </main>
 
-      {/* fine print */}
-      <section className="mx-auto max-w-6xl px-5 py-12">
-        <div className="grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              h: "the deposit",
-              p: "$25 holds your slot and comes off your total. no-shows make me sad and make other clients miss out.",
-            },
-            {
-              h: "the lead time",
-              p: "cuts book at least 2 days out. new color clients: consult first, 3 days out. existing color: 1 week out.",
-            },
-            {
-              h: "the disclaimer",
-              p: "pocket studio is independent — not affiliated with rudy's barbershop. terms + privacy live on the classic page footer.",
-            },
-          ].map((x, i) => (
-            <div
-              key={i}
-              className="border-2 p-5"
-              style={{
-                background: i % 2 ? "#fff" : "var(--color-card-2)",
-                borderColor: "var(--color-void)",
-                boxShadow: "4px 4px 0 var(--color-void)",
-              }}
-            >
-              <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>
-                {x.h}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
-                {x.p}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <footer
-        className="border-t px-5 py-8"
-        style={{ background: "var(--color-void)", borderColor: "var(--color-ash)" }}
-      >
-        <div
-          className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 text-xs sm:flex-row sm:items-center"
-          style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
-        >
-          <span>
-            © {new Date().getFullYear()} Pocket Studio · MyKey Pocket (they/them) · Seattle
-          </span>
+      <footer className="border-t px-5 py-8" style={{ borderColor: "var(--color-ash)" }}>
+        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 text-xs sm:flex-row sm:items-center" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
+          <span>© {new Date().getFullYear()} Pocket Studio · MyKey Pocket (they/them) · Seattle</span>
           <span className="flex gap-5">
-            <Link to="/" className="underline-offset-4 hover:underline">
-              Home
-            </Link>
-            <a href="/classic/terms.html" className="underline-offset-4 hover:underline">
-              Terms
-            </a>
-            <a href="/classic/privacy.html" className="underline-offset-4 hover:underline">
-              Privacy
-            </a>
+            <Link to="/" className="underline-offset-4 hover:underline">Home</Link>
+            <a href="/classic/terms.html" className="underline-offset-4 hover:underline">Terms</a>
+            <a href="/classic/privacy.html" className="underline-offset-4 hover:underline">Privacy</a>
           </span>
         </div>
       </footer>
+    </div>
+  );
+}
+
+type FeeResult = {
+  available: boolean;
+  distance_mi?: number;
+  fee?: number;
+  reason?: string;
+};
+
+function TravelFeeCalculator() {
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<FeeResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  async function calculate() {
+    if (!address.trim() || loading) return;
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch("/api/travel-fee", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: address.trim() }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      setResult((await res.json()) as FeeResult);
+    } catch {
+      setError("couldn't reach the calculator — try again, or text us for a quote.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div
+      className="mt-8 border-2 p-4 sm:p-6"
+      style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}
+    >
+      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-violet-brand)" }}>TRAVEL FEE</p>
+      <h2 className="mt-1 text-xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+        House call? Get your travel fee.
+      </h2>
+      <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
+        House calls are Seattle-area only. The fee is ${TRAVEL.flat} base + ${TRAVEL.perMile}/mi from {TRAVEL.baseLocation},
+        quoted before you book — never after.
+      </p>
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+        <input
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void calculate(); } }}
+          placeholder="your address or neighborhood (e.g. Capitol Hill, Seattle)"
+          className="w-full flex-1 border-2 px-4 py-2.5 text-sm outline-none"
+          style={{ background: "var(--color-void)", color: "var(--color-bone)", borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+        />
+        <button
+          type="button"
+          onClick={() => void calculate()}
+          disabled={loading || !address.trim()}
+          className="border-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{
+            background: "var(--color-lime)",
+            color: "var(--color-void)",
+            borderColor: "var(--color-void)",
+            boxShadow: "4px 4px 0 var(--color-void)",
+            fontFamily: "var(--font-display)",
+          }}
+        >
+          {loading ? "calculating…" : "Calculate travel fee"}
+        </button>
+      </div>
+      <div className="mt-4 text-sm" aria-live="polite" style={{ fontFamily: "var(--font-mono)" }}>
+        {loading && <p style={{ color: "var(--color-ash)" }}>checking the map…</p>}
+        {error && <p style={{ color: "var(--color-flush)" }}>{error}</p>}
+        {result && (
+          result.available ? (
+            <p style={{ color: "var(--color-bone)" }}>
+              {result.distance_mi != null
+                ? <>Distance: {result.distance_mi} mi — Travel fee: <span className="font-black" style={{ color: "var(--color-lime)" }}>${result.fee}</span></>
+                : <>Travel fee: <span className="font-black" style={{ color: "var(--color-lime)" }}>${result.fee}</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "estimate only"})</span></>}
+            </p>
+          ) : (
+            <p style={{ color: "var(--color-flush)" }}>
+              sorry, no house calls there{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — {result.reason ?? "outside service area"}.
+            </p>
+          )
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ServiceCard({ service, onReset }: { service: Service; onReset: () => void }) {
+  return (
+    <div
+      className="msg-in max-w-[92%] self-start border-2 p-4"
+      style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-lime)" }}
+    >
+      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-mist)" }}>YOUR PICK</p>
+      <h3 className="mt-1 text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>{service.name}</h3>
+      <p className="mt-1 text-sm font-bold" style={{ fontFamily: "var(--font-mono)" }}>
+        {service.duration} · {service.price}
+      </p>
+      <p className="mt-2 text-sm leading-relaxed">{service.detail}</p>
+      <a
+        href={`${CAL_BASE}${service.slug}`}
+        target="_blank"
+        rel="noreferrer"
+        onClick={() => window.dispatchEvent(new CustomEvent("mybesti:celebrate"))}
+        className="mt-4 block w-full px-4 py-3 text-center text-sm font-bold uppercase tracking-wider transition hover:-translate-y-0.5"
+        style={{ background: "var(--color-lime)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)", fontFamily: "var(--font-display)" }}
+      >
+        BOOK {service.name} →
+      </a>
+      <div className="mt-3 flex items-center justify-between text-xs">
+        <Link to="/services/$slug" params={{ slug: service.slug }} className="underline underline-offset-4 font-semibold">
+          see the work
+        </Link>
+        <button onClick={onReset} className="underline underline-offset-4" style={{ color: "var(--color-mist)" }}>
+          start over
+        </button>
+      </div>
     </div>
   );
 }
