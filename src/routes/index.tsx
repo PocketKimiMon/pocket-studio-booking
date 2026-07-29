@@ -6,6 +6,8 @@ import { BookingPopup } from "../components/BookingPopup";
 import { EmergencyModal } from "../components/EmergencyModal";
 import { ReadingModeToggle } from "../components/ReadingModeToggle";
 import { TravelFee } from "../components/TravelFee";
+import { ScrollScrub } from "../components/scroll-scrub/scroll-scrub";
+import type { ScrollScrubScene } from "../components/scroll-scrub/scroll-scrub";
 
 export const Route = createFileRoute("/")({
   head: () => headFor("/"),
@@ -98,6 +100,110 @@ const POLICIES = [
   },
 ];
 
+/* ── scroll movie — cinematic opening act ────────────── */
+/* Posters are placeholders; generated video legs drop in later per
+   docs/scroll-movie-brief.md (fill clip/mobileClip, swap posters). */
+const SCROLL_MOVIE_SCENES: ScrollScrubScene[] = [
+  {
+    id: "chair-moved",
+    label: "the move",
+    kicker: "your chair moved",
+    title: "the chair comes to you now.",
+    body: "house-call cuts + color, anywhere in seattle. no front desk, no phone tag — the whole shop, at your door.",
+    tags: ["house calls", "seattle, wa", "booking open"],
+    poster: "/assets/world/scene-1-poster.jpg",
+    mobilePoster: "/assets/world/scene-1-mobile-poster.jpg",
+    align: "left",
+    scroll: 1.5,
+    actions: <Link to="/book">book now →</Link>,
+  },
+  {
+    id: "buzz",
+    label: "buzz cut",
+    kicker: "scene 02 · buzz cut",
+    title: "clippers up. back to your life.",
+    body: "clippers all over, clean edges, thirty minutes and you're done.",
+    tags: ["30 min", "quick"],
+    poster: "/assets/world/scene-2-poster.jpg",
+    mobilePoster: "/assets/world/scene-2-mobile-poster.jpg",
+    align: "right",
+    scroll: 1.3,
+    actions: (
+      <a href={`${CAL_BASE}buzz-cut`} target="_blank" rel="noreferrer">
+        book a buzz cut →
+      </a>
+    ),
+  },
+  {
+    id: "color",
+    label: "color",
+    kicker: "color chaos welcome",
+    title: "foils in your kitchen. why not.",
+    body: "roots, refresh, full transformation — planned at your table, executed in your kitchen.",
+    tags: ["consult first", "3–5 hr sessions"],
+    poster: "/assets/world/scene-3-poster.jpg",
+    mobilePoster: "/assets/world/scene-3-mobile-poster.jpg",
+    align: "left",
+    scroll: 1.3,
+    actions: (
+      <a href={`${CAL_BASE}hair-consultation`} target="_blank" rel="noreferrer">
+        book a color consult →
+      </a>
+    ),
+  },
+  {
+    id: "detail",
+    label: "the detail",
+    kicker: "the detail",
+    title: "edges so clean they gossip.",
+    body: "layers, texture, cleanup. keep the length, kill the dead ends.",
+    tags: ["long cut", "detail work"],
+    poster: "/assets/world/scene-4-poster.jpg",
+    mobilePoster: "/assets/world/scene-4-mobile-poster.jpg",
+    align: "right",
+    scroll: 1.3,
+    actions: (
+      <a href={`${CAL_BASE}long-cut`} target="_blank" rel="noreferrer">
+        book a long cut →
+      </a>
+    ),
+  },
+  {
+    id: "book-it",
+    label: "book it",
+    kicker: "seattle house calls",
+    title: "your chair. your place.",
+    body: "calendar opens on the 1st for the whole month. first come, first serve — and i don't hold slots.",
+    tags: ["thu–sun", "425-918-2029"],
+    poster: "/assets/world/scene-5-poster.jpg",
+    mobilePoster: "/assets/world/scene-5-mobile-poster.jpg",
+    align: "left",
+    scroll: 1.6,
+    actions: (
+      <>
+        <Link to="/book">book it →</Link>
+        <a href="tel:425-918-2029" data-variant="ghost">
+          call 425-918-2029
+        </a>
+      </>
+    ),
+  },
+];
+
+function ScrollMovie() {
+  return (
+    <ScrollScrub
+      scenes={SCROLL_MOVIE_SCENES}
+      theme={{
+        background: "#0b0b0f",
+        ink: "#f4efe6",
+        muted: "#adb0bd",
+        accent: "#c53b38",
+      }}
+    />
+  );
+}
+
 function Page() {
   return (
     <div
@@ -108,6 +214,7 @@ function Page() {
       }}
     >
       <TopBar />
+      <ScrollMovie />
       <Hero />
       <Marquee />
       <About />
