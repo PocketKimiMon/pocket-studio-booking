@@ -44,7 +44,7 @@ export function TravelFee() {
       if (miles > RANGE_MI) {
         setResult({ kind: "outside", miles });
       } else {
-        setResult({ kind: "ok", miles, fee: 25 + 2 * Math.round(miles) });
+        setResult({ kind: "ok", miles, fee: 25 + 2 * Math.round(miles * 10) / 10 });
       }
     } catch {
       setResult({ kind: "fallback" });

@@ -32,7 +32,7 @@ const SERVICES: Service[] = [
 function earliestDate(leadDays: number) {
   const d = new Date();
   d.setDate(d.getDate() + leadDays);
-  return d.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "America/Los_Angeles" });
 }
 
 function Home() {

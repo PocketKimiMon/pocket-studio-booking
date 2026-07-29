@@ -56,7 +56,7 @@ type Step = "start" | "cut" | "color" | "result";
 
 function earliestDate(minDays: number) {
   const d = new Date(Date.now() + minDays * 86400000);
-  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/Los_Angeles" });
 }
 
 export function BookingPopup() {
