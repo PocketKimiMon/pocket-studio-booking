@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { CAL_BASE, SERVICES } from "../lib/services";
-import { serviceHead } from "../lib/seo";
+import { CAL_BASE, SERVICES, STRIPE_DEPOSIT_LINK } from "../lib/services";
+import { headFor } from "../lib/seo";
+import { ReadingModeToggle } from "../components/ReadingModeToggle";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -8,7 +9,7 @@ export const Route = createFileRoute("/services/$slug")({
     if (!svc) throw notFound();
     return svc;
   },
-  head: ({ loaderData }) => serviceHead(loaderData),
+  head: ({ loaderData }) => headFor(`/services/${loaderData?.slug ?? ""}`),
   component: ServicePage,
 });
 
@@ -26,6 +27,7 @@ function ServicePage() {
             ✂ POCKET STUDIO
           </Link>
           <div className="flex items-center gap-4">
+            <ReadingModeToggle compact />
             <Link to="/" hash="services" className="hidden text-sm underline-offset-4 hover:underline sm:block" style={{ fontFamily: "var(--font-mono)" }}>
               ← all services
             </Link>
@@ -34,7 +36,7 @@ function ServicePage() {
               target="_blank"
               rel="noreferrer"
               className="border-2 px-4 py-1.5 text-sm font-black transition-transform hover:-translate-y-0.5"
-              style={{ background: "var(--color-lime)", borderColor: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}
+              style={{ background: "var(--color-lime)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}
             >
               BOOK
             </a>
@@ -52,9 +54,9 @@ function ServicePage() {
           <span style={{ color: svc.accent === "var(--color-lime)" ? "var(--color-flush)" : svc.accent }}>.</span>
         </h1>
         <div className="mt-5 flex flex-wrap items-center gap-3" style={{ fontFamily: "var(--font-mono)", fontSize: 14 }}>
-          <span className="border-2 px-3 py-1" style={{ borderColor: "var(--color-void)", background: "#fff" }}>{svc.duration}</span>
+          <span className="border-2 px-3 py-1" style={{ borderColor: "var(--color-void)", background: "var(--color-card-w)" }}>{svc.duration}</span>
           <span className="border-2 px-3 py-1 font-black" style={{ borderColor: "var(--color-void)", background: svc.accent, color: "var(--color-void)" }}>{svc.price}</span>
-          <span style={{ color: "var(--color-ash)" }}>house call · Seattle</span>
+          <span style={{ color: "var(--color-ash)" }}>house call · Seattle · no travel fee right now</span>
         </div>
         <p className="mt-6 max-w-xl text-xl leading-relaxed" style={{ fontFamily: "Georgia, serif", color: "var(--color-mist)" }}>
           {svc.detail}
@@ -62,13 +64,21 @@ function ServicePage() {
       </section>
 
       {/* gallery */}
-      <section className="mx-auto max-w-6xl px-5 pb-12">
+      <section
+        className="border-y-2 px-5 py-12"
+        style={{
+          background:
+            "linear-gradient(rgba(11,11,15,.95), rgba(11,11,15,.95)), url(/images/gallery-texture-1.jpg) center/cover",
+          borderColor: "var(--color-void)",
+        }}
+      >
+        <div className="mx-auto max-w-6xl">
         <div className={`grid gap-4 ${svc.images.length === 1 ? "sm:grid-cols-[2fr_1fr]" : svc.images.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
           {svc.images.map((img, i) => (
             <figure
               key={img.src}
               className={`overflow-hidden border-2 ${i % 2 === 1 ? "sm:translate-y-4" : ""}`}
-              style={{ borderColor: "var(--color-void)", boxShadow: "6px 6px 0 var(--color-void)", background: "#fff" }}
+              style={{ borderColor: "var(--color-void)", boxShadow: "6px 6px 0 var(--color-void)", background: "var(--color-card-w)" }}
             >
               <img src={img.src} alt={img.alt} className="aspect-[4/5] w-full object-cover" loading={i === 0 ? "eager" : "lazy"} />
             </figure>
@@ -76,7 +86,7 @@ function ServicePage() {
           {svc.images.length === 1 && (
             <div className="flex items-center border-2 p-6" style={{ borderColor: "var(--color-void)", background: "var(--color-card-2)", boxShadow: "6px 6px 0 var(--color-void)" }}>
               <p className="rotate-[-3deg] text-3xl leading-snug" style={{ fontFamily: "var(--font-hand)", color: "var(--color-flush)" }}>
-                fresh out of the chair — more coming to the wall soon ~
+                fresh out of the chair — more coming to the wall soon!
               </p>
             </div>
           )}
@@ -84,19 +94,20 @@ function ServicePage() {
         <p className="mt-4 text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
           real clients, real couches · shared with permission
         </p>
+        </div>
       </section>
 
       {/* what happens + good for */}
       <section className="border-y-2" style={{ background: "var(--color-card-2)", borderColor: "var(--color-void)" }}>
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:grid-cols-[1.3fr_1fr]">
           <div>
-            <h2 className="text-3xl font-black" style={{ fontFamily: "var(--font-display)" }}>what happens</h2>
+            <h2 className="text-3xl font-black" style={{ fontFamily: "var(--font-display)" }}>What happens</h2>
             <ol className="mt-6 space-y-4">
               {svc.whatHappens.map((step, i) => (
                 <li key={i} className="flex gap-4">
                   <span
                     className="flex h-8 w-8 shrink-0 items-center justify-center border-2 text-sm font-black"
-                    style={{ borderColor: "var(--color-void)", background: i === 0 ? svc.accent : "#fff", fontFamily: "var(--font-mono)" }}
+                    style={{ borderColor: "var(--color-void)", background: i === 0 ? svc.accent : "var(--color-card-w)", fontFamily: "var(--font-mono)" }}
                   >
                     {i + 1}
                   </span>
@@ -106,10 +117,10 @@ function ServicePage() {
             </ol>
           </div>
           <div className="self-start border-2 p-6" style={{ background: "var(--color-void)", color: "var(--color-bone)", borderColor: "var(--color-void)", boxShadow: "6px 6px 0 " + (svc.accent === "var(--color-lime)" ? "var(--color-lime)" : svc.accent) }}>
-            <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>good for</h3>
+            <h3 className="text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>Good for</h3>
             <p className="mt-3 text-sm leading-relaxed" style={{ color: "var(--color-bone)" }}>{svc.goodFor}</p>
-            <p className="mt-5 text-xs leading-relaxed" style={{ color: "var(--color-ash)" }}>
-              every appointment is a house call — i bring the chair, tools, and the gossip. you bring decent light and an outlet.
+            <p className="mt-5 text-xs leading-relaxed" style={{ color: "#3d3d47" }}>
+              Every appointment is a house call — I bring the chair, tools, and the gossip. You bring decent light and an outlet.
             </p>
           </div>
         </div>
@@ -118,7 +129,7 @@ function ServicePage() {
       {/* CTA */}
       <section className="mx-auto max-w-6xl px-5 py-14 text-center sm:py-20">
         <h2 className="text-3xl font-black sm:text-5xl" style={{ fontFamily: "var(--font-display)" }}>
-          want this one?
+          Want this one?
         </h2>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
@@ -133,11 +144,17 @@ function ServicePage() {
           <Link
             to="/book"
             className="border-2 px-8 py-3 text-base font-black transition-transform hover:-translate-y-0.5"
-            style={{ background: "#fff", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)" }}
+            style={{ background: "var(--color-card-w)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)" }}
           >
             SEE ALL SLOTS
           </Link>
         </div>
+        <p className="mx-auto mt-6 max-w-md text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
+          a <strong style={{ color: "var(--color-void)" }}>$25 deposit</strong> holds your slot — applied to your total at the chair.{" "}
+          <a href={STRIPE_DEPOSIT_LINK} target="_blank" rel="noreferrer" className="underline underline-offset-2" style={{ color: "var(--color-violet-brand)" }}>
+            pay deposit →
+          </a>
+        </p>
         <p className="mt-8 text-sm" style={{ color: "var(--color-ash)" }}>
           Next up:{" "}
           <Link to="/services/$slug" params={{ slug: next.slug }} className="font-bold underline underline-offset-4" style={{ color: "var(--color-void)" }}>
@@ -146,13 +163,13 @@ function ServicePage() {
         </p>
       </section>
 
-      <footer className="border-t px-5 py-8" style={{ background: "var(--color-void)", borderColor: "var(--color-ash)" }}>
+      <footer className="border-t px-5 py-8" style={{ background: "var(--color-card-2)", borderColor: "var(--color-ash)" }}>
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 text-xs sm:flex-row sm:items-center" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
           <span>© {new Date().getFullYear()} Pocket Studio · MyKey Pocket (they/them) · Seattle</span>
           <span className="flex gap-5">
             <Link to="/" className="underline-offset-4 hover:underline">Home</Link>
-            <a href="/classic/terms.html" className="underline-offset-4 hover:underline">Terms</a>
-            <a href="/classic/privacy.html" className="underline-offset-4 hover:underline">Privacy</a>
+            <Link to="/terms" className="underline-offset-4 hover:underline">Terms</Link>
+            <Link to="/privacy" className="underline-offset-4 hover:underline">Privacy</Link>
           </span>
         </div>
       </footer>

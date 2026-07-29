@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CAL_BASE, SERVICES, type Service } from "../lib/services";
-import { TRAVEL } from "../lib/travel";
-import { seoHead } from "../lib/seo";
+import { CAL_BASE, SERVICES, STRIPE_DEPOSIT_LINK, type Service } from "../lib/services";
+import { headFor } from "../lib/seo";
+import { ReadingModeToggle } from "../components/ReadingModeToggle";
 
 export const Route = createFileRoute("/book")({
-  head: seoHead("/book"),
+  head: () => headFor("/book"),
   component: BookPage,
 });
 
 const bySlug = (slug: string) => SERVICES.find((s) => s.slug === slug)!;
-const CUTS = ["buzz-cut", "taper-fade-cut", "short-cut", "long-cut", "curl-cut"].map(bySlug);
+const CUTS = ["buzz-cut", "short-cut", "long-cut"].map(bySlug);
 const CONSULT = bySlug("hair-consultation");
 const EXISTING = bySlug("existing-client-color-appointment");
 
@@ -87,20 +87,29 @@ function BookPage() {
           : [];
 
   return (
-    <div style={{ background: "var(--color-void)", color: "var(--color-bone)", fontFamily: "var(--font-sans)", minHeight: "100vh" }}>
+    <div
+      style={{
+        background:
+          "linear-gradient(rgba(11,11,15,.94), rgba(11,11,15,.96)), url(/images/booking-bg.jpg) center/cover fixed",
+        color: "var(--color-void)",
+        fontFamily: "var(--font-sans)",
+        minHeight: "100vh",
+      }}
+    >
       <style>{`
         @keyframes msg-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         .msg-in { animation: msg-in 0.25s ease-out both; }
       `}</style>
 
-      <header className="sticky top-0 z-50 border-b" style={{ background: "var(--color-void)", borderColor: "var(--color-ash)" }}>
+      <header className="sticky top-0 z-50 border-b" style={{ background: "var(--color-bone)", borderColor: "var(--color-ash)" }}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
-          <Link to="/" className="text-sm font-black tracking-tight" style={{ fontFamily: "var(--font-display)", color: "var(--color-bone)" }}>
+          <Link to="/" className="text-sm font-black tracking-tight" style={{ fontFamily: "var(--font-display)", color: "var(--color-void)" }}>
             ✂ POCKET STUDIO
           </Link>
           <div className="flex items-center gap-4" style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full" style={{ background: "var(--color-lime)" }} />
-            <Link to="/" hash="services" className="underline-offset-4 hover:underline" style={{ color: "var(--color-bone)" }}>
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full" style={{ background: "var(--color-go)" }} />
+            <ReadingModeToggle compact />
+            <Link to="/" hash="services" className="underline-offset-4 hover:underline" style={{ color: "var(--color-void)" }}>
               ← services
             </Link>
           </div>
@@ -122,7 +131,7 @@ function BookPage() {
           style={{ borderColor: "var(--color-lime)", boxShadow: "6px 6px 0 var(--color-lime)", background: "rgba(255,255,255,0.03)" }}
         >
           <div className="mb-4 flex items-center gap-2 border-b pb-3" style={{ borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-ash)" }}>
-            <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-lime)" }} />
+            <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-go)" }} />
             BOOKING BOT · ONLINE
           </div>
 
@@ -137,7 +146,7 @@ function BookPage() {
                   style={
                     m.from === "user"
                       ? { background: "var(--color-lime)", color: "var(--color-void)", fontWeight: 700, border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 rgba(255,255,255,0.25)" }
-                      : { background: "var(--color-bone)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 var(--color-lime)" }
+                      : { background: "var(--color-card-w)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 var(--color-lime)" }
                   }
                 >
                   {m.text}
@@ -169,11 +178,11 @@ function BookPage() {
           </div>
         </div>
 
-        <TravelFeeCalculator />
+        <AreaChecker />
 
         <p className="mt-6 text-sm" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
           prefer the full calendar?{" "}
-          <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-bone)" }}>
+          <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-void)" }}>
             open cal.com →
           </a>
           <br />
@@ -187,8 +196,8 @@ function BookPage() {
           <span>© {new Date().getFullYear()} Pocket Studio · MyKey Pocket (they/them) · Seattle</span>
           <span className="flex gap-5">
             <Link to="/" className="underline-offset-4 hover:underline">Home</Link>
-            <a href="/classic/terms.html" className="underline-offset-4 hover:underline">Terms</a>
-            <a href="/classic/privacy.html" className="underline-offset-4 hover:underline">Privacy</a>
+            <Link to="/terms" className="underline-offset-4 hover:underline">Terms</Link>
+            <Link to="/privacy" className="underline-offset-4 hover:underline">Privacy</Link>
           </span>
         </div>
       </footer>
@@ -203,7 +212,7 @@ type FeeResult = {
   reason?: string;
 };
 
-function TravelFeeCalculator() {
+function AreaChecker() {
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<FeeResult | null>(null);
@@ -223,7 +232,7 @@ function TravelFeeCalculator() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setResult((await res.json()) as FeeResult);
     } catch {
-      setError("couldn't reach the calculator — try again, or text us for a quote.");
+      setError("couldn't reach the checker — try again, or text us and we'll confirm.");
     } finally {
       setLoading(false);
     }
@@ -234,13 +243,14 @@ function TravelFeeCalculator() {
       className="mt-8 border-2 p-4 sm:p-6"
       style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}
     >
-      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-violet-brand)" }}>TRAVEL FEE</p>
+      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-violet-brand)" }}>SERVICE AREA</p>
       <h2 className="mt-1 text-xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
-        House call? Get your travel fee.
+        House call? Check you're in range.
       </h2>
       <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
-        House calls are Seattle-area only. The fee is ${TRAVEL.flat} base + ${TRAVEL.perMile}/mi from {TRAVEL.baseLocation},
-        quoted before you book — never after.
+        House calls are Seattle-area only — and right now there's{" "}
+        <strong style={{ color: "var(--color-go)" }}>no travel fee at all</strong>. $0, anywhere in range,
+        while the books are building.
       </p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
         <input
@@ -250,7 +260,7 @@ function TravelFeeCalculator() {
           onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void calculate(); } }}
           placeholder="your address or neighborhood (e.g. Capitol Hill, Seattle)"
           className="w-full flex-1 border-2 px-4 py-2.5 text-sm outline-none"
-          style={{ background: "var(--color-void)", color: "var(--color-bone)", borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+          style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
         />
         <button
           type="button"
@@ -265,7 +275,7 @@ function TravelFeeCalculator() {
             fontFamily: "var(--font-display)",
           }}
         >
-          {loading ? "calculating…" : "Calculate travel fee"}
+          {loading ? "checking…" : "Check my address"}
         </button>
       </div>
       <div className="mt-4 text-sm" aria-live="polite" style={{ fontFamily: "var(--font-mono)" }}>
@@ -273,10 +283,10 @@ function TravelFeeCalculator() {
         {error && <p style={{ color: "var(--color-flush)" }}>{error}</p>}
         {result && (
           result.available ? (
-            <p style={{ color: "var(--color-bone)" }}>
+            <p style={{ color: "var(--color-void)" }}>
               {result.distance_mi != null
-                ? <>Distance: {result.distance_mi} mi — Travel fee: <span className="font-black" style={{ color: "var(--color-lime)" }}>${result.fee}</span></>
-                : <>Travel fee: <span className="font-black" style={{ color: "var(--color-lime)" }}>${result.fee}</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "estimate only"})</span></>}
+                ? <>You're in range ({result.distance_mi} mi) — travel fee: <span className="font-black" style={{ color: "var(--color-go)" }}>$0</span> <span style={{ color: "var(--color-ash)" }}>(no fee right now)</span></>
+                : <>You're in range — travel fee: <span className="font-black" style={{ color: "var(--color-go)" }}>$0</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "no fee right now"})</span></>}
             </p>
           ) : (
             <p style={{ color: "var(--color-flush)" }}>
@@ -293,7 +303,7 @@ function ServiceCard({ service, onReset }: { service: Service; onReset: () => vo
   return (
     <div
       className="msg-in max-w-[92%] self-start border-2 p-4"
-      style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-lime)" }}
+      style={{ background: "var(--color-card-w)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-lime)" }}
     >
       <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-mist)" }}>YOUR PICK</p>
       <h3 className="mt-1 text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>{service.name}</h3>
@@ -311,6 +321,12 @@ function ServiceCard({ service, onReset }: { service: Service; onReset: () => vo
       >
         BOOK {service.name} →
       </a>
+      <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--color-ash)" }}>
+        a <strong style={{ color: "var(--color-void)" }}>$25 deposit</strong> holds your slot — applied to your total at the chair.{" "}
+        <a href={STRIPE_DEPOSIT_LINK} target="_blank" rel="noreferrer" className="underline underline-offset-2" style={{ color: "var(--color-violet-brand)" }}>
+          pay deposit →
+        </a>
+      </p>
       <div className="mt-3 flex items-center justify-between text-xs">
         <Link to="/services/$slug" params={{ slug: service.slug }} className="underline underline-offset-4 font-semibold">
           see the work
