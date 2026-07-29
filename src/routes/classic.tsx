@@ -1,6 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { seoHead } from "../lib/seo";
 
-export const Route = createFileRoute("/classic")({ component: Classic });
+export const Route = createFileRoute("/classic")({
+  head: seoHead("/classic"),
+  component: Classic,
+});
 
 function Classic() {
   return <div className="flex min-h-screen flex-col bg-[var(--color-void)]">

@@ -9,39 +9,25 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as StudioRouteImport } from './routes/studio'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as MobileRouteImport } from './routes/mobile'
-import { Route as ClassicRouteImport } from './routes/classic'
-import { Route as BookRouteImport } from './routes/book'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as BookRouteImport } from './routes/book'
+import { Route as ClassicRouteImport } from './routes/classic'
+import { Route as MobileRouteImport } from './routes/mobile'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as StudioRouteImport } from './routes/studio'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as ApiTravelFeeRouteImport } from './routes/api/travel-fee'
+import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StudioRoute = StudioRouteImport.update({
-  id: '/studio',
-  path: '/studio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MobileRoute = MobileRouteImport.update({
-  id: '/mobile',
-  path: '/mobile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassicRoute = ClassicRouteImport.update({
-  id: '/classic',
-  path: '/classic',
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookRoute = BookRouteImport.update({
@@ -49,14 +35,29 @@ const BookRoute = BookRouteImport.update({
   path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ClassicRoute = ClassicRouteImport.update({
+  id: '/classic',
+  path: '/classic',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/services/$slug',
-  path: '/services/$slug',
+const MobileRoute = MobileRouteImport.update({
+  id: '/mobile',
+  path: '/mobile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudioRoute = StudioRouteImport.update({
+  id: '/studio',
+  path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
@@ -64,9 +65,15 @@ const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
   path: '/api/travel-fee',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/services/$slug',
+  path: '/services/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/book': typeof BookRoute
   '/classic': typeof ClassicRoute
   '/mobile': typeof MobileRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/book': typeof BookRoute
   '/classic': typeof ClassicRoute
   '/mobile': typeof MobileRoute
@@ -90,6 +98,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
   '/book': typeof BookRoute
   '/classic': typeof ClassicRoute
   '/mobile': typeof MobileRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blog'
     | '/book'
     | '/classic'
     | '/mobile'
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/blog'
     | '/book'
     | '/classic'
     | '/mobile'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/blog'
     | '/book'
     | '/classic'
     | '/mobile'
@@ -137,6 +149,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlogRoute: typeof BlogRoute
   BookRoute: typeof BookRoute
   ClassicRoute: typeof ClassicRoute
   MobileRoute: typeof MobileRoute
@@ -149,39 +162,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/studio': {
-      id: '/studio'
-      path: '/studio'
-      fullPath: '/studio'
-      preLoaderRoute: typeof StudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mobile': {
-      id: '/mobile'
-      path: '/mobile'
-      fullPath: '/mobile'
-      preLoaderRoute: typeof MobileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/classic': {
-      id: '/classic'
-      path: '/classic'
-      fullPath: '/classic'
-      preLoaderRoute: typeof ClassicRouteImport
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book': {
@@ -191,18 +183,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/classic': {
+      id: '/classic'
+      path: '/classic'
+      fullPath: '/classic'
+      preLoaderRoute: typeof ClassicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/services/$slug'
-      fullPath: '/services/$slug'
-      preLoaderRoute: typeof ServicesSlugRouteImport
+    '/mobile': {
+      id: '/mobile'
+      path: '/mobile'
+      fullPath: '/mobile'
+      preLoaderRoute: typeof MobileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studio': {
+      id: '/studio'
+      path: '/studio'
+      fullPath: '/studio'
+      preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/travel-fee': {
@@ -212,11 +225,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTravelFeeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/$slug': {
+      id: '/services/$slug'
+      path: '/services/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlogRoute: BlogRoute,
   BookRoute: BookRoute,
   ClassicRoute: ClassicRoute,
   MobileRoute: MobileRoute,

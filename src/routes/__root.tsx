@@ -7,10 +7,11 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { BASE_URL, DEFAULT_OG_IMAGE, HAIR_SALON_JSONLD, SEO_CONFIG } from "../lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -77,16 +78,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pocket Studio — MyKey Pocket · Seattle Hair" },
-      { name: "description", content: "MyKey Pocket's independent Seattle hair studio. Cuts, color, and consults booked one month at a time." },
+      // Sitewide defaults — child routes override title/description/robots/
+      // og:url via their own head (see src/lib/seo.ts + SEO-INJECTION.md).
+      { title: SEO_CONFIG["/"].title },
+      { name: "description", content: SEO_CONFIG["/"].description },
       { name: "author", content: "MyKey Pocket" },
-      { property: "og:title", content: "Pocket Studio — MyKey Pocket · Seattle Hair" },
-      { property: "og:description", content: "MyKey Pocket's independent Seattle hair studio. Cuts, color, and consults booked one month at a time." },
+      { name: "robots", content: "index, follow" },
+      { property: "og:site_name", content: "Pocket Studio" },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${BASE_URL}/` },
+      { property: "og:title", content: SEO_CONFIG["/"].title },
+      { property: "og:description", content: SEO_CONFIG["/"].description },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: SEO_CONFIG["/"].title },
+      { name: "twitter:description", content: SEO_CONFIG["/"].description },
+      { name: "twitter:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [
+      // NOTE: no root-level canonical — TanStack concatenates link tags
+      // (unlike meta, they don't override), so every leaf route emits its own
+      // canonical via buildHead() in src/lib/seo.ts. A root canonical here
+      // would render duplicate <link rel="canonical"> on every child route.
       {
         rel: "stylesheet",
         href: appCss,
@@ -97,6 +112,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(HAIR_SALON_JSONLD),
       },
     ],
   }),
@@ -113,6 +134,24 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        {/* reading mode (OpenDyslexic) — DEFAULT ON, persisted in localStorage
+            ("ps-reading-mode": "on" | "off"; unset = on). applied pre-paint so
+            the dyslexia-friendly fonts land without a flash. guarded: works
+            even when localStorage is unavailable. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var m = window.localStorage.getItem('ps-reading-mode');
+                  if (m === null || m === 'on') document.body.classList.add('reading-mode');
+                } catch (e) {
+                  if (document.body) document.body.classList.add('reading-mode');
+                }
+              })();
+            `,
+          }}
+        />
         {children}
         <Scripts />
         <script
@@ -153,6 +192,57 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <ReadingModeToggle />
     </QueryClientProvider>
+  );
+}
+
+/**
+ * Reading mode toggle — visible on every page (fixed bottom-left).
+ * OpenDyslexic + open spacing is ON BY DEFAULT; persists to localStorage
+ * ("ps-reading-mode"). SSR-safe: all window/localStorage/body access is
+ * guarded and client-only.
+ */
+function ReadingModeToggle() {
+  const [on, setOn] = useState(true);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem("ps-reading-mode");
+      const next = stored === null ? true : stored === "on";
+      setOn(next);
+      document.body.classList.toggle("reading-mode", next);
+    } catch {
+      document.body.classList.add("reading-mode");
+    }
+  }, []);
+
+  const toggle = () => {
+    const next = !on;
+    setOn(next);
+    try {
+      window.localStorage.setItem("ps-reading-mode", next ? "on" : "off");
+    } catch {
+      /* storage unavailable — the class toggle still works for this session */
+    }
+    document.body.classList.toggle("reading-mode", next);
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={on}
+      className="fixed bottom-4 left-4 z-[70] border-2 px-3 py-1.5 text-xs font-black transition-transform hover:-translate-y-0.5"
+      style={{
+        background: on ? "var(--color-lime)" : "var(--color-bone)",
+        color: "var(--color-void)",
+        borderColor: "var(--color-void)",
+        boxShadow: "3px 3px 0 var(--color-void)",
+        fontFamily: "var(--font-mono)",
+      }}
+    >
+      reading mode: {on ? "on" : "off"}
+    </button>
   );
 }

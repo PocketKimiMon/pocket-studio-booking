@@ -155,3 +155,108 @@
     color: var(--color-foreground);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Pocket Studio — brand texture (extended, not replaced).
+   dark-ink base tokens + oxblood accent + subtle grain overlay.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-ink-deep: #120E17; /* dark-ink editorial base (matches --color-void) */
+  --color-oxblood: #C53B38; /* oxblood accent — studio lead */
+  --color-oxblood-deep: #7E211F; /* oxblood, pressed */
+}
+
+@layer base {
+  /* grain — warm, low-saturation SVG noise over the whole canvas */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44IiBudW1PY3RhdmVzPSIyIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjE2MCIgaGVpZ2h0PSIxNjAiIGZpbHRlcj0idXJsKCNuKSIgb3BhY2l0eT0iMC40Ii8+PC9zdmc+");
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reading mode (OpenDyslexic) — body.reading-mode, DEFAULT ON.
+   Toggled by the root-layout control, persisted in localStorage
+   ("ps-reading-mode": "on" | "off"; unset = on). Applied pre-paint by the
+   inline script in src/routes/__root.tsx.
+
+   Fonts load from jsDelivr (no npm dep, no binary in repo):
+   primary  = @fontsource/opendyslexic (npm package, verified 200)
+   fallback = antijingoist/opendyslexic (official repo via jsDelivr gh)
+   final    = dyslexia-friendly system stack (Verdana/Tahoma) — the
+              letter/word/line spacing below still applies either way.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "OpenDyslexic";
+  src:
+    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-400-normal.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src:
+    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-700-normal.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src:
+    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-400-italic.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "OpenDyslexic";
+  src:
+    url("https://cdn.jsdelivr.net/npm/@fontsource/opendyslexic@5.3.0/files/opendyslexic-latin-700-italic.woff2") format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/antijingoist/opendyslexic@main/compiled/OpenDyslexic-BoldItalic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --ps-reading-font: "OpenDyslexic", "Comic Sans MS", Verdana, Tahoma, sans-serif;
+}
+
+/* swap every brand type stack — routes consume these vars (and the /mobile
+   page's .ps classes are covered by the !important rule below) */
+body.reading-mode {
+  --font-display: var(--ps-reading-font);
+  --font-sans: var(--ps-reading-font);
+  --font-mono: var(--ps-reading-font);
+  --font-hand: var(--ps-reading-font);
+  line-height: 1.9;
+  letter-spacing: 0.012em;
+  word-spacing: 0.1em;
+}
+body.reading-mode,
+body.reading-mode * {
+  font-family: var(--ps-reading-font) !important;
+}
+body.reading-mode p,
+body.reading-mode li,
+body.reading-mode dd,
+body.reading-mode blockquote {
+  text-align: left;
+  line-height: 1.9;
+  letter-spacing: 0.012em;
+  word-spacing: 0.1em;
+}
+/* calm the grain a touch while reading */
+body.reading-mode::after {
+  opacity: 0.03;
+}
