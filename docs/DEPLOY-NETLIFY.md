@@ -1,7 +1,8 @@
 # Deploy — Netlify (pocket-studio-seattle)
 
 **Live:** https://pocket-studio-seattle.netlify.app
-Site ID: `23843508-456e-42e5-8475-99ed98ed4191` (team: mykeypocket)
+Site ID: `68a53dee-a0db-4489-b816-a468401ab2b3` (team: mykeypocket)
+*(site was recreated 2026-07-29 — old ID 23843508… is dead; always `netlify sites:list` first)*
 
 ## The command (post-Lovable-restructure)
 
