@@ -20,6 +20,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ApiTravelFeeRouteImport } from './routes/api/travel-fee'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -76,6 +77,11 @@ const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
   path: '/api/travel-fee',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/chat': typeof ApiChatRoute
   '/api/travel-fee': typeof ApiTravelFeeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/chat': typeof ApiChatRoute
   '/api/travel-fee': typeof ApiTravelFeeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/studio': typeof StudioRoute
   '/terms': typeof TermsRoute
+  '/api/chat': typeof ApiChatRoute
   '/api/travel-fee': typeof ApiTravelFeeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/studio'
     | '/terms'
+    | '/api/chat'
     | '/api/travel-fee'
     | '/blog/$slug'
     | '/services/$slug'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/studio'
     | '/terms'
+    | '/api/chat'
     | '/api/travel-fee'
     | '/blog/$slug'
     | '/services/$slug'
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/studio'
     | '/terms'
+    | '/api/chat'
     | '/api/travel-fee'
     | '/blog/$slug'
     | '/services/$slug'
@@ -168,6 +180,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   StudioRoute: typeof StudioRoute
   TermsRoute: typeof TermsRoute
+  ApiChatRoute: typeof ApiChatRoute
   ApiTravelFeeRoute: typeof ApiTravelFeeRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
 }
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTravelFeeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -273,6 +293,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   StudioRoute: StudioRoute,
   TermsRoute: TermsRoute,
+  ApiChatRoute: ApiChatRoute,
   ApiTravelFeeRoute: ApiTravelFeeRoute,
   ServicesSlugRoute: ServicesSlugRoute,
 }

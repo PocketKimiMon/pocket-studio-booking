@@ -1,349 +1,174 @@
-import { useEffect, useState } from "react";
-import { CAL_BASE } from "../lib/services";
+import { useEffect, useRef, useState } from "react";
+import { SERVICES, CAL_BASE } from "../lib/services";
 
-type Pick = {
-  slug: string;
-  name: string;
-  time: string;
-  minDays: number;
-  leadLabel: string;
+type Msg = { role: "user" | "assistant"; content: string };
+
+const OPENING: Msg = {
+  role: "assistant",
+  content:
+    "hey! i'm pocket ✂ mykey's booking bot. tell me what you want done with your hair and i'll get you to the right slot.",
 };
-
-const CUTS: Pick[] = [
-  {
-    slug: "buzz-cut",
-    name: "Buzz",
-    time: "30 min",
-    minDays: 2,
-    leadLabel: "books 2 days out minimum",
-  },
-  {
-    slug: "short-cut",
-    name: "Short",
-    time: "45 min",
-    minDays: 2,
-    leadLabel: "books 2 days out minimum",
-  },
-  {
-    slug: "long-cut",
-    name: "Long",
-    time: "60 min",
-    minDays: 2,
-    leadLabel: "books 2 days out minimum",
-  },
-];
-
-const COLORS: Pick[] = [
-  {
-    slug: "hair-consultation",
-    name: "New-Client Color Consult",
-    time: "45 min consult",
-    minDays: 3,
-    leadLabel: "books 3 days out minimum",
-  },
-  {
-    slug: "existing-client-color-appointment",
-    name: "Existing-Client Color",
-    time: "3 hr, up to 5 for complex",
-    minDays: 7,
-    leadLabel: "books 1 week out minimum",
-  },
-];
-
-const ALL_SLUGS = [...CUTS, ...COLORS].map((p) => p.slug);
-
-type Step = "start" | "cut" | "color" | "result";
-
-function earliestDate(minDays: number) {
-  const d = new Date(Date.now() + minDays * 86400000);
-  return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/Los_Angeles" });
-}
 
 export function BookingPopup() {
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<Step>("start");
-  const [pick, setPick] = useState<Pick | null>(null);
-  const [booked, setBooked] = useState<string[]>([]);
-
-  const allBooked = booked.length >= ALL_SLUGS.length;
+  const [msgs, setMsgs] = useState<Msg[]>([OPENING]);
+  const [input, setInput] = useState("");
+  const [busy, setBusy] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   // The pet dispatches this on click — it's the site's chatbot entry point.
   useEffect(() => {
-    const open = () => {
-      setStep("start");
-      setPick(null);
-      setOpen(true);
-    };
-    window.addEventListener("mybesti:open-booking", open);
-    return () => window.removeEventListener("mybesti:open-booking", open);
+    const openFn = () => setOpen(true);
+    window.addEventListener("mybesti:open-booking", openFn);
+    return () => window.removeEventListener("mybesti:open-booking", openFn);
   }, []);
 
   useEffect(() => {
     if (!open) return;
-    window.dispatchEvent(new CustomEvent(step === "result" ? "mybesti:review" : "mybesti:waiting"));
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
+    window.dispatchEvent(new CustomEvent(busy ? "mybesti:waiting" : "mybesti:review"));
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [open, step]);
+  }, [open, busy]);
 
-  const choose = (p: Pick) => {
-    setPick(p);
-    setStep("result");
-  };
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [msgs, busy]);
 
-  const go = () => {
-    if (!pick) return;
-    window.dispatchEvent(new CustomEvent("mybesti:celebrate"));
-    setBooked((b) => (b.includes(pick.slug) ? b : [...b, pick.slug]));
-    window.open(`${CAL_BASE}${pick.slug}`, "_blank", "noopener");
-  };
+  async function send(text?: string) {
+    const content = (text ?? input).trim();
+    if (!content || busy) return;
+    const next = [...msgs, { role: "user" as const, content }];
+    setMsgs(next);
+    setInput("");
+    setBusy(true);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: next }),
+      });
+      const data = (await res.json()) as { reply?: string; error?: string };
+      setMsgs([
+        ...next,
+        {
+          role: "assistant",
+          content: data.reply ?? `hmm, my brain hiccuped (${data.error ?? "no reply"}). try again — or text mykey directly: 425-918-2029.`,
+        },
+      ]);
+    } catch {
+      setMsgs([
+        ...next,
+        { role: "assistant", content: "connection died on me. try again, or text mykey: 425-918-2029." },
+      ]);
+    } finally {
+      setBusy(false);
+    }
+  }
 
-  const reset = () => {
-    setStep("start");
-    setPick(null);
-  };
-
-  const choiceBtn = (label: string, sub: string, onClick: () => void, accent: string) => (
-    <button
-      key={label}
-      type="button"
-      onClick={onClick}
-      className="w-full rounded-xl border-2 p-3.5 text-left transition-transform hover:-translate-y-0.5"
-      style={{
-        borderColor: "var(--color-void)",
-        background: "#fff",
-        boxShadow: "3px 3px 0 var(--color-void)",
-      }}
-    >
-      <span
-        className="block text-base font-black"
-        style={{ fontFamily: "var(--font-display)", color: accent }}
-      >
-        {label}
-      </span>
-      <span className="mt-0.5 block text-xs" style={{ color: "var(--color-mist)" }}>
-        {sub}
-      </span>
-    </button>
-  );
+  if (!open) return null;
 
   return (
-    <>
-      {/* corner button */}
-      <button
-        type="button"
-        onClick={() => {
-          setOpen((o) => !o);
-          reset();
-        }}
-        aria-expanded={open}
-        className="fixed bottom-5 right-5 z-[70] border-2 px-6 py-3 text-base font-black transition-transform hover:-translate-y-1"
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center"
+      style={{ background: "rgba(11,11,15,.72)" }}
+      onClick={(e) => e.target === e.currentTarget && setOpen(false)}
+    >
+      <div
+        role="dialog"
+        aria-label="chat with pocket, the booking bot"
+        className="flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border"
         style={{
-          background: "var(--color-lime)",
-          borderColor: "var(--color-void)",
-          boxShadow: "4px 4px 0 var(--color-void)",
-          fontFamily: "var(--font-display)",
+          background: "var(--color-void, #16161d)",
+          borderColor: "rgba(244,239,230,.12)",
+          boxShadow: "10px 10px 0 var(--color-flush, #c53b38)",
+          maxHeight: "80vh",
         }}
       >
-        {open ? "× CLOSE" : "BOOK"}
-      </button>
-
-      {open && (
-        <div
-          role="dialog"
-          aria-label="Book with MyKey"
-          className="fixed bottom-24 right-5 z-[70] w-[calc(100vw-2.5rem)] max-w-sm rounded-2xl border-2 p-5"
-          style={{
-            background: "var(--color-bone)",
-            borderColor: "var(--color-void)",
-            boxShadow: "8px 8px 0 var(--color-violet-brand)",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 11,
-              letterSpacing: "0.15em",
-              color: "var(--color-ash)",
-            }}
-          >
-            BOOK WITH MYKEY
+        <div className="flex items-center justify-between border-b px-5 py-3" style={{ borderColor: "rgba(244,239,230,.1)" }}>
+          <p className="text-sm" style={{ fontFamily: "var(--font-mono)", color: "var(--color-lime)" }}>
+            pocket · booking bot
           </p>
-
-          {allBooked ? (
-            <div className="mt-3">
-              <h3 className="text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>
-                that's the whole menu
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-mist)" }}>
-                you've lined up everything i offer. want something custom? text{" "}
-                <a
-                  href="tel:425-918-2029"
-                  className="underline underline-offset-2"
-                  style={{ color: "var(--color-flush)" }}
-                >
-                  425-918-2029
-                </a>{" "}
-                and we'll figure it out.
-              </p>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="mt-4 w-full border-2 px-4 py-2.5 text-sm font-black"
-                style={{
-                  background: "var(--color-lime)",
-                  borderColor: "var(--color-void)",
-                  boxShadow: "3px 3px 0 var(--color-void)",
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          ) : step === "start" ? (
-            <div className="mt-3 space-y-2.5">
-              <h3 className="text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>
-                what are we doing?
-              </h3>
-              {choiceBtn(
-                "a cut",
-                "buzz, short, or long — clippers or scissors",
-                () => setStep("cut"),
-                "var(--color-void)",
-              )}
-              {choiceBtn(
-                "color",
-                "roots, refresh, or a full transformation",
-                () => setStep("color"),
-                "var(--color-violet-brand)",
-              )}
-            </div>
-          ) : step === "cut" ? (
-            <div className="mt-3 space-y-2.5">
-              <Back onClick={reset} />
-              <h3 className="text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>
-                which cut?
-              </h3>
-              {CUTS.map((c) =>
-                choiceBtn(
-                  c.name,
-                  `${c.time} · ${c.leadLabel}`,
-                  () => choose(c),
-                  "var(--color-void)",
-                ),
-              )}
-            </div>
-          ) : step === "color" ? (
-            <div className="mt-3 space-y-2.5">
-              <Back onClick={reset} />
-              <h3 className="text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>
-                first time coloring with me?
-              </h3>
-              {choiceBtn(
-                "yes, i'm new",
-                "we plan the lift, tone & maintenance first · 45 min consult · books 3 days out",
-                () => choose(COLORS[0]),
-                "var(--color-violet-brand)",
-              )}
-              {choiceBtn(
-                "nope, coming back",
-                "we already know the vibe · 3 hr, up to 5 for complex · books 1 week out",
-                () => choose(COLORS[1]),
-                "var(--color-violet-brand)",
-              )}
-            </div>
-          ) : pick ? (
-            <div className="mt-3">
-              <Back onClick={reset} />
-              <h3
-                className="mt-2 text-xl font-black leading-snug"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                nice, you're set up for {pick.name}
-              </h3>
-              <p
-                className="mt-1.5 text-sm"
-                style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
-              >
-                {pick.leadLabel} · earliest: {earliestDate(pick.minDays)}
-              </p>
-              <button
-                type="button"
-                onClick={go}
-                className="mt-4 w-full border-2 px-4 py-3 text-sm font-black transition-transform hover:-translate-y-0.5"
-                style={{
-                  background: "var(--color-lime)",
-                  borderColor: "var(--color-void)",
-                  boxShadow: "3px 3px 0 var(--color-void)",
-                }}
-              >
-                BOOK MY APPOINTMENT →
-              </button>
-              <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--color-ash)" }}>
-                opens the live calendar to pick a day &amp; time. by booking you accept the{" "}
-                <a href="/classic/terms.html" className="underline underline-offset-2">
-                  terms
-                </a>{" "}
-                &amp;{" "}
-                <a href="/classic/privacy.html" className="underline underline-offset-2">
-                  privacy policy
-                </a>
-                . text{" "}
-                <a href="tel:425-918-2029" className="underline underline-offset-2">
-                  425-918-2029
-                </a>{" "}
-                if nothing works.
-              </p>
-
-              {/* upsell */}
-              <div className="mt-4 border-t-2 pt-3" style={{ borderColor: "rgba(18,14,23,.15)" }}>
-                <p className="text-sm font-black" style={{ fontFamily: "var(--font-display)" }}>
-                  now that you're sorted…
-                </p>
-                <p className="mt-0.5 text-xs" style={{ color: "var(--color-mist)" }}>
-                  want to add anything else while you're here?
-                </p>
-                <div className="mt-2 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="flex-1 border-2 px-3 py-2 text-xs font-black"
-                    style={{
-                      background: "#fff",
-                      borderColor: "var(--color-void)",
-                      boxShadow: "2px 2px 0 var(--color-void)",
-                    }}
-                  >
-                    ADD ANOTHER
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setOpen(false)}
-                    className="flex-1 px-3 py-2 text-xs underline underline-offset-2"
-                    style={{ color: "var(--color-mist)" }}
-                  >
-                    i'm good, thanks — close
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : null}
+          <button
+            onClick={() => setOpen(false)}
+            aria-label="close chat"
+            className="text-lg leading-none"
+            style={{ color: "var(--color-bone)" }}
+          >
+            ×
+          </button>
         </div>
-      )}
-    </>
-  );
-}
 
-function Back({ onClick }: { onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="text-xs underline underline-offset-2"
-      style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
-    >
-      ← back
-    </button>
+        <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4" style={{ minHeight: 240 }}>
+          {msgs.map((m, i) => (
+            <div key={i} className={m.role === "user" ? "text-right" : "text-left"}>
+              <span
+                className="inline-block rounded-xl px-3 py-2 text-sm leading-relaxed"
+                style={
+                  m.role === "user"
+                    ? { background: "var(--color-flush, #c53b38)", color: "var(--color-bone, #f4efe6)" }
+                    : { background: "rgba(244,239,230,.08)", color: "var(--color-bone, #f4efe6)" }
+                }
+              >
+                {m.content}
+              </span>
+            </div>
+          ))}
+          {busy && (
+            <p className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+              pocket is typing…
+            </p>
+          )}
+        </div>
+
+        <div className="border-t px-4 py-3" style={{ borderColor: "rgba(244,239,230,.1)" }}>
+          <div className="mb-2 flex flex-wrap gap-2">
+            {SERVICES.slice(0, 3).map((s) => (
+              <button
+                key={s.slug}
+                onClick={() => send(`tell me about the ${s.name.toLowerCase()}`)}
+                className="rounded-full px-3 py-1 text-xs"
+                style={{ background: "rgba(244,239,230,.08)", color: "var(--color-mist)", fontFamily: "var(--font-mono)" }}
+              >
+                {s.name}
+              </button>
+            ))}
+            <a
+              href={`${CAL_BASE}`}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full px-3 py-1 text-xs"
+              style={{ background: "var(--color-lime)", color: "#0b0b0f", fontFamily: "var(--font-mono)" }}
+            >
+              full calendar →
+            </a>
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
+            className="flex gap-2"
+          >
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="say what your hair needs…"
+              aria-label="message the booking bot"
+              className="flex-1 rounded-lg border bg-transparent px-3 py-2 text-sm"
+              style={{ borderColor: "rgba(244,239,230,.15)", color: "var(--color-bone)" }}
+            />
+            <button
+              type="submit"
+              disabled={busy}
+              className="rounded-lg px-4 py-2 text-sm font-bold"
+              style={{ background: "var(--color-lime)", color: "#0b0b0f", opacity: busy ? 0.5 : 1 }}
+            >
+              send
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 }

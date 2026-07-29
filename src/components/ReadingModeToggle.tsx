@@ -8,15 +8,20 @@ declare global {
 
 /**
  * Reading-mode (dyslexia-friendly) toggle. Works with /reading-mode.js,
- * which owns the state (default ON, persisted in localStorage) and also
+ * which owns the state (default OFF, persisted in localStorage) and also
  * handles clicks via the [data-reading-toggle] attribute — so this button
  * just renders state and lets the global handler do the work.
+ * Hydration-safe: initial state is read from the html attribute the
+ * pre-paint script already applied, so SSR text and client text agree.
  */
 export function ReadingModeToggle({ compact = false }: { compact?: boolean }) {
-  const [on, setOn] = useState(true);
+  const [on, setOn] = useState(() => {
+    if (typeof document === "undefined") return false; // SSR: default off
+    return document.documentElement.getAttribute("data-reading-mode") === "dyslexic";
+  });
 
   useEffect(() => {
-    const sync = () => setOn(window.PSReadingMode ? window.PSReadingMode.isOn() : true);
+    const sync = () => setOn(window.PSReadingMode ? window.PSReadingMode.isOn() : false);
     sync();
     const handler = () => sync();
     document.addEventListener("ps-reading-mode-change", handler);
@@ -29,7 +34,7 @@ export function ReadingModeToggle({ compact = false }: { compact?: boolean }) {
       data-reading-toggle
       aria-pressed={on}
       aria-label={(on ? "Turn off" : "Turn on") + " dyslexia-friendly reading mode"}
-      title="Dyslexia-friendly reading mode (on by default)"
+      title="Dyslexia-friendly reading mode (off by default)"
       style={{
         display: "inline-flex",
         alignItems: "center",
