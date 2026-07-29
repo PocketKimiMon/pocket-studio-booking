@@ -39,8 +39,9 @@ CTAs: scene 1 → `/book`, scenes 2–4 → matching cal.com link, scene 5 → `
 
 ## Media chain (when Higgsfield plan has credits)
 
-Cost shape: 1 entry still + 4 sequential video legs (leg N starts from the
-EXACT last frame of leg N−1 — never a separately imagined still).
+Cost shape: 1 entry still + 5 sequential video legs — one leg per scene
+(leg 1 starts from the entry still; leg N starts from the EXACT last frame
+of leg N−1 — never a separately imagined still).
 
 ```bash
 # 1. entry still (scene 1)
