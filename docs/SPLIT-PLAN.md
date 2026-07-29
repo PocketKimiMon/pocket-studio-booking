@@ -44,7 +44,7 @@
 
 ## Toolchain (user directive 7/29)
 - **Image gen: Kimi FIRST** (image_generation plugin, brand-locked pack: og-image, home-hero, blog-header, gallery textures, booking-bg → output/images/ → repo public/), **then Grok** for anything Kimi can't nail
-- **Frontend: Qwen** (CLI `qwen` 0.21.0 on this box) — routes/components/copy per FE queue
-- **Backend: Claude Code** (CLI `claude` 2.1.220) — api/supabase/emails/stripe per BE queue
-- **Merge: Kimi Swarm** (running, chat 19fad3c6)
+- **LLM preference: Asian models first** (Qwen, Kimi, MiniMax, DeepSeek) — Claude/Grok are backstop only
+- **Routing: `llm`** (~/.local/bin/llm — 9router replacement, cooldown failover). Chains: default/fe/be = qwen→ominimax→orfree→claude→grok · fast = local granite first · freeonly = free providers only
+- **Merge: Kimi Swarm** (in-project, chat 19fad677)
 - Both Hermes bots still review ALL output before merge, per the golden rule above.
