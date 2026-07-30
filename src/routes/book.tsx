@@ -78,7 +78,7 @@ function BookPage() {
   return (
     <div
       style={{
-        background: "linear-gradient(rgba(11,11,15,.94), rgba(11,11,15,.96)), url(/booking-bg.jpg) center/cover fixed",
+        background: "var(--color-bone)",
         color: "var(--color-void)",
         fontFamily: "var(--font-sans)",
         minHeight: "100vh",
@@ -87,6 +87,14 @@ function BookPage() {
       <style>{`
         @keyframes msg-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         .msg-in { animation: msg-in 0.25s ease-out both; }
+        .chat-user { background: var(--color-lime); color: #fff; border: 2px solid rgba(255,255,255,0.35); box-shadow: 4px 4px 0 rgba(0,0,0,0.35); border-radius: 18px; border-bottom-right-radius: 6px; }
+        .chat-bot { background: rgba(22,22,29,0.92); color: var(--color-void); border: 2px solid rgba(244,239,230,0.18); box-shadow: 4px 4px 0 var(--color-lime); border-radius: 18px; border-bottom-left-radius: 6px; border-left: 3px solid var(--color-lime); }
+        .chip { border: 2px solid var(--color-lime); color: var(--color-void); background: transparent; box-shadow: 3px 3px 0 var(--color-lime); }
+        .chip:hover { background: rgba(198,59,56,0.12); }
+        .panel { border: 2px solid var(--color-ash); box-shadow: 6px 6px 0 var(--color-violet-brand); background: rgba(255,255,255,0.03); }
+        .panel input, .panel select { background: var(--color-bone); color: var(--color-void); border: 2px solid var(--color-ash); }
+        .btn-primary { background: var(--color-lime); color: #fff; border: 2px solid rgba(255,255,255,0.35); box-shadow: 3px 3px 0 rgba(0,0,0,0.35); }
+        .btn-secondary { background: var(--color-card-w); color: var(--color-void); border: 2px solid var(--color-void); box-shadow: 3px 3px 0 var(--color-void); }
       `}</style>
 
       <header className="sticky top-0 z-50 border-b" style={{ background: "var(--color-bone)", borderColor: "var(--color-ash)" }}>
@@ -113,8 +121,7 @@ function BookPage() {
           Two taps and you're booked. Every appointment is a house call — your couch, your mirror, your gossip.
         </p>
 
-        {/* chat thread */}
-        <div className="mt-8 border-2 p-4 sm:p-6" style={{ borderColor: "var(--color-lime)", boxShadow: "6px 6px 0 var(--color-lime)", background: "rgba(255,255,255,0.03)" }}>
+        <div className="mt-8 panel p-4 sm:p-6">
           <div className="mb-4 flex items-center gap-2 border-b pb-3" style={{ borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-ash)" }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-go)" }} />
             BOOKING BOT · ONLINE
@@ -125,7 +132,7 @@ function BookPage() {
               "card" in m ? (
                 <ServiceCard key={m.id} service={m.card} onReset={reset} />
               ) : (
-                <div key={m.id} className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end" : "self-start"}`} style={m.from === "user" ? { background: "var(--color-lime)", color: "#fff", border: "2px solid rgba(255,255,255,0.35)", boxShadow: "4px 4px 0 rgba(0,0,0,0.35)", borderRadius: 18, borderBottomRightRadius: 6 } : { background: "rgba(22,22,29,0.92)", color: "var(--color-void)", border: "2px solid rgba(244,239,230,0.18)", boxShadow: "4px 4px 0 var(--color-lime)", borderRadius: 18, borderBottomLeftRadius: 6, borderLeft: "3px solid var(--color-lime)" }}>
+                <div key={m.id} className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end chat-user" : "self-start chat-bot"}`}>
                   {m.text}
                 </div>
               ),
@@ -134,7 +141,7 @@ function BookPage() {
             {chips.length > 0 && (
               <div className="msg-in mt-1 flex flex-wrap gap-2 self-end">
                 {chips.map((c) => (
-                  <button key={c.label} onClick={c.onClick} className="border-2 px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5" style={{ borderColor: "var(--color-lime)", color: "var(--color-lime)", background: "transparent", fontFamily: "var(--font-display)", boxShadow: "3px 3px 0 var(--color-lime)" }}>
+                  <button key={c.label} onClick={c.onClick} className="chip rounded px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5" style={{ fontFamily: "var(--font-display)" }}>
                     {c.label}
                   </button>
                 ))}
@@ -163,6 +170,27 @@ function BookPage() {
           </span>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function ServiceCard({ service, onReset }: { service: Service; onReset: () => void }) {
+  return (
+    <div key={service.slug} className="msg-in self-start chat-bot p-4 sm:p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-widest" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>service card</p>
+          <h3 className="mt-1 text-lg font-black" style={{ fontFamily: "var(--font-display)" }}>{service.name}</h3>
+          <p className="mt-1 text-sm" style={{ color: "var(--color-mist)" }}>{service.duration} · {service.price}</p>
+        </div>
+        <button onClick={onReset} className="text-xs" style={{ color: "var(--color-flush)" }}>✕ reset</button>
+      </div>
+      <p className="mt-3 text-sm" style={{ color: "var(--color-void)" }}>{service.detail}</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <a href={`${CAL_BASE}${service.slug}`} target="_blank" rel="noreferrer" className="btn-primary inline-flex items-center rounded px-4 py-2 text-xs font-black" style={{ fontFamily: "var(--font-display)" }}>
+          BOOK {service.name.toUpperCase()} →
+        </a>
+      </div>
     </div>
   );
 }
@@ -197,7 +225,7 @@ function TestBookingPanel() {
   };
 
   return (
-    <div className="mt-10 border-2 p-4 sm:p-6" style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}>
+    <div className="mt-10 panel p-4 sm:p-6">
       <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-violet-brand)" }}>TEST · RULES + REMINDERS</p>
       <h2 className="mt-2 text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>Test booking guardrails</h2>
       <p className="mt-2 text-sm" style={{ color: "var(--color-ash)" }}>
@@ -207,7 +235,7 @@ function TestBookingPanel() {
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
           Service
-          <select className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.serviceSlug} onChange={(e) => setForm({ ...form, serviceSlug: e.target.value })}>
+          <select className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.serviceSlug} onChange={(e) => setForm({ ...form, serviceSlug: e.target.value })}>
             {SERVICES.map((s) => (
               <option key={s.slug} value={s.slug}>{s.name}</option>
             ))}
@@ -215,30 +243,30 @@ function TestBookingPanel() {
         </label>
         <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
           Start time (ISO)
-          <input className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.startISO} onChange={(e) => setForm({ ...form, startISO: e.target.value })} placeholder="2026-08-01T14:00:00" />
+          <input className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.startISO} onChange={(e) => setForm({ ...form, startISO: e.target.value })} placeholder="2026-08-01T14:00:00" />
         </label>
         <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
           Contact
-          <input className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} />
+          <input className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} />
         </label>
         <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
           Channel
-          <select className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value as any })}>
+          <select className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value as any })}>
             <option value="sms">SMS</option>
             <option value="email">Email</option>
           </select>
         </label>
         <label className="text-xs sm:col-span-2" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
           Address (house call)
-          <input className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+          <input className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
         </label>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3">
-        <button type="button" onClick={submit} disabled={loading} className="border-2 px-5 py-2 text-sm font-black transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "var(--color-lime)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}>
+        <button type="button" onClick={submit} disabled={loading} className="btn-primary rounded px-5 py-2 text-sm font-black transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50" style={{ fontFamily: "var(--font-display)" }}>
           {loading ? "running…" : "Run test booking"}
         </button>
-        <button type="button" onClick={runReminders} className="border-2 px-5 py-2 text-sm font-black transition hover:-translate-y-0.5" style={{ background: "var(--color-card-w)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}>
+        <button type="button" onClick={runReminders} className="btn-secondary rounded px-5 py-2 text-sm font-black transition hover:-translate-y-0.5" style={{ fontFamily: "var(--font-display)" }}>
           Process due reminders
         </button>
       </div>
@@ -248,108 +276,6 @@ function TestBookingPanel() {
           <pre className="whitespace-pre-wrap rounded border p-3" style={{ background: "rgba(0,0,0,0.25)", borderColor: "var(--color-ash)" }}>{JSON.stringify(result, null, 2)}</pre>
         </div>
       )}
-    </div>
-  );
-}
-
-type FeeResult = {
-  available: boolean;
-  distance_mi?: number;
-  fee?: number;
-  reason?: string;
-};
-
-function AreaChecker() {
-  const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<FeeResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function calculate() {
-    if (!address.trim() || loading) return;
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const res = await fetch("/api/travel-fee", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: address.trim() }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setResult((await res.json()) as FeeResult);
-    } catch {
-      setError("couldn't reach the checker — try again, or text us and we'll confirm.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="mt-8 border-2 p-4 sm:p-6" style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}>
-      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-violet-brand)" }}>SERVICE AREA</p>
-      <h2 className="mt-1 text-xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>House call? Check you're in range.</h2>
-      <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
-        House calls are Seattle-area only — right now there's <strong style={{ color: "var(--color-go)" }}>no travel fee</strong> while the books are building.
-      </p>
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-        <input
-          type="text"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void calculate(); } }}
-          placeholder="your address or neighborhood"
-          className="w-full flex-1 border-2 px-4 py-2.5 text-sm outline-none"
-          style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
-        />
-        <button type="button" onClick={() => void calculate()} disabled={loading || !address.trim()} className="border-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "var(--color-lime)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)", fontFamily: "var(--font-display)" }}>
-          {loading ? "checking…" : "Check my address"}
-        </button>
-      </div>
-      <div className="mt-4 text-sm" aria-live="polite" style={{ fontFamily: "var(--font-mono)" }}>
-        {loading && <p style={{ color: "var(--color-ash)" }}>checking the map…</p>}
-        {error && <p style={{ color: "var(--color-flush)" }}>{error}</p>}
-        {result && (
-          <p style={{ color: "var(--color-void)" }}>
-            {result.available ? (
-              <>You're in range{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — travel fee: <span className="font-black" style={{ color: "var(--color-go)" }}>${result.fee ?? TRAVEL.flat}</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "live quote"})</span></>
-            ) : (
-              <>sorry, no house calls there{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — {result.reason ?? "outside service area"}.</>
-            )}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ServiceCard({ service, onReset }: { service: Service; onReset: () => void }) {
-  return (
-    <div className="msg-in max-w-[92%] self-start border-2 p-4" style={{ background: "var(--color-card-w)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-lime)" }}>
-      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-mist)" }}>YOUR PICK</p>
-      <h3 className="mt-1 text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>{service.name}</h3>
-      <p className="mt-1 text-sm font-bold" style={{ fontFamily: "var(--font-mono)" }}>{service.duration} · {service.price}</p>
-      <p className="mt-2 text-sm leading-relaxed">{service.detail}</p>
-      <a
-        href={`${CAL_BASE}${service.slug}`}
-        target="_blank"
-        rel="noreferrer"
-        onClick={() => window.dispatchEvent(new CustomEvent("mybesti:celebrate"))}
-        className="mt-4 block w-full px-4 py-3 text-center text-sm font-bold uppercase tracking-wider transition hover:-translate-y-0.5"
-        style={{ background: "var(--color-lime)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)", fontFamily: "var(--font-display)" }}
-      >
-        BOOK {service.name} →
-      </a>
-      <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--color-ash)" }}>
-        a <strong style={{ color: "var(--color-void)" }}>$25 deposit</strong> holds your slot — applied to your total at the chair.{" "}
-        <a href={STRIPE_DEPOSIT_LINK} target="_blank" rel="noreferrer" className="underline underline-offset-2" style={{ color: "var(--color-violet-brand)" }}>
-          pay deposit →
-        </a>
-      </p>
-      <div className="mt-3 flex items-center justify-between text-xs">
-        <Link to="/services/$slug" params={{ slug: service.slug }} className="underline underline-offset-4 font-semibold">see the work</Link>
-        <button onClick={onReset} className="underline underline-offset-4" style={{ color: "var(--color-mist)" }}>start over</button>
-      </div>
     </div>
   );
 }
