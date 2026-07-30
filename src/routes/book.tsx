@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { CAL_BASE, SERVICES, STRIPE_DEPOSIT_LINK, type Service } from "../lib/services";
+import { TRAVEL } from "../lib/travel";
 import { headFor } from "../lib/seo";
 import { ReadingModeToggle } from "../components/ReadingModeToggle";
 
@@ -36,15 +37,13 @@ function BookPage() {
     if (messages.length > GREETING.length) endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages]);
 
-  // Let the My Besti page pet react to booking progress.
   useEffect(() => {
     if (stage === "done") window.dispatchEvent(new CustomEvent("mybesti:review"));
     else if (stage !== "start") window.dispatchEvent(new CustomEvent("mybesti:waiting"));
   }, [stage]);
 
-  type MsgIn = { from: "user" | "bot"; text: string } | { from: "bot"; card: Service };
-  const push = (...msgs: MsgIn[]) =>
-    setMessages((m) => [...m, ...msgs.map((msg) => ({ ...msg, id: nextId.current++ }) as Msg)]);
+  const push = (...msgs: Array<{ from: Msg["from"]; text?: string; card?: Service }>) =>
+    setMessages((m) => [...m, ...msgs.map((msg) => ({ ...msg, id: nextId.current++ } as Msg))]);
 
   const pickCut = () => {
     push({ from: "user", text: "cut" }, { from: "bot", text: "love that for you. which cut are we doing?" });
@@ -55,30 +54,20 @@ function BookPage() {
     setStage("color");
   };
   const pickService = (s: Service, userText: string) => {
-    push(
-      { from: "user", text: userText },
-      { from: "bot", text: "say less. here's the deal:" },
-      { from: "bot", card: s },
-    );
+    push({ from: "user", text: userText }, { from: "bot", text: "say less. here's the deal:" }, { from: "bot", card: s });
     setStage("done");
   };
   const reset = () => {
-    setMessages(GREETING);
+    setMessages([...GREETING]);
     setStage("start");
     nextId.current = 2;
   };
 
   const chips: { label: string; onClick: () => void }[] =
     stage === "start"
-      ? [
-          { label: "CUT ✂", onClick: pickCut },
-          { label: "COLOR 🎨", onClick: pickColor },
-        ]
+      ? [{ label: "CUT ✂", onClick: pickCut }, { label: "COLOR 🎨", onClick: pickColor }]
       : stage === "cut"
-        ? CUTS.map((s) => ({
-            label: `${s.name} · ${s.price} · ${s.duration}`,
-            onClick: () => pickService(s, `${s.name}, please`),
-          }))
+        ? CUTS.map((s) => ({ label: `${s.name} · ${s.price} · ${s.duration}`, onClick: () => pickService(s, `${s.name}, please`) }))
         : stage === "color"
           ? [
               { label: "first time", onClick: () => pickService(CONSULT, "first time with you") },
@@ -89,8 +78,7 @@ function BookPage() {
   return (
     <div
       style={{
-        background:
-          "linear-gradient(rgba(11,11,15,.94), rgba(11,11,15,.96)), url(/booking-bg.jpg) center/cover fixed",
+        background: "linear-gradient(rgba(11,11,15,.94), rgba(11,11,15,.96)), url(/booking-bg.jpg) center/cover fixed",
         color: "var(--color-void)",
         fontFamily: "var(--font-sans)",
         minHeight: "100vh",
@@ -126,10 +114,7 @@ function BookPage() {
         </p>
 
         {/* chat thread */}
-        <div
-          className="mt-8 border-2 p-4 sm:p-6"
-          style={{ borderColor: "var(--color-lime)", boxShadow: "6px 6px 0 var(--color-lime)", background: "rgba(255,255,255,0.03)" }}
-        >
+        <div className="mt-8 border-2 p-4 sm:p-6" style={{ borderColor: "var(--color-lime)", boxShadow: "6px 6px 0 var(--color-lime)", background: "rgba(255,255,255,0.03)" }}>
           <div className="mb-4 flex items-center gap-2 border-b pb-3" style={{ borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-ash)" }}>
             <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-go)" }} />
             BOOKING BOT · ONLINE
@@ -140,15 +125,7 @@ function BookPage() {
               "card" in m ? (
                 <ServiceCard key={m.id} service={m.card} onReset={reset} />
               ) : (
-                <div
-                  key={m.id}
-                  className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end" : "self-start"}`}
-                  style={
-                    m.from === "user"
-                      ? { background: "var(--color-lime)", color: "var(--color-void)", fontWeight: 700, border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 rgba(255,255,255,0.25)" }
-                      : { background: "var(--color-card-w)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 var(--color-lime)" }
-                  }
-                >
+                <div key={m.id} className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end" : "self-start"}`} style={m.from === "user" ? { background: "var(--color-lime)", color: "var(--color-void)", fontWeight: 700, border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 rgba(255,255,255,0.25)" } : { background: "var(--color-card-w)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 var(--color-lime)" }}>
                   {m.text}
                 </div>
               ),
@@ -157,18 +134,7 @@ function BookPage() {
             {chips.length > 0 && (
               <div className="msg-in mt-1 flex flex-wrap gap-2 self-end">
                 {chips.map((c) => (
-                  <button
-                    key={c.label}
-                    onClick={c.onClick}
-                    className="border-2 px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5"
-                    style={{
-                      borderColor: "var(--color-lime)",
-                      color: "var(--color-lime)",
-                      background: "transparent",
-                      fontFamily: "var(--font-display)",
-                      boxShadow: "3px 3px 0 var(--color-lime)",
-                    }}
-                  >
+                  <button key={c.label} onClick={c.onClick} className="border-2 px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5" style={{ borderColor: "var(--color-lime)", color: "var(--color-lime)", background: "transparent", fontFamily: "var(--font-display)", boxShadow: "3px 3px 0 var(--color-lime)" }}>
                     {c.label}
                   </button>
                 ))}
@@ -178,16 +144,12 @@ function BookPage() {
           </div>
         </div>
 
-        <AreaChecker />
+        <TestBookingPanel />
 
         <p className="mt-6 text-sm" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
-          prefer the full calendar?{" "}
-          <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-void)" }}>
-            open cal.com →
-          </a>
+          prefer the full calendar? <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-void)" }}>open cal.com →</a>
           <br />
-          Calendar not showing a slot soon enough? Text{" "}
-          <a href="sms:+14259182029" className="underline underline-offset-4" style={{ color: "var(--color-lime)" }}>425-918-2029</a>.
+          Calendar not showing a slot soon enough? Text <a href="sms:+14259182029" className="underline underline-offset-4" style={{ color: "var(--color-lime)" }}>425-918-2029</a>.
         </p>
       </main>
 
@@ -201,6 +163,91 @@ function BookPage() {
           </span>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function TestBookingPanel() {
+  const [form, setForm] = useState({ serviceSlug: "buzz-cut", startISO: "", contact: "425-918-2029", channel: "sms" as "sms" | "email", address: "Capitol Hill, Seattle", isExistingClient: false, houseCall: true });
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
+  const submit = async () => {
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch("/api/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      setResult({ status: res.status, data });
+    } catch (e) {
+      setResult({ status: 0, data: { error: e instanceof Error ? e.message : String(e) } });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const runReminders = async () => {
+    const res = await fetch("/api/reminders?mode=run");
+    const data = await res.json();
+    setResult((prev: any) => ({ ...prev, reminders: data }));
+  };
+
+  return (
+    <div className="mt-10 border-2 p-4 sm:p-6" style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}>
+      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-violet-brand)" }}>TEST · RULES + REMINDERS</p>
+      <h2 className="mt-2 text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>Test booking guardrails</h2>
+      <p className="mt-2 text-sm" style={{ color: "var(--color-ash)" }}>
+        Fake a booking and validate the full flow in one place: advance-notice rules, address gate, deposit reminder, confirmation/24h/2h reminders, and no-show policy.
+      </p>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          Service
+          <select className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.serviceSlug} onChange={(e) => setForm({ ...form, serviceSlug: e.target.value })}>
+            {SERVICES.map((s) => (
+              <option key={s.slug} value={s.slug}>{s.name}</option>
+            ))}
+          </select>
+        </label>
+        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          Start time (ISO)
+          <input className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.startISO} onChange={(e) => setForm({ ...form, startISO: e.target.value })} placeholder="2026-08-01T14:00:00" />
+        </label>
+        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          Contact
+          <input className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} />
+        </label>
+        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          Channel
+          <select className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value as any })}>
+            <option value="sms">SMS</option>
+            <option value="email">Email</option>
+          </select>
+        </label>
+        <label className="text-xs sm:col-span-2" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+          Address (house call)
+          <input className="mt-1 w-full border-2 px-3 py-2 text-sm" style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)" }} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+        </label>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-3">
+        <button type="button" onClick={submit} disabled={loading} className="border-2 px-5 py-2 text-sm font-black transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "var(--color-lime)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}>
+          {loading ? "running…" : "Run test booking"}
+        </button>
+        <button type="button" onClick={runReminders} className="border-2 px-5 py-2 text-sm font-black transition hover:-translate-y-0.5" style={{ background: "var(--color-card-w)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "3px 3px 0 var(--color-void)" }}>
+          Process due reminders
+        </button>
+      </div>
+
+      {result && (
+        <div className="mt-4 text-xs leading-relaxed" style={{ fontFamily: "var(--font-mono)", color: "var(--color-mist)" }}>
+          <pre className="whitespace-pre-wrap rounded border p-3" style={{ background: "rgba(0,0,0,0.25)", borderColor: "var(--color-ash)" }}>{JSON.stringify(result, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }
@@ -239,18 +286,11 @@ function AreaChecker() {
   }
 
   return (
-    <div
-      className="mt-8 border-2 p-4 sm:p-6"
-      style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}
-    >
+    <div className="mt-8 border-2 p-4 sm:p-6" style={{ borderColor: "var(--color-violet-brand)", boxShadow: "6px 6px 0 var(--color-violet-brand)", background: "rgba(255,255,255,0.03)" }}>
       <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-violet-brand)" }}>SERVICE AREA</p>
-      <h2 className="mt-1 text-xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
-        House call? Check you're in range.
-      </h2>
+      <h2 className="mt-1 text-xl font-black tracking-tight" style={{ fontFamily: "var(--font-display)" }}>House call? Check you're in range.</h2>
       <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-ash)" }}>
-        House calls are Seattle-area only — and right now there's{" "}
-        <strong style={{ color: "var(--color-go)" }}>no travel fee at all</strong>. $0, anywhere in range,
-        while the books are building.
+        House calls are Seattle-area only — right now there's <strong style={{ color: "var(--color-go)" }}>no travel fee</strong> while the books are building.
       </p>
       <div className="mt-4 flex flex-col gap-3 sm:flex-row">
         <input
@@ -258,23 +298,11 @@ function AreaChecker() {
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void calculate(); } }}
-          placeholder="your address or neighborhood (e.g. Capitol Hill, Seattle)"
+          placeholder="your address or neighborhood"
           className="w-full flex-1 border-2 px-4 py-2.5 text-sm outline-none"
           style={{ background: "var(--color-bone)", color: "var(--color-void)", borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
         />
-        <button
-          type="button"
-          onClick={() => void calculate()}
-          disabled={loading || !address.trim()}
-          className="border-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-          style={{
-            background: "var(--color-lime)",
-            color: "var(--color-void)",
-            borderColor: "var(--color-void)",
-            boxShadow: "4px 4px 0 var(--color-void)",
-            fontFamily: "var(--font-display)",
-          }}
-        >
+        <button type="button" onClick={() => void calculate()} disabled={loading || !address.trim()} className="border-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50" style={{ background: "var(--color-lime)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-void)", fontFamily: "var(--font-display)" }}>
           {loading ? "checking…" : "Check my address"}
         </button>
       </div>
@@ -282,17 +310,13 @@ function AreaChecker() {
         {loading && <p style={{ color: "var(--color-ash)" }}>checking the map…</p>}
         {error && <p style={{ color: "var(--color-flush)" }}>{error}</p>}
         {result && (
-          result.available ? (
-            <p style={{ color: "var(--color-void)" }}>
-              {result.distance_mi != null
-                ? <>You're in range ({result.distance_mi} mi) — travel fee: <span className="font-black" style={{ color: "var(--color-go)" }}>$0</span> <span style={{ color: "var(--color-ash)" }}>(no fee right now)</span></>
-                : <>You're in range — travel fee: <span className="font-black" style={{ color: "var(--color-go)" }}>$0</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "no fee right now"})</span></>}
-            </p>
-          ) : (
-            <p style={{ color: "var(--color-flush)" }}>
-              sorry, no house calls there{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — {result.reason ?? "outside service area"}.
-            </p>
-          )
+          <p style={{ color: "var(--color-void)" }}>
+            {result.available ? (
+              <>You're in range{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — travel fee: <span className="font-black" style={{ color: "var(--color-go)" }}>${result.fee ?? TRAVEL.flat}</span> <span style={{ color: "var(--color-ash)" }}>({result.reason ?? "live quote"})</span></>
+            ) : (
+              <>sorry, no house calls there{result.distance_mi != null ? ` (${result.distance_mi} mi)` : ""} — {result.reason ?? "outside service area"}.</>
+            )}
+          </p>
         )}
       </div>
     </div>
@@ -301,15 +325,10 @@ function AreaChecker() {
 
 function ServiceCard({ service, onReset }: { service: Service; onReset: () => void }) {
   return (
-    <div
-      className="msg-in max-w-[92%] self-start border-2 p-4"
-      style={{ background: "var(--color-card-w)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-lime)" }}
-    >
+    <div className="msg-in max-w-[92%] self-start border-2 p-4" style={{ background: "var(--color-card-w)", color: "var(--color-void)", borderColor: "var(--color-void)", boxShadow: "4px 4px 0 var(--color-lime)" }}>
       <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.15em", color: "var(--color-mist)" }}>YOUR PICK</p>
       <h3 className="mt-1 text-xl font-black" style={{ fontFamily: "var(--font-display)" }}>{service.name}</h3>
-      <p className="mt-1 text-sm font-bold" style={{ fontFamily: "var(--font-mono)" }}>
-        {service.duration} · {service.price}
-      </p>
+      <p className="mt-1 text-sm font-bold" style={{ fontFamily: "var(--font-mono)" }}>{service.duration} · {service.price}</p>
       <p className="mt-2 text-sm leading-relaxed">{service.detail}</p>
       <a
         href={`${CAL_BASE}${service.slug}`}
@@ -328,12 +347,8 @@ function ServiceCard({ service, onReset }: { service: Service; onReset: () => vo
         </a>
       </p>
       <div className="mt-3 flex items-center justify-between text-xs">
-        <Link to="/services/$slug" params={{ slug: service.slug }} className="underline underline-offset-4 font-semibold">
-          see the work
-        </Link>
-        <button onClick={onReset} className="underline underline-offset-4" style={{ color: "var(--color-mist)" }}>
-          start over
-        </button>
+        <Link to="/services/$slug" params={{ slug: service.slug }} className="underline underline-offset-4 font-semibold">see the work</Link>
+        <button onClick={onReset} className="underline underline-offset-4" style={{ color: "var(--color-mist)" }}>start over</button>
       </div>
     </div>
   );

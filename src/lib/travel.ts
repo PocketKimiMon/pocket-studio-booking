@@ -5,3 +5,10 @@ export const TRAVEL = {
   maxRadiusMi: 30,
   baseLocation: "Seattle, WA",
 };
+
+export type TravelFeeResult = {
+  available: boolean;
+  distance_mi?: number;
+  fee?: number;
+  reason?: string;
+};

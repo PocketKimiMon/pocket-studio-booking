@@ -13,7 +13,7 @@ export type Service = {
 
 export const CAL_BASE = "https://cal.com/maneautoimation/";
 
-/* $25 deposit holds the slot — applied to the total at the chair. */
+/* book page still uses classic deposit CTA — keep exported symbol. */
 export const STRIPE_DEPOSIT_LINK = "https://buy.stripe.com/eVqfZg2B26Nb3554NH9Zm05";
 
 export const SERVICES: Service[] = [
@@ -23,16 +23,19 @@ export const SERVICES: Service[] = [
     duration: "30 min",
     price: "priced at the chair",
     accent: "var(--color-lime)",
-    blurb: "Clippers all over, clean edges.",
-    detail: "Clean fade or one-length buzz. In and out, sharp — back to your day.",
-    goodFor: "Fades, one-length buzzes, undercut designs, shape-ups between bigger cuts.",
+    blurb: "The reset button.",
+    detail: "Clippers all over, clean edges, back to your day. Thirty minutes, no small talk unless you want it.",
+    goodFor: "Fades, one-length buzzes, undercuts, shape-ups between bigger cuts. The 'I just want it clean' appointment.",
     whatHappens: [
-      "Quick chat about guard length, fade height, and how you wear it.",
+      "Quick chat about guard length, fade height, and how you actually wear it.",
       "Clippers all over or a tailored fade — your call.",
-      "Edges, neckline, and around the ears detailed clean.",
-      "Style check + tips to keep it crisp until the next one.",
+      "Edges, neckline, ears detailed clean.",
+      "Style check + tips to keep it crisp.",
     ],
-    images: [{ src: "/work/buzz-1.jpg", alt: "Fresh fade with clean edges" }],
+    images: [
+      { src: "/work/buzz-1.jpg", alt: "Fresh fade, clean edges" },
+      { src: "/work/buzz-2.jpg", alt: "Buzz cut with skin fade detail" },
+    ],
   },
   {
     slug: "short-cut",
@@ -40,15 +43,14 @@ export const SERVICES: Service[] = [
     duration: "45 min",
     price: "priced at the chair",
     accent: "var(--color-flush)",
-    blurb: "Shaped to your head.",
-    detail: "Scissor or clipper-over-comb. Precision short shapes with intention.",
-    goodFor:
-      "Textured crops, curly shapes, pixies, mullets, anything above the shoulders with a point of view.",
+    blurb: "Shaped to your head, not a Pinterest board.",
+    detail: "Scissor or clipper-over-comb. I cut to how your hair actually grows, not how it grows on models.",
+    goodFor: "Textured crops, curly shapes, pixies, mullets. Anything above the shoulders with a point of view.",
     whatHappens: [
-      "We talk shape, texture, and how much work you want mornings to be.",
-      "Scissor work or clipper-over-comb, cut to how your hair actually grows.",
-      "Texturizing and weight removal so it falls right on its own.",
-      "Styled to finish, with product notes if you want them.",
+      "We talk shape and how much work you want mornings to be.",
+      "Cut to your hair's actual growth pattern.",
+      "Texturizing and weight removal so it falls right.",
+      "Product notes if you want them, none if you don't.",
     ],
     images: [
       { src: "/work/short-1.jpg", alt: "Short textured cut, side view" },
@@ -62,14 +64,14 @@ export const SERVICES: Service[] = [
     duration: "60 min",
     price: "priced at the chair",
     accent: "var(--color-violet-brand)",
-    blurb: "Keep the length, lose dead ends.",
-    detail: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo.",
+    blurb: "Keep the length, kill the dead ends.",
+    detail: "Long layers, curtain bangs, wolf cuts, shags. Bring inspo — I'll tell you honestly what your hair will do.",
     goodFor: "Long layers, curtain bangs, wolf cuts, shags, big dust-offs that keep your length.",
     whatHappens: [
-      "Inspo review — bring photos, I'll tell you honestly what your hair will do.",
+      "Inspo review — bring photos, I'll tell you the truth.",
       "Sectioned, precise cutting: layers, face-frame, bangs as needed.",
       "Dead ends gone without losing the length you grew.",
-      "Blow-dry or air-dry styling to match how you'll actually wear it.",
+      "Blow-dry or air-dry to match how you'll actually wear it.",
     ],
     images: [
       { src: "/work/long-1.jpg", alt: "Long layered cut, shoulder length" },
@@ -82,19 +84,18 @@ export const SERVICES: Service[] = [
     duration: "45 min",
     price: "priced at the chair",
     accent: "var(--color-violet-brand)",
-    blurb: "Required before new color.",
-    detail:
-      "First time coloring with me? We plan the lift, tone, and upkeep before anything touches your head.",
-    goodFor: "Anyone new to my chair who wants color — vivids, blondes, coverage, corrections.",
+    blurb: "Let's plan this before I fry your hair.",
+    detail: "First time coloring with me? We sit down and plan lift, tone, and upkeep before anything touches your head. Required for new color — I'm not winging it.",
+    goodFor: "Anyone new to my chair who wants color — vivids, blondes, coverage, corrections. Bring your box-dye confessions.",
     whatHappens: [
       "We look at your hair's history — every box dye confession stays between us.",
       "Strand test if needed, so there are no surprises on the day.",
       "We plan lift, tone, timing, and honest upkeep costs.",
-      "You leave with a real plan and a booked color date. Consult fee applies to your first color.",
+      "You leave with a real plan and a booked color date.",
     ],
     images: [
-      { src: "/work/consult-1.jpg", alt: "Vivid green undercut color result" },
-      { src: "/work/consult-2.jpg", alt: "Peekaboo color placement" },
+      { src: "/work/consult-1.jpg", alt: "Vivid color result, natural light" },
+      { src: "/work/consult-2.jpg", alt: "Color placement detail" },
     ],
   },
   {
@@ -104,18 +105,17 @@ export const SERVICES: Service[] = [
     price: "priced at the chair",
     accent: "var(--color-lime)",
     blurb: "We already know the vibe.",
-    detail: "Roots, refresh, gloss, lift, tone, full transformations for returning clients.",
-    goodFor:
-      "Returning color clients: root touch-ups, gloss refreshes, vivids, dimensional work, big changes.",
+    detail: "Roots, refresh, gloss, lift, tone, full transformations for returning clients. Block the afternoon — complex sessions run 3–5 hours and I'm not rushing your hair for anyone's schedule.",
+    goodFor: "Returning color clients: root touch-ups, gloss refreshes, vivids, dimensional work, big changes.",
     whatHappens: [
-      "We confirm the plan from your intake — refresh or something new.",
-      "Color mixed and applied in sections; complex work runs up to 5 hours, so get comfy.",
+      "We confirm the plan from your last session — refresh or something new.",
+      "Color mixed and applied in sections; get comfy.",
       "Processing, rinse, gloss/tone as the formula needs.",
-      "Cut-in or style finish, plus home-care notes to keep it alive longer.",
+      "Cut-in or style finish, plus home-care notes.",
     ],
     images: [
-      { src: "/work/color-1.jpg", alt: "Dimensional color with vivid peekaboo" },
-      { src: "/work/color-2.jpg", alt: "Fresh color result, three-quarter view" },
+      { src: "/work/color-1.jpg", alt: "Dimensional color result" },
+      { src: "/work/color-2.jpg", alt: "Fresh color finish, three-quarter view" },
       { src: "/work/color-3.jpg", alt: "Color placement detail" },
     ],
   },
