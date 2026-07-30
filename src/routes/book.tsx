@@ -125,7 +125,7 @@ function BookPage() {
               "card" in m ? (
                 <ServiceCard key={m.id} service={m.card} onReset={reset} />
               ) : (
-                <div key={m.id} className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end" : "self-start"}`} style={m.from === "user" ? { background: "var(--color-lime)", color: "var(--color-void)", fontWeight: 700, border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 rgba(255,255,255,0.25)" } : { background: "var(--color-card-w)", color: "var(--color-void)", border: "2px solid var(--color-void)", boxShadow: "3px 3px 0 var(--color-lime)" }}>
+                <div key={m.id} className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end" : "self-start"}`} style={m.from === "user" ? { background: "var(--color-lime)", color: "#fff", border: "2px solid rgba(255,255,255,0.35)", boxShadow: "4px 4px 0 rgba(0,0,0,0.35)", borderRadius: 18, borderBottomRightRadius: 6 } : { background: "rgba(22,22,29,0.92)", color: "var(--color-void)", border: "2px solid rgba(244,239,230,0.18)", boxShadow: "4px 4px 0 var(--color-lime)", borderRadius: 18, borderBottomLeftRadius: 6, borderLeft: "3px solid var(--color-lime)" }}>
                   {m.text}
                 </div>
               ),
