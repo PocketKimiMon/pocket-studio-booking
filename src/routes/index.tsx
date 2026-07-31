@@ -47,7 +47,7 @@ const STUDIO_SERVICES = [
     slug: "hair-consultation",
     duration: "45 MIN",
     price: "priced at the chair",
-    desc: "first time coloring with me? we sit down and plan everything (lift, tone, maintenance, realistic expectations) before anything touches your hair. books 3 days out.",
+    desc: "first time coloring with me? we sit down and plan everything (lift, tone, maintenance, realistic expectations) before anything touches your hair.",
     tag: "required for new color",
     accent: "var(--color-violet-brand)",
   },
@@ -56,7 +56,7 @@ const STUDIO_SERVICES = [
     slug: "existing-client-color-appointment",
     duration: "3 HR",
     price: "priced at the chair",
-    desc: "roots, refresh, full transformation. we already know the vibe. block the afternoon; complex sessions can run 3–5 hours and i'm not rushing your hair for anyone's schedule. books 1 week out.",
+    desc: "roots, refresh, full transformation. we already know the vibe. block the afternoon; complex sessions can run 3–5 hours and i'm not rushing your hair for anyone's schedule.",
     tag: "color",
     accent: "var(--color-lime)",
   },
@@ -71,7 +71,7 @@ const POLICIES = [
   {
     n: "02",
     h: "advance notice",
-    p: "haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out. color takes prep and i refuse to wing it. need it sooner? send an emergency request.",
+    p: "haircuts and color both need some lead time — i won't wing it, but i don't make you wait forever either. color especially: there's prep, planning, and i refuse to rush your hair. need it sooner? send an emergency request.",
   },
   {
     n: "03",
@@ -366,7 +366,7 @@ function Hero() {
           rebook ahead, get the tea.
         </h2>
         <p className="mt-3 max-w-lg text-base sm:text-lg" style={{ color: "var(--color-void)" }}>
-          book your next appointment at least 2 days out and i'll spill everything. why i'm not at
+          book your next appointment with some lead time and i'll spill everything. why i'm not at
           the old shop anymore, what really went down, all of it. consider it a loyalty bribe. ☕
         </p>
       </div>

@@ -32,9 +32,9 @@ export const POSTS: Post[] = [
       "vivids season is here. new clients: the consult comes first, and yes, your box-dye confession is safe with me.",
     body: [
       "august is officially vivids season and the color calendar just opened. if you've been sitting on a pinterest board since march, this is your sign.",
-      "quick protocol reminder, because it matters: if we've never done color together, you book the new-client color consult first (45 min, books 3 days out). we go through your full hair history — and yes, that includes the box dye era. no judgment, but i do need the truth, because 'virgin hair' that secretly had three rounds of black box dye is how you end up orange in a way nobody enjoys.",
+      "quick protocol reminder, because it matters: if we've never done color together, you book the new-client color consult first (45 min, lead time required). we go through your full hair history — and yes, that includes the box dye era. no judgment, but i do need the truth, because 'virgin hair' that secretly had three rounds of black box dye is how you end up orange in a way nobody enjoys.",
       "at the consult we plan lift, tone, timing, and the honest upkeep cost. if your goal takes two sessions, i'll tell you it takes two sessions. pricing gets quoted before anything touches your hair — no surprises at the end, just a plan.",
-      "existing color clients: you already know the drill. book the color appointment (1 week out), block the afternoon, bring snacks. complex work runs three to five hours and i will not rush your hair for anyone's schedule.",
+      "existing color clients: you already know the drill. book the color appointment, block the afternoon, bring snacks. complex work runs three to five hours and i will not rush your hair for anyone's schedule.",
       "also, a love letter to the color-correction crowd: the grow-out rescues and the 'i did something at 2am' appointments are genuinely my favorite work. bring me your chaos.",
       "— mykey",
     ],

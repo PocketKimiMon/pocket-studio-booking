@@ -113,7 +113,7 @@ function Hero() {
           rebook ahead, get the tea.
         </h2>
         <p className="mt-3 max-w-lg text-base sm:text-lg" style={{ color: "var(--color-void)" }}>
-          book your next appointment at least 2 days out and i'll spill everything. why i'm not at the old shop anymore, what really went down, all of it. consider it a loyalty bribe. ☕
+          book your next appointment with some lead time and i'll spill everything. why i'm not at the old shop anymore, what really went down, all of it. consider it a loyalty bribe. ☕
         </p>
       </div>
 
@@ -246,7 +246,7 @@ function Services() {
 function Policies() {
   const items = [
     ["One month at a time", "Books open month-by-month, first come first serve."],
-    ["Lead times", "Cuts: 2 days · New color consult: 3 days · Existing color: 1 week."],
+    ["Lead times", "Cuts and color both need advance notice so i can prep — i won't wing it."],
     ["24-hour cancellation", "Cancel or reschedule at least 24 hours before your appointment."],
     ["No-show", "No-shows may be charged up to the full quoted / estimated amount."],
     ["Confirmation window", "Please confirm your appointment within a 2-hour confirmation window."],
