@@ -101,7 +101,7 @@ function MobilePage() {
             spill the tea ☕
           </h2>
           <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--color-void)" }}>
-            book 2+ days out and you get the full story of why i left the old shop — plus product
+            book with some lead time and you get the full story of why i left the old shop — plus product
             recs — during your appointment.
           </p>
         </section>
@@ -160,12 +160,7 @@ function MobilePage() {
                         </Link>
                       </div>
                       <p className="mt-3 text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
-                        {s.slug === "existing-client-color-appointment"
-                          ? "books 1 week out"
-                          : s.slug === "hair-consultation"
-                            ? "books 3 days out"
-                            : "books 2 days out"}{" "}
-                        · one month at a time
+                        lead time required · one month at a time
                       </p>
                     </div>
                   )}
@@ -225,7 +220,7 @@ function MobilePage() {
           </p>
           <ul className="mt-3 space-y-2 text-sm" style={{ color: "var(--color-mist)" }}>
             <li>· one month at a time, first come first serve</li>
-            <li>· cuts book 2 days out · consult 3 · existing color 1 week</li>
+            <li>· cuts and color both need lead time — emergencies available</li>
             <li>· 24-hour cancellation — emergencies are real, ghosting isn't</li>
             <li>· no-call-no-show = charged up to the full amount</li>
             <li>· 2-hour verification text — reply to hold your slot</li>

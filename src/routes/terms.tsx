@@ -40,7 +40,7 @@ function Page() {
         </p>
         <ul className="mt-3 list-disc space-y-1.5 pl-6">
           <li>book through the site (or a cal.com link), pay a <strong>$25 deposit</strong>, get a reference code. the deposit comes off your total.</li>
-          <li>the calendar opens <strong>on the 1st for the month ahead</strong>. cuts book at least <strong>2 days out</strong>; new-client color consults <strong>3 days</strong>; existing-client color <strong>1 week</strong>.</li>
+          <li>the calendar opens <strong>on the 1st for the month ahead</strong>. cuts and color both need some lead time so i can do this right.</li>
           <li>i text/email a confirmation request <strong>2 hours before</strong> your appointment. no reply = the slot may be released.</li>
           <li>cancel with at least <strong>24 hours' notice</strong> and you're fine. no-call-no-show can be charged <strong>up to the full service amount</strong>.</li>
           <li>prices are quoted before or at the chair and depend on your hair. <strong>payment is due at the appointment.</strong></li>
@@ -100,7 +100,7 @@ function Page() {
         <ul className="list-disc space-y-1.5 pl-6">
           <li>appointments are booked through the <strong>booking engine on this site</strong>; some booking flows run through <strong>cal.com</strong>, and those bookings are also subject to these terms.</li>
           <li>the booking calendar <strong>opens on the 1st of each month for the full month ahead</strong>, first come, first served — and i don't hold slots.</li>
-          <li>minimum lead times: <strong>cuts — 2 days out; new-client color consult — 3 days; existing-client color — 1 week.</strong> need it sooner? the emergency request option on the contact page exists for that, but nothing is guaranteed.</li>
+          <li>minimum lead times: <strong>cuts and color both need advance notice so i can prep — i won't wing it.</strong> need it sooner? the emergency request option on the contact page exists for that, but nothing is guaranteed.</li>
           <li>every booking gets a <strong>reference code</strong> — keep it, it's how we find and manage your booking.</li>
           <li>a booking is a reservation of my time, not a guarantee of a specific result. hair is a collaboration; we'll talk before scissors move.</li>
         </ul>

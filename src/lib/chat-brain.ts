@@ -17,8 +17,8 @@ const POLICIES = [
   "$25 deposit holds the slot (stripe link after booking)",
   "24-hour cancellation; no-call-no-show gets charged",
   "2-hour-before confirmation text — unconfirmed slots can release",
-  "new color clients MUST book the consult first (45 min, books 3 days out)",
-  "existing color clients book 1 week out; complex sessions run 3–5 hours",
+  "new color clients MUST book the consult first (45 min, lead time required)",
+  "existing color clients need lead time too; complex sessions run 3–5 hours",
   "pets must be secured during the visit",
 ].join(". ");
 

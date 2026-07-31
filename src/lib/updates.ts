@@ -39,7 +39,7 @@ export const UPDATES: UpdatePost[] = [
     body: [
       "quick one for everyone who used to book me at Rudy's: i'm not at Rudy's anymore. this is where you book now — same hands, same energy, way fewer hoops.",
       "no front desk, no phone tag, no wondering if the message went through. you pick a slot, i show up, we do the work. if you've been putting off a cut because rebooking felt like a chore, that excuse is gone.",
-      "a couple of practical things: the calendar opens on the 1st for the full month ahead, and cuts book at least 2 days out. if you're a color client and we haven't done color together before, we start with a consult — i plan, i don't wing it.",
+      "a couple of practical things: the calendar opens on the 1st for the full month ahead, and cuts and color both need a little lead time so i can prep. if you're a color client and we haven't done color together before, we start with a consult — i plan, i don't wing it.",
       "and yes, i'm doing house calls while i hunt for a new chair, with no travel fee for now. your kitchen, your living room, wherever there's decent light and an outlet. — mykey",
     ],
   },
