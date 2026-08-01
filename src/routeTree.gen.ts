@@ -9,49 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogRouteImport } from './routes/blog'
-import { Route as BookRouteImport } from './routes/book'
-import { Route as ClassicRouteImport } from './routes/classic'
-import { Route as MobileRouteImport } from './routes/mobile'
-import { Route as PrivacyRouteImport } from './routes/privacy'
-import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TermsRouteImport } from './routes/terms'
-import { Route as ApiBookRouteImport } from './routes/api/book'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
-import { Route as ApiRemindersRouteImport } from './routes/api/reminders'
-import { Route as ApiTravelFeeRouteImport } from './routes/api/travel-fee'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as StudioRouteImport } from './routes/studio'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as MobileRouteImport } from './routes/mobile'
+import { Route as ClassicRouteImport } from './routes/classic'
+import { Route as BookRouteImport } from './routes/book'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ApiTravelFeeRouteImport } from './routes/api/travel-fee'
+import { Route as ApiRemindersRouteImport } from './routes/api/reminders'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiBookRouteImport } from './routes/api/book'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BookRoute = BookRouteImport.update({
-  id: '/book',
-  path: '/book',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassicRoute = ClassicRouteImport.update({
-  id: '/classic',
-  path: '/classic',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MobileRoute = MobileRouteImport.update({
-  id: '/mobile',
-  path: '/mobile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PrivacyRoute = PrivacyRouteImport.update({
-  id: '/privacy',
-  path: '/privacy',
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StudioRoute = StudioRouteImport.update({
@@ -59,29 +34,39 @@ const StudioRoute = StudioRouteImport.update({
   path: '/studio',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiBookRoute = ApiBookRouteImport.update({
-  id: '/api/book',
-  path: '/api/book',
+const MobileRoute = MobileRouteImport.update({
+  id: '/mobile',
+  path: '/mobile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiChatRoute = ApiChatRouteImport.update({
-  id: '/api/chat',
-  path: '/api/chat',
+const ClassicRoute = ClassicRouteImport.update({
+  id: '/classic',
+  path: '/classic',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiRemindersRoute = ApiRemindersRouteImport.update({
-  id: '/api/reminders',
-  path: '/api/reminders',
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
-  id: '/api/travel-fee',
-  path: '/api/travel-fee',
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesSlugRoute = ServicesSlugRouteImport.update({
+  id: '/services/$slug',
+  path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
@@ -89,9 +74,24 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
-const ServicesSlugRoute = ServicesSlugRouteImport.update({
-  id: '/services/$slug',
-  path: '/services/$slug',
+const ApiTravelFeeRoute = ApiTravelFeeRouteImport.update({
+  id: '/api/travel-fee',
+  path: '/api/travel-fee',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiRemindersRoute = ApiRemindersRouteImport.update({
+  id: '/api/reminders',
+  path: '/api/reminders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBookRoute = ApiBookRouteImport.update({
+  id: '/api/book',
+  path: '/api/book',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -213,46 +213,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/book': {
-      id: '/book'
-      path: '/book'
-      fullPath: '/book'
-      preLoaderRoute: typeof BookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/classic': {
-      id: '/classic'
-      path: '/classic'
-      fullPath: '/classic'
-      preLoaderRoute: typeof ClassicRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mobile': {
-      id: '/mobile'
-      path: '/mobile'
-      fullPath: '/mobile'
-      preLoaderRoute: typeof MobileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/privacy': {
-      id: '/privacy'
-      path: '/privacy'
-      fullPath: '/privacy'
-      preLoaderRoute: typeof PrivacyRouteImport
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/studio': {
@@ -262,39 +227,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/book': {
-      id: '/api/book'
-      path: '/api/book'
-      fullPath: '/api/book'
-      preLoaderRoute: typeof ApiBookRouteImport
+    '/mobile': {
+      id: '/mobile'
+      path: '/mobile'
+      fullPath: '/mobile'
+      preLoaderRoute: typeof MobileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/chat': {
-      id: '/api/chat'
-      path: '/api/chat'
-      fullPath: '/api/chat'
-      preLoaderRoute: typeof ApiChatRouteImport
+    '/classic': {
+      id: '/classic'
+      path: '/classic'
+      fullPath: '/classic'
+      preLoaderRoute: typeof ClassicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/reminders': {
-      id: '/api/reminders'
-      path: '/api/reminders'
-      fullPath: '/api/reminders'
-      preLoaderRoute: typeof ApiRemindersRouteImport
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/travel-fee': {
-      id: '/api/travel-fee'
-      path: '/api/travel-fee'
-      fullPath: '/api/travel-fee'
-      preLoaderRoute: typeof ApiTravelFeeRouteImport
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/$slug': {
+      id: '/services/$slug'
+      path: '/services/$slug'
+      fullPath: '/services/$slug'
+      preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/$slug': {
@@ -304,11 +283,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
-    '/services/$slug': {
-      id: '/services/$slug'
-      path: '/services/$slug'
-      fullPath: '/services/$slug'
-      preLoaderRoute: typeof ServicesSlugRouteImport
+    '/api/travel-fee': {
+      id: '/api/travel-fee'
+      path: '/api/travel-fee'
+      fullPath: '/api/travel-fee'
+      preLoaderRoute: typeof ApiTravelFeeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/reminders': {
+      id: '/api/reminders'
+      path: '/api/reminders'
+      fullPath: '/api/reminders'
+      preLoaderRoute: typeof ApiRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/book': {
+      id: '/api/book'
+      path: '/api/book'
+      fullPath: '/api/book'
+      preLoaderRoute: typeof ApiBookRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
