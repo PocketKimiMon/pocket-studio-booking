@@ -70,31 +70,26 @@ const POLICIES = [
   },
   {
     n: "02",
-    h: "advance notice",
-    p: "haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out. color takes prep and i refuse to wing it. need it sooner? send an emergency request.",
-  },
-  {
-    n: "03",
     h: "24-hour cancellation",
     p: "cancel or reschedule? 24 hours notice. emergencies are real and i'm reasonable, but my time is literally how i pay rent, so please don't ghost me.",
   },
   {
-    n: "04",
+    n: "03",
     h: "no-call-no-show = charged",
     p: "miss a confirmed appointment with no heads-up and you'll be charged up to the full service amount. i'll invoice you if there's no card on file. fairness goes both ways. full terms on the terms page.",
   },
   {
-    n: "05",
+    n: "04",
     h: "2-hour confirmation",
     p: "you'll get a text or email 2 hours before your appointment. if i don't hear back, i may give your slot to someone else. just a quick \"yep\" is all i need.",
   },
   {
-    n: "06",
+    n: "05",
     h: "pricing & payment",
     p: "prices are quoted before or at the chair. they vary by hair and complexity because hair isn't one-size-fits-all. payment is due at the appointment unless we work something out.",
   },
   {
-    n: "07",
+    n: "06",
     h: "house-call space",
     p: "give me a safe, ready spot and an accurate address. i may leave if the situation isn't workable; nothing personal. let me know about allergies and any prior chemical work so i don't fry your hair.",
   },
