@@ -6,7 +6,7 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "/home/mykey/pocket-studio-booking-10a2c4c2/dist/client"
+publish = "/home/mykey/pocket-studio-booking-10a2c4c2/.output/public"
 publishOrigin = "ui"
 commandOrigin = "ui"
 command = "npm run build"
