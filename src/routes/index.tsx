@@ -71,7 +71,7 @@ const POLICIES = [
   {
     n: "02",
     h: "advance notice",
-    p: "haircuts and color both need some lead time — i won't wing it, but i don't make you wait forever either. color especially: there's prep, planning, and i refuse to rush your hair. need it sooner? send an emergency request.",
+    p: "haircuts book 2 days out. new-client color consults book 3 days out. existing-client color books 1 week out. color takes prep and i refuse to wing it. need it sooner? send an emergency request.",
   },
   {
     n: "03",
