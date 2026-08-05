@@ -11,14 +11,11 @@ declare global {
  * which owns the state (default OFF, persisted in localStorage) and also
  * handles clicks via the [data-reading-toggle] attribute — so this button
  * just renders state and lets the global handler do the work.
- * Hydration-safe: initial state is read from the html attribute the
- * pre-paint script already applied, so SSR text and client text agree.
+ * The first render always uses the default-off state so SSR and hydration
+ * agree; the effect then synchronizes any persisted preference.
  */
 export function ReadingModeToggle({ compact = false }: { compact?: boolean }) {
-  const [on, setOn] = useState(() => {
-    if (typeof document === "undefined") return false; // SSR: default off
-    return document.documentElement.getAttribute("data-reading-mode") === "dyslexic";
-  });
+  const [on, setOn] = useState(false);
 
   useEffect(() => {
     const sync = () => setOn(window.PSReadingMode ? window.PSReadingMode.isOn() : false);
@@ -32,6 +29,7 @@ export function ReadingModeToggle({ compact = false }: { compact?: boolean }) {
     <button
       type="button"
       data-reading-toggle
+      data-reading-react
       aria-pressed={on}
       aria-label={(on ? "Turn off" : "Turn on") + " dyslexia-friendly reading mode"}
       title="Dyslexia-friendly reading mode (off by default)"

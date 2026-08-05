@@ -186,9 +186,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Reading mode (dyslexia-friendly) — default ON; must run before paint. */}
+        {/* Reading mode may restore a persisted preference before hydration. */}
         <script src="/reading-mode.js" />
         <HeadContent />
       </head>

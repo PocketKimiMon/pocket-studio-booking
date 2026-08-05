@@ -1,15 +1,21 @@
 /* PocketStudio — Reading Mode (dyslexia) helper. DEFAULT OFF, persisted.
  * (Was default ON; users reported the OpenDyslexic face was HARDER to read.) */
 (function () {
-  var KEY = 'ps-reading-mode';
-  var VALUE = 'dyslexic';
-  var OFF = 'off';
-  var ATTR = 'data-reading-mode';
+  var KEY = "ps-reading-mode";
+  var VALUE = "dyslexic";
+  var OFF = "off";
+  var ATTR = "data-reading-mode";
   function read() {
-    try { return localStorage.getItem(KEY) === VALUE; } catch (e) { return false; }
+    try {
+      return localStorage.getItem(KEY) === VALUE;
+    } catch (e) {
+      return false;
+    }
   }
   function write(on) {
-    try { on ? localStorage.setItem(KEY, VALUE) : localStorage.setItem(KEY, OFF); } catch (e) {}
+    try {
+      on ? localStorage.setItem(KEY, VALUE) : localStorage.setItem(KEY, OFF);
+    } catch (e) {}
   }
   function apply(on) {
     var root = document.documentElement;
@@ -17,15 +23,17 @@
     else root.removeAttribute(ATTR);
   }
   function syncButtons(on) {
-    var btns = document.querySelectorAll('[data-reading-toggle]');
+    var btns = document.querySelectorAll("[data-reading-toggle]:not([data-reading-react])");
     for (var i = 0; i < btns.length; i++) {
       var b = btns[i];
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-      var lbl = b.querySelector('[data-reading-label]');
-      if (lbl) lbl.textContent = on ? 'Reading mode: on' : 'Reading mode: off';
-      if (!b.getAttribute('aria-label') && !b.querySelector('[data-reading-label]')) {
-        b.setAttribute('aria-label',
-          (on ? 'Turn off' : 'Turn on') + ' dyslexia-friendly reading mode');
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      var lbl = b.querySelector("[data-reading-label]");
+      if (lbl) lbl.textContent = on ? "Reading mode: on" : "Reading mode: off";
+      if (!b.getAttribute("aria-label") && !b.querySelector("[data-reading-label]")) {
+        b.setAttribute(
+          "aria-label",
+          (on ? "Turn off" : "Turn on") + " dyslexia-friendly reading mode",
+        );
       }
     }
   }
@@ -34,27 +42,39 @@
     apply(on);
     write(on);
     syncButtons(on);
-    document.dispatchEvent(new CustomEvent('ps-reading-mode-change', { detail: { on: on } }));
+    document.dispatchEvent(new CustomEvent("ps-reading-mode-change", { detail: { on: on } }));
   }
   var API = {
     isOn: read,
     set: set,
-    toggle: function () { set(!read()); },
-    boot: function () { apply(read()); }
+    toggle: function () {
+      set(!read());
+    },
+    boot: function () {
+      apply(read());
+    },
   };
   window.PSReadingMode = API;
   apply(read());
   function init() {
     syncButtons(read());
-    document.addEventListener('click', function (e) {
-      var t = e.target.closest && e.target.closest('[data-reading-toggle]');
-      if (t) { e.preventDefault(); API.toggle(); }
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest && e.target.closest("[data-reading-toggle]");
+      if (t) {
+        e.preventDefault();
+        API.toggle();
+      }
     });
-    window.addEventListener('storage', function (e) {
-      if (e.key === KEY) { apply(read()); syncButtons(read()); }
+    window.addEventListener("storage", function (e) {
+      if (e.key === KEY) {
+        apply(read());
+        syncButtons(read());
+      }
     });
   }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else { init(); }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
