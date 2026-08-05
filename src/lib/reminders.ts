@@ -16,6 +16,16 @@ export type ReminderRecord = {
 
 const memoryStore: ReminderRecord[] = [];
 
+/** Test-only: clear the in-memory reminder store so tests start clean. */
+export function __clearStore() {
+  memoryStore.length = 0;
+}
+
+/** Test-only: peek at the full in-memory store. */
+export function __peekStore(): ReminderRecord[] {
+  return [...memoryStore];
+}
+
 export function queueReminder(record: Omit<ReminderRecord, "id" | "status" | "createdAt">): ReminderRecord {
   const item: ReminderRecord = {
     ...record,
