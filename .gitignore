@@ -36,3 +36,5 @@ src/.tsr-tmp/
 .netlify/
 .vercel
 .env*
+# Hermes desktop attachments (may contain local screenshots / transient state)
+.hermes/
