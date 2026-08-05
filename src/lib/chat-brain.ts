@@ -3,22 +3,16 @@
 
 import { SERVICES, CAL_BASE } from "./services";
 
-const HOURS = [
-  "thursday 11am–6pm",
-  "friday 12pm–5pm",
-  "saturday + sunday 12pm–8pm",
-  "mon–wed closed",
-].join("; ");
+const HOURS = "thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm, mon–wed closed";
 
 const POLICIES = [
-  "calendar opens one month at a time, on the 1st",
-  "house calls only right now (seattle area, ~30 mi radius)",
-  "travel fee: $25 base + $2/mile from seattle, quoted before booking",
-  "$25 deposit holds the slot (stripe link after booking)",
+  "calendar opens one month at a time (on the 1st), first come first serve",
+  "house calls only right now (seattle area) — no travel fee at the moment",
+  "$25 deposit holds the slot (via stripe after booking on cal)",
   "24-hour cancellation; no-call-no-show gets charged",
-  "2-hour-before confirmation text — unconfirmed slots can release",
-  "new color clients MUST book the consult first (45 min, lead time required)",
-  "existing color clients need lead time too; complex sessions run 3–5 hours",
+  "2-hour confirmation text before the slot — unconfirmed can release",
+  "new color clients must book the 45min consult first (lead time required)",
+  "existing color clients: complex sessions 3–5 hours, need lead time",
   "pets must be secured during the visit",
 ].join(". ");
 

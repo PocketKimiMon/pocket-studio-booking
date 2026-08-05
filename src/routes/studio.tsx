@@ -138,9 +138,7 @@ function Hero() {
       {/* Hours */}
       <div className="mt-8 flex flex-wrap items-center gap-4 text-sm" style={{ fontFamily: "var(--font-mono)", color: "var(--color-mist)" }}>
         <span className="inline-flex items-center gap-2"><Clock size={16} /> HOURS</span>
-        <span>THU 11–6</span>
-        <span>FRI 12–5</span>
-        <span>SAT–SUN 12–8</span>
+        <span>thu 11am–6pm, fri 12pm–5pm, sat–sun 12pm–8pm, mon–wed closed</span>
         <span className="inline-flex items-center gap-2"><MapPin size={16} /> Seattle, WA</span>
       </div>
     </section>
@@ -245,12 +243,12 @@ function Services() {
 
 function Policies() {
   const items = [
-    ["One month at a time", "Books open month-by-month, first come first serve."],
-    ["Lead times", "Cuts and color both need advance notice so i can prep — i won't wing it."],
-    ["24-hour cancellation", "Cancel or reschedule at least 24 hours before your appointment."],
-    ["No-show", "No-shows may be charged up to the full quoted / estimated amount."],
-    ["Confirmation window", "Please confirm your appointment within a 2-hour confirmation window."],
-    ["House-call space", "Give me a safe, ready spot and an accurate address — and flag allergies or prior chemical work so i don't fry your hair."],
+    ["One month at a time", "Calendar opens on the 1st, first come first serve. Next full month becomes available then."],
+    ["Deposit", "$25 via stripe after you pick the slot — holds your time."],
+    ["24-hour cancellation", "Cancel or reschedule at least 24 hours before your appointment. No-call-no-show gets charged."],
+    ["Confirmation", "You'll get a text/email ~2 hours before. Confirm or the slot can release."],
+    ["House calls", "I come to you (seattle area). No travel fee right now."],
+    ["Pets", "Secure pets during the visit."],
   ];
   return (
     <section id="policies" className="mt-24">
