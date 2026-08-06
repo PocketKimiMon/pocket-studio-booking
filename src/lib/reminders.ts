@@ -1,5 +1,10 @@
 export type ReminderChannel = "sms" | "email";
-export type ReminderKind = "confirmation" | "reminder_24h" | "reminder_2h" | "no_show_warning" | "follow_up";
+export type ReminderKind =
+  | "confirmation"
+  | "reminder_24h"
+  | "reminder_2h"
+  | "no_show_warning"
+  | "follow_up";
 
 export type ReminderRecord = {
   id: string;
@@ -26,7 +31,9 @@ export function __peekStore(): ReminderRecord[] {
   return [...memoryStore];
 }
 
-export function queueReminder(record: Omit<ReminderRecord, "id" | "status" | "createdAt">): ReminderRecord {
+export function queueReminder(
+  record: Omit<ReminderRecord, "id" | "status" | "createdAt">,
+): ReminderRecord {
   const item: ReminderRecord = {
     ...record,
     id: `r_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
@@ -120,7 +127,10 @@ async function sendSms(to: string, body: string) {
   const form = new URLSearchParams({ To: to, From: from, Body: body });
   const res = await fetch(url, {
     method: "POST",
-    headers: { Authorization: `Basic ${btoa(`${sid}:${token}`)}`, "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      Authorization: `Basic ${btoa(`${sid}:${token}`)}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
     body: form,
   });
   if (!res.ok) throw new Error(`Twilio SMS failed: ${res.status}`);
@@ -135,7 +145,12 @@ async function sendEmail(to: string, body: string) {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: "Pocket Studio <bookings@pocketstudio.biz>", to, subject: "Pocket Studio appointment", text: body }),
+      body: JSON.stringify({
+        from: "Pocket Studio <bookings@pocketstudio.biz>",
+        to,
+        subject: "Pocket Studio appointment",
+        text: body,
+      }),
     });
     if (!res.ok) throw new Error(`Resend email failed: ${res.status}`);
   } else if (provider === "sendgrid") {

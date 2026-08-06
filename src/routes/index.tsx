@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CAL_BASE } from "../lib/services";
 import { headFor } from "../lib/seo";
 import { BookingPopup } from "../components/BookingPopup";
 import { EmergencyModal } from "../components/EmergencyModal";
 import { ReadingModeToggle } from "../components/ReadingModeToggle";
 import { TravelFee } from "../components/TravelFee";
+import { CalInline, RemindersStrip, EmergencyStrip } from "../components/LiveBookingPage";
 import { ScrollScrub } from "../components/scroll-scrub/scroll-scrub";
 import type { ScrollScrubScene } from "../components/scroll-scrub/scroll-scrub";
 
@@ -108,6 +109,8 @@ const SCROLL_MOVIE_SCENES: ScrollScrubScene[] = [
     tags: ["house calls", "seattle, wa", "booking open"],
     poster: "/assets/world/scene-1-poster.jpg",
     mobilePoster: "/assets/world/scene-1-mobile-poster.jpg",
+    clip: "/assets/world/scene-1.mp4",
+    mobileClip: "/assets/world/scene-1-mobile.mp4",
     align: "left",
     scroll: 1.5,
     actions: <Link to="/book">book now →</Link>,
@@ -121,6 +124,8 @@ const SCROLL_MOVIE_SCENES: ScrollScrubScene[] = [
     tags: ["30 min", "quick"],
     poster: "/assets/world/scene-2-poster.jpg",
     mobilePoster: "/assets/world/scene-2-mobile-poster.jpg",
+    clip: "/assets/world/scene-2.mp4",
+    mobileClip: "/assets/world/scene-2-mobile.mp4",
     align: "right",
     scroll: 1.3,
     actions: (
@@ -138,6 +143,8 @@ const SCROLL_MOVIE_SCENES: ScrollScrubScene[] = [
     tags: ["consult first", "3–5 hr sessions"],
     poster: "/assets/world/scene-3-poster.jpg",
     mobilePoster: "/assets/world/scene-3-mobile-poster.jpg",
+    clip: "/assets/world/scene-3.mp4",
+    mobileClip: "/assets/world/scene-3-mobile.mp4",
     align: "left",
     scroll: 1.3,
     actions: (
@@ -200,6 +207,37 @@ function ScrollMovie() {
 }
 
 function Page() {
+  const [reminders, setReminders] = useState({ queued: 0, sent: 0 });
+
+  // Fetch reminders status once on mount for the live strip.
+  useEffect(() => {
+    void fetch("/api/reminders")
+      .then((r) => r.json())
+      .then((d) => {
+        const items = d.items ?? [];
+        setReminders({
+          queued: items.filter((r: { status: string }) => r.status === "queued").length,
+          sent: items.filter((r: { status: string }) => r.status === "sent").length,
+        });
+      })
+      .catch(() => {});
+  }, []);
+
+  async function processReminders() {
+    window.dispatchEvent(new CustomEvent("mybesti:waiting"));
+    await fetch("/api/reminders?mode=run");
+    void fetch("/api/reminders")
+      .then((r) => r.json())
+      .then((d) => {
+        const items = d.items ?? [];
+        setReminders({
+          queued: items.filter((r: { status: string }) => r.status === "queued").length,
+          sent: items.filter((r: { status: string }) => r.status === "sent").length,
+        });
+      });
+    window.dispatchEvent(new CustomEvent("mybesti:review"));
+  }
+
   return (
     <div
       style={{
@@ -216,7 +254,25 @@ function Page() {
       <Updates />
       <Services />
       <Rules />
-      <Book />
+
+      {/* ── Integrated live booking block: cal.com + reminders + emergency ─ */}
+      <section className="mx-auto max-w-6xl px-5 py-16 sm:py-24" style={{ background: "var(--color-card-2)" }}>
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.15em", color: "var(--color-ash)" }}>
+          05 · LIVE BOOKING
+        </p>
+        <h2 className="mt-2 text-4xl font-black leading-tight sm:text-5xl" style={{ fontFamily: "var(--font-display)" }}>
+          the chair comes to you
+        </h2>
+        <p className="mt-4 max-w-xl text-lg leading-relaxed" style={{ color: "var(--color-mist)" }}>
+          the calendar is live right here. pick a slot, get instant confirmation, and pocket will
+          text you before you walk out the door. house calls across Seattle.
+        </p>
+      </section>
+
+      <CalInline />
+      <RemindersStrip reminders={reminders} onProcess={processReminders} />
+      <EmergencyStrip onBooked={() => window.dispatchEvent(new CustomEvent("mybesti:celebrate"))} />
+
       <TravelFee />
       <Footer />
       <BookingPopup />
@@ -259,6 +315,19 @@ function TopBar() {
           >
             425-918-2029
           </a>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent("mybesti:open-booking"))}
+            className="inline-flex items-center gap-1.5 rounded-full border-2 border-transparent bg-transparent px-3 py-1.5 text-xs font-black transition-colors hover:border-current"
+            style={{
+              fontFamily: "var(--font-display)",
+              color: "var(--color-flush)",
+            }}
+            aria-label="Chat with pocket, the booking bot"
+            title="Chat with pocket, the booking bot"
+          >
+            💬 chat
+          </button>
           <Link
             to="/book"
             className="border-2 px-4 py-1.5 text-sm font-black transition-transform hover:-translate-y-0.5"
@@ -825,96 +894,6 @@ function Rules() {
           </li>
         ))}
       </ol>
-    </section>
-  );
-}
-
-/* ── 05 · book it ────────────────────────────────────── */
-function Book() {
-  return (
-    <section
-      id="book"
-      className="border-t-2"
-      style={{ background: "var(--color-void)", borderColor: "var(--color-void)" }}
-    >
-      <div className="mx-auto max-w-6xl px-5 py-16 text-center sm:py-24">
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.15em",
-            color: "var(--color-lime)",
-          }}
-        >
-          05 · BOOK IT
-        </p>
-        <h2
-          className="mt-2 text-4xl font-black leading-tight sm:text-6xl"
-          style={{ fontFamily: "var(--font-display)", color: "var(--color-bone)" }}
-        >
-          let's book it →
-        </h2>
-        <p className="mx-auto mt-4 max-w-md text-lg" style={{ color: "var(--color-ash)" }}>
-          answer a couple quick questions and i'll point you to the right slot. no guesswork, no
-          booking the wrong thing and having to start over.
-        </p>
-        <p
-          className="mx-auto mt-3 text-sm"
-          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
-        >
-          thu 11am–6pm · fri 12pm–5pm · sat–sun 12pm–8pm
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <Link
-            to="/book"
-            className="inline-block border-2 px-10 py-4 text-lg font-black transition-transform hover:-translate-y-0.5"
-            style={{
-              background: "var(--color-lime)",
-              borderColor: "var(--color-lime)",
-              boxShadow: "4px 4px 0 var(--color-violet-brand)",
-              color: "var(--color-void)",
-            }}
-          >
-            LET'S BOOK IT →
-          </Link>
-          <button
-            type="button"
-            data-emergency
-            className="inline-block border-2 px-8 py-4 text-base font-black transition-transform hover:-translate-y-0.5"
-            style={{
-              background: "var(--color-flush)",
-              borderColor: "var(--color-flush)",
-              boxShadow: "4px 4px 0 var(--color-violet-brand)",
-              color: "#fff",
-            }}
-          >
-            🚨 need it sooner? emergency request
-          </button>
-        </div>
-        <p className="mx-auto mt-6 max-w-xl text-sm" style={{ color: "var(--color-ash)" }}>
-          calendar is live. real time, instant confirmation. house calls only right now.
-        </p>
-        <p className="mx-auto mt-2 max-w-xl text-sm" style={{ color: "var(--color-ash)" }}>
-          by booking you agree to the{" "}
-          <Link
-            to="/terms"
-            className="underline underline-offset-4"
-            style={{ color: "var(--color-lime)" }}
-          >
-            terms of service
-          </Link>{" "}
-          and{" "}
-          <Link
-            to="/privacy"
-            className="underline underline-offset-4"
-            style={{ color: "var(--color-lime)" }}
-          >
-            privacy policy
-          </Link>
-          , including the 24-hour cancel rule, no-show charge, SMS/email reminders, and house-call
-          terms. booking runs on cal.com.
-        </p>
-      </div>
     </section>
   );
 }

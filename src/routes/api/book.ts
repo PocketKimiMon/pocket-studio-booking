@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { validateBooking, type RuleContext } from "../../lib/booking-rules";
-import { queueReminder, listReminders, processReminders, type ReminderKind } from "../../lib/reminders";
+import {
+  validateBooking,
+  type RuleContext,
+  isKnownClient,
+  registerClient,
+} from "../../lib/booking-rules";
+import {
+  queueReminder,
+  listReminders,
+  processReminders,
+  type ReminderKind,
+} from "../../lib/reminders";
 import { CAL_BASE, SERVICES } from "../../lib/services";
 
 type BookingBody = {
@@ -49,15 +59,24 @@ export const Route = createFileRoute("/api/book")({
           startISO,
           address: isHouseCall ? body.address || "" : undefined,
           isHouseCall,
-          isReturningColorClient: isExistingClient,
-          isExistingClient,
+          // Authoritative: client history, not the client-supplied flag.
+          isReturningColorClient: isKnownClient(contact),
+          isExistingClient: isKnownClient(contact),
         };
 
         const results = validateBooking(ctx);
         const blockers = results.filter((r) => !r.pass && r.blockBooking);
         if (blockers.length) {
-          return Response.json({ error: blockers.map((b) => b.message).join("; "), results, status: 409 });
+          return Response.json({
+            error: blockers.map((b) => b.message).join("; "),
+            results,
+            status: 409,
+          });
         }
+
+        // Authoritative registration: this contact is now an existing client
+        // for future color-protocol checks (resolves server-side, not by client claim).
+        registerClient(contact);
 
         const bookingId = `BK-${Date.now().toString(36).toUpperCase()}`;
         const calLink = `${CAL_BASE}${service.slug}`;
@@ -82,11 +101,13 @@ export const Route = createFileRoute("/api/book")({
               channel,
               to: contact,
               scheduledFor: r.scheduledFor,
-            })
+            }),
           )
           .sort((a, b) => new Date(a.scheduledFor).getTime() - new Date(b.scheduledFor).getTime());
 
-        const simulated = await processReminders(new Date(queued[0]?.scheduledFor ? startMs - 1000 : now));
+        const simulated = await processReminders(
+          new Date(queued[0]?.scheduledFor ? startMs - 1000 : now),
+        );
         const sentCount = simulated.filter((r) => r.status === "sent").length;
 
         return Response.json({

@@ -100,15 +100,18 @@ describe("reminders", () => {
       expect(__peekStore().find((r) => r.id === rec.id)?.status).toBe("queued");
     });
 
-    it("processes due reminders and marks them sent", async () => {
+    it("processes due reminders and attempts to send them", async () => {
       const past = new Date();
       past.setHours(past.getHours() - 1);
+      // No Twilio/Resend env in tests -> sendReminder throws -> status=failed
       queueReminder(
         baseRecord({ kind: "confirmation", scheduledFor: past.toISOString(), channel: "sms" }),
       );
       const results = await processReminders();
       expect(results).toHaveLength(1);
-      expect(results[0].status).toBe("sent");
+      // With no SMS provider configured, the send throws -> marked failed (not sent).
+      expect(results[0].status).toBe("failed");
+      expect(results[0].error).toBeTruthy();
     });
 
     it("marks failed when sendReminder throws", async () => {

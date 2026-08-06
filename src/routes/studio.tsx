@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Scissors, Palette, Sparkles, Clock, MapPin, Mail, Phone, X, AlertTriangle } from "lucide-react";
+import { EmergencyModal } from "../components/EmergencyModal";
 import { headFor } from "../lib/seo";
 
 export const Route = createFileRoute("/studio")({
@@ -433,7 +434,7 @@ function BookingPopup() {
         </div>
       )}
 
-      {emergency && <EmergencyModal defaultService={chosen?.name ?? ""} onClose={() => setEmergency(false)} />}
+      {emergency && <EmergencyModal />}
     </>
   );
 }
@@ -451,89 +452,3 @@ function QuizButton({ label, icon, onClick }: { label: string; icon: React.React
   );
 }
 
-function EmergencyModal({ defaultService, onClose }: { defaultService: string; onClose: () => void }) {
-  const [state, setState] = useState<"form" | "sending" | "ok" | "err">("form");
-  const [form, setForm] = useState({ name: "", contact: "", service: defaultService, timing: "" });
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    setState("sending");
-    try {
-      const res = await fetch("https://formsubmit.co/ajax/itspocketmykey@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          _subject: "🚨 EMERGENCY booking request — Pocket Studio",
-          ...form,
-        }),
-      });
-      if (!res.ok) throw new Error("bad status");
-      setState("ok");
-    } catch {
-      setState("err");
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" style={{ background: "rgba(18,14,23,0.6)" }} onClick={onClose}>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md rounded-2xl border-2 p-6"
-        style={{ background: "white", borderColor: "var(--color-flush)", boxShadow: "10px 10px 0 var(--color-flush)" }}
-      >
-        <button onClick={onClose} className="absolute right-3 top-3 rounded-full p-1 hover:opacity-70" aria-label="Close">
-          <X size={18} />
-        </button>
-        <div className="flex items-center gap-2">
-          <AlertTriangle size={20} style={{ color: "var(--color-flush)" }} />
-          <h3 className="text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>emergency request</h3>
-        </div>
-        <p className="mt-1 text-sm" style={{ color: "var(--color-mist)" }}>
-          Nothing within lead time? Send the details — I'll reply if I can squeeze you in.
-        </p>
-
-        {state === "form" || state === "sending" ? (
-          <form onSubmit={submit} className="mt-5 space-y-3">
-            <Field label="your name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-            <Field label="best contact (phone or email)" value={form.contact} onChange={(v) => setForm({ ...form, contact: v })} required />
-            <Field label="desired service" value={form.service} onChange={(v) => setForm({ ...form, service: v })} required />
-            <Field label="when do you need it?" value={form.timing} onChange={(v) => setForm({ ...form, timing: v })} required />
-            <button
-              type="submit"
-              disabled={state === "sending"}
-              className="w-full rounded-full px-4 py-3 text-sm font-bold uppercase tracking-wider"
-              style={{ background: "var(--color-flush)", color: "white", fontFamily: "var(--font-display)" }}
-            >
-              {state === "sending" ? "sending…" : "send request"}
-            </button>
-          </form>
-        ) : state === "ok" ? (
-          <div className="mt-5 rounded-xl p-4 text-sm" style={{ background: "color-mix(in oklab, var(--color-lime) 20%, white)" }}>
-            got it — your request is in. I'll reach out at your contact info shortly.
-          </div>
-        ) : (
-          <div className="mt-5 rounded-xl p-4 text-sm" style={{ background: "color-mix(in oklab, var(--color-flush) 12%, white)" }}>
-            couldn't send that. text{" "}
-            <a href="tel:14259182029" className="underline font-semibold">425-918-2029</a> or email{" "}
-            <a href="mailto:mykeypocket@icloud.com" className="underline font-semibold">mykeypocket@icloud.com</a> directly.
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function Field({ label, value, onChange, required }: { label: string; value: string; onChange: (v: string) => void; required?: boolean }) {
-  return (
-    <label className="block">
-      <span className="text-xs uppercase tracking-widest" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>{label}</span>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        required={required}
-        className="mt-1 w-full rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2"
-        style={{ borderColor: "rgba(18,14,23,.15)" }}
-      />
-    </label>
-  );
-}

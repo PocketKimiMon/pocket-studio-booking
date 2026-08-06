@@ -11,8 +11,38 @@ export type RuleContext = {
   address?: string;
   isHouseCall: boolean;
   isReturningColorClient: boolean;
+  /**
+   * Existing-client status must be resolved SERVER-SIDE (contact has a prior
+   * booking) before reaching validateBooking. Do NOT trust a client-supplied
+   * isExistingClient flag — a client could otherwise bypass the new-color
+   * consult requirement by posting isExistingClient=true.
+   */
   isExistingClient: boolean;
 };
+
+/**
+ * In-memory booking registry keyed by contact identifier.
+ * Persists only for the lifetime of the server process — in production this
+ * would be backed by Supabase/Postgres. Used to resolve "is this an existing
+ * client" authoritatively before validating color-protocol rules.
+ */
+const clientBookings = new Set<string>();
+
+/** Register a contact after a successful booking. */
+export function registerClient(contact: string) {
+  if (contact) clientBookings.add(contact.toLowerCase().trim());
+}
+
+/** True if the contact has a prior booking on record. */
+export function isKnownClient(contact: string): boolean {
+  if (!contact) return false;
+  return clientBookings.has(contact.toLowerCase().trim());
+}
+
+/** Test-only: clear the client-booking registry. */
+export function __clearClientBookings() {
+  clientBookings.clear();
+}
 
 export type RuleResult = {
   pass: boolean;
@@ -42,7 +72,8 @@ export const RULES: BookingRule[] = [
       const hours = (start.getTime() - Date.now()) / 36e5;
       let min = MIN_LEAD_HOURS.CUTS;
       if (ctx.serviceSlug === "hair-consultation") min = MIN_LEAD_HOURS.NEW_COLOR;
-      if (ctx.serviceSlug === "existing-client-color-appointment") min = MIN_LEAD_HOURS.EXISTING_COLOR;
+      if (ctx.serviceSlug === "existing-client-color-appointment")
+        min = MIN_LEAD_HOURS.EXISTING_COLOR;
       if (hours < min)
         return {
           pass: false,
@@ -58,7 +89,8 @@ export const RULES: BookingRule[] = [
     severity: "error",
     enforce: (ctx) => {
       if (!ctx.isHouseCall) return { pass: true, message: "in-shop / virtual — no geo gate" };
-      if (!ctx.address) return { pass: false, message: "address required for house calls", blockBooking: true };
+      if (!ctx.address)
+        return { pass: false, message: "address required for house calls", blockBooking: true };
       return { pass: true, message: "address collected — distance checked at booking" };
     },
   },

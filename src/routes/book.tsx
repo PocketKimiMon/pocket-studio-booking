@@ -87,18 +87,18 @@ function BookPage() {
       <style>{`
         @keyframes msg-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
         .msg-in { animation: msg-in 0.25s ease-out both; }
-        .chat-user { background: var(--color-flush, #c53b38); color: var(--color-bone, #fff); border: 2px solid rgba(255,255,255,0.35); box-shadow: 4px 4px 0 rgba(0,0,0,0.35); border-radius: 18px; border-bottom-right-radius: 6px; }
-        .chat-bot { background: rgba(22,22,29,0.92); color: var(--color-bone, #f4efe6); border: 2px solid rgba(244,239,230,0.22); box-shadow: 4px 4px 0 var(--color-lime); border-radius: 18px; border-bottom-left-radius: 6px; border-left: 3px solid var(--color-lime); }
-        .chip { border: 2px solid var(--color-lime); color: var(--color-void); background: transparent; box-shadow: 3px 3px 0 var(--color-lime); }
-        .chip:hover { background: rgba(198,59,56,0.08); }
+        .chat-user { background: var(--color-flush, #c53b38); color: var(--color-void, #f4efe6); border: 2px solid rgba(244,239,230,0.35); box-shadow: 4px 4px 0 rgba(0,0,0,0.35); border-radius: 18px; border-bottom-right-radius: 6px; }
+        .chat-bot { background: rgba(22,22,29,0.92); color: var(--color-void, #f4efe6); border: 2px solid rgba(244,239,230,0.22); box-shadow: 4px 4px 0 var(--color-lime); border-radius: 18px; border-bottom-left-radius: 6px; border-left: 3px solid var(--color-lime); }
+        .chip { border: 2px solid var(--color-go, #b6f23a); color: var(--color-void, #f4efe6); background: transparent; box-shadow: 3px 3px 0 var(--color-go, #b6f23a); }
+        .chip:hover { background: rgba(198,59,56,0.12); }
         .panel { border: 2px solid var(--color-ash); box-shadow: 6px 6px 0 var(--color-violet-brand); background: rgba(255,255,255,0.04); }
-        .panel input, .panel select { background: var(--color-bone); color: var(--color-void); border: 2px solid var(--color-ash); }
-        .panel label { color: var(--color-void); }
-        .btn-primary { background: var(--color-lime); color: #0b0b0f; border: 2px solid rgba(255,255,255,0.35); box-shadow: 3px 3px 0 rgba(0,0,0,0.35); }
-        .btn-secondary { background: var(--color-card-w); color: var(--color-void); border: 2px solid var(--color-void); box-shadow: 3px 3px 0 var(--color-void); }
-        .service-card-title { color: var(--color-void); }
-        .service-card-meta { color: var(--color-void); opacity: 0.85; }
-        .service-card-body { color: var(--color-void); opacity: 0.92; }
+        .panel input, .panel select { background: var(--color-card-w); color: var(--color-void, #f4efe6); border: 2px solid var(--color-ash); }
+        .panel label { color: var(--color-void, #f4efe6); }
+        .btn-primary { background: var(--color-lime, #c53b38); color: var(--color-void, #f4efe6); border: 2px solid rgba(244,239,230,0.35); box-shadow: 3px 3px 0 rgba(0,0,0,0.35); }
+        .btn-secondary { background: var(--color-card-w); color: var(--color-void, #f4efe6); border: 2px solid var(--color-void); box-shadow: 3px 3px 0 var(--color-void); }
+        .service-card-title { color: var(--color-void, #f4efe6); }
+        .service-card-meta { color: var(--color-void, #f4efe6); opacity: 0.85; }
+        .service-card-body { color: var(--color-void, #f4efe6); opacity: 0.92; }
       `}</style>
 
       <header className="sticky top-0 z-50 border-b" style={{ background: "var(--color-bone)", borderColor: "var(--color-ash)" }}>

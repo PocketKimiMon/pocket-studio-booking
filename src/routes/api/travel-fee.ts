@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TRAVEL, type TravelFeeResult } from "../../lib/travel";
+import { TRAVEL, type TravelFeeResult, haversineMi, computeTravelFee } from "../../lib/travel";
 
 async function geocode(query: string): Promise<{ lat: number; lon: number } | null> {
   const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
@@ -14,14 +14,6 @@ async function geocode(query: string): Promise<{ lat: number; lon: number } | nu
   return { lat: Number(first.lat), lon: Number(first.lon) };
 }
 
-function haversine(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
-  const rad = Math.PI / 180;
-  const dLat = (b.lat - a.lat) * rad;
-  const dLon = (b.lon - a.lon) * rad;
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLon / 2) ** 2;
-  return 3958.8 * 2 * Math.asin(Math.min(1, Math.sqrt(h)));
-}
-
 export const Route = createFileRoute("/api/travel-fee")({
   server: {
     handlers: {
@@ -34,19 +26,36 @@ export const Route = createFileRoute("/api/travel-fee")({
           // ignore
         }
         if (!address) {
-          return Response.json({ available: true, distance_mi: undefined, fee: TRAVEL.flat, reason: "estimate only — no address" } satisfies TravelFeeResult);
+          return Response.json({
+            available: true,
+            distance_mi: undefined,
+            fee: TRAVEL.flat,
+            reason: "estimate only — no address",
+          } satisfies TravelFeeResult);
         }
         const [client, base] = await Promise.all([geocode(address), geocode(TRAVEL.baseLocation)]);
         if (!client || !base) {
-          return Response.json({ available: true, distance_mi: undefined, fee: TRAVEL.flat, reason: "estimate only" } satisfies TravelFeeResult);
+          return Response.json({
+            available: true,
+            distance_mi: undefined,
+            fee: TRAVEL.flat,
+            reason: "estimate only",
+          } satisfies TravelFeeResult);
         }
-        const mi = haversine(base, client);
-        const rounded = Math.round(mi * 10) / 10;
-        if (rounded > TRAVEL.maxRadiusMi) {
-          return Response.json({ available: false, distance_mi: rounded, reason: `outside service area (${TRAVEL.maxRadiusMi} mi)` } satisfies TravelFeeResult);
+        const mi = haversineMi(base.lat, base.lon, client.lat, client.lon);
+        const result = computeTravelFee(mi);
+        if ("outside" in result) {
+          return Response.json({
+            available: false,
+            distance_mi: result.miles,
+            reason: `outside service area (${TRAVEL.maxRadiusMi} mi)`,
+          } satisfies TravelFeeResult);
         }
-        const fee = Math.round(TRAVEL.flat + TRAVEL.perMile * mi);
-        return Response.json({ available: true, distance_mi: rounded, fee } satisfies TravelFeeResult);
+        return Response.json({
+          available: true,
+          distance_mi: Math.round(mi * 10) / 10,
+          fee: result.fee,
+        } satisfies TravelFeeResult);
       },
     },
   },

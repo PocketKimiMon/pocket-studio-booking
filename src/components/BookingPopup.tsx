@@ -75,7 +75,8 @@ export function BookingPopup() {
     try {
       const data = await callChat(next);
       const replyText =
-        data.reply ?? `hmm, my brain hiccuped (${data.error ?? "no reply"}). try again — or text mykey directly: 425-918-2029.`;
+        data.reply ??
+        `hmm, my brain hiccuped (${data.error ?? "no reply"}). try again — or text mykey directly: 425-918-2029.`;
       setMsgs([...next, { role: "assistant", content: replyText }]);
       if (data.reply && isBookingLink(data.reply)) {
         window.dispatchEvent(new CustomEvent("mybesti:celebrate"));
@@ -83,7 +84,10 @@ export function BookingPopup() {
     } catch {
       setMsgs([
         ...next,
-        { role: "assistant", content: "connection died on me. try again, or text mykey: 425-918-2029." },
+        {
+          role: "assistant",
+          content: "connection died on me. try again, or text mykey: 425-918-2029.",
+        },
       ]);
     } finally {
       setBusy(false);
@@ -104,34 +108,51 @@ export function BookingPopup() {
         aria-modal="true"
         className="flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border"
         style={{
-          background: "var(--color-void, #16161d)",
-          borderColor: "rgba(244,239,230,.12)",
+          background: "var(--color-card-w, #16161d)",
+          borderColor: "rgba(244,239,230,.14)",
           boxShadow: "10px 10px 0 var(--color-flush, #c53b38)",
+          color: "var(--color-void, #f4efe6)",
           maxHeight: "80vh",
         }}
       >
-        <div className="flex items-center justify-between border-b px-5 py-3" style={{ borderColor: "rgba(244,239,230,.1)" }}>
-          <p className="text-sm" style={{ fontFamily: "var(--font-mono)", color: "var(--color-lime)" }}>
+        <div
+          className="flex items-center justify-between border-b px-5 py-3"
+          style={{ borderColor: "rgba(244,239,230,.1)" }}
+        >
+          <p
+            className="text-sm"
+            style={{ fontFamily: "var(--font-mono)", color: "var(--color-go, #b6f23a)" }}
+          >
             pocket · booking bot
           </p>
           <button
             onClick={() => setOpen(false)}
             aria-label="close chat"
             className="text-lg leading-none"
-            style={{ color: "var(--color-bone)" }}
+            style={{ color: "var(--color-void, #f4efe6)" }}
           >
             ×
           </button>
         </div>
-        <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4" style={{ minHeight: 240 }}>
+        <div
+          ref={scrollRef}
+          className="flex-1 space-y-3 overflow-y-auto px-5 py-4"
+          style={{ minHeight: 240 }}
+        >
           {msgs.map((m, i) => (
             <div key={i} className={m.role === "user" ? "text-right" : "text-left"}>
               <span
                 className="inline-block rounded-xl px-3 py-2 text-sm leading-relaxed"
                 style={
                   m.role === "user"
-                    ? { background: "var(--color-flush, #c53b38)", color: "var(--color-bone, #f4efe6)" }
-                    : { background: "rgba(244,239,230,.08)", color: "var(--color-bone, #f4efe6)" }
+                    ? {
+                        background: "var(--color-flush, #c53b38)",
+                        color: "var(--color-bone, #0b0b0f)",
+                      }
+                    : {
+                        background: "rgba(244,239,230,.09)",
+                        color: "var(--color-void, #f4efe6)",
+                      }
                 }
               >
                 {m.content}
@@ -139,7 +160,10 @@ export function BookingPopup() {
             </div>
           ))}
           {busy && (
-            <p className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+            <p
+              className="text-xs"
+              style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash, #797c8a)" }}
+            >
               pocket is typing…
             </p>
           )}
@@ -152,7 +176,13 @@ export function BookingPopup() {
                 onClick={() => send(`tell me about the ${s.name.toLowerCase()}`)}
                 disabled={busy}
                 className="rounded-full px-3 py-1 text-xs"
-                style={{ background: "rgba(244,239,230,.08)", color: "var(--color-mist)", fontFamily: "var(--font-mono)", opacity: busy ? 0.5 : 1 }}
+                style={{
+                  background: "rgba(244,239,230,.09)",
+                  color: "var(--color-void, #f4efe6)",
+                  border: "1px solid rgba(244,239,230,.2)",
+                  fontFamily: "var(--font-mono)",
+                  opacity: busy ? 0.5 : 1,
+                }}
               >
                 {s.name}
               </button>
@@ -163,7 +193,11 @@ export function BookingPopup() {
               rel="noreferrer"
               onClick={() => window.dispatchEvent(new CustomEvent("mybesti:celebrate"))}
               className="rounded-full px-3 py-1 text-xs"
-              style={{ background: "var(--color-lime)", color: "#0b0b0f", fontFamily: "var(--font-mono)" }}
+              style={{
+                background: "var(--color-lime, #c53b38)",
+                color: "var(--color-void, #f4efe6)",
+                fontFamily: "var(--font-mono)",
+              }}
             >
               full calendar →
             </a>
@@ -183,13 +217,21 @@ export function BookingPopup() {
               aria-label="message the booking bot"
               disabled={busy}
               className="flex-1 rounded-lg border bg-transparent px-3 py-2 text-sm"
-              style={{ borderColor: "rgba(244,239,230,.15)", color: "var(--color-bone)", opacity: busy ? 0.6 : 1 }}
+              style={{
+                borderColor: "rgba(244,239,230,.22)",
+                color: "var(--color-void, #f4efe6)",
+                opacity: busy ? 0.6 : 1,
+              }}
             />
             <button
               type="submit"
               disabled={busy || !input.trim()}
               className="rounded-lg px-4 py-2 text-sm font-bold"
-              style={{ background: "var(--color-lime)", color: "#0b0b0f", opacity: busy || !input.trim() ? 0.5 : 1 }}
+              style={{
+                background: "var(--color-lime, #c53b38)",
+                color: "var(--color-void, #f4efe6)",
+                opacity: busy || !input.trim() ? 0.5 : 1,
+              }}
             >
               send
             </button>

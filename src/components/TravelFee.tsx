@@ -1,25 +1,15 @@
 import { useState } from "react";
+import {
+  TRAVEL,
+  BASE_LAT,
+  BASE_LON,
+  haversineMi,
+  computeTravelFee,
+  type TravelFeeResult as _TravelFeeResult,
+} from "../lib/travel";
 
-/* Pocket Studio home base (downtown Seattle reference point). */
-const BASE_LAT = 47.6062;
-const BASE_LON = -122.3321;
-const RANGE_MI = 30;
-
-function haversineMi(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const toRad = (d: number) => (d * Math.PI) / 180;
-  const R = 3958.8;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(a));
-}
-
-type Result =
-  | { kind: "ok"; miles: number; fee: number }
-  | { kind: "outside"; miles: number }
-  | { kind: "fallback" };
+/* Re-export for any caller that still imports TravelFeeResult from this file. */
+export type TravelFeeResult = _TravelFeeResult;
 
 export function TravelFee() {
   const [address, setAddress] = useState("");
@@ -41,11 +31,12 @@ export function TravelFee() {
       const hit = hits[0];
       if (!hit) throw new Error("not found");
       const miles = haversineMi(BASE_LAT, BASE_LON, parseFloat(hit.lat), parseFloat(hit.lon));
-      if (miles > RANGE_MI) {
-        setResult({ kind: "outside", miles });
+      const feeResult = computeTravelFee(miles);
+      if ("outside" in feeResult) {
+        setResult({ kind: "outside", miles: feeResult.miles });
       } else {
         const displayedMiles = Math.round(miles * 10) / 10;
-        setResult({ kind: "ok", miles: displayedMiles, fee: 25 + 2 * displayedMiles });
+        setResult({ kind: "ok", miles: displayedMiles, fee: feeResult.fee });
       }
     } catch {
       setResult({ kind: "fallback" });
@@ -137,7 +128,8 @@ export function TravelFee() {
             color: "var(--color-flush)",
           }}
         >
-          sorry, can't get there. {result.miles.toFixed(1)} mi is outside my {RANGE_MI}-mile range.
+          sorry, can't get there. {result.miles.toFixed(1)} mi is outside my {TRAVEL.maxRadiusMi}
+          -mile range.
         </p>
       )}
       {result?.kind === "fallback" && (
