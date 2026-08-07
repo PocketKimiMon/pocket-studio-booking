@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CAL_BASE, SERVICES, STRIPE_DEPOSIT_LINK, type Service } from "../lib/services";
+import { CAL_BASE, SERVICES, type Service } from "../lib/services";
 import { TRAVEL } from "../lib/travel";
+import { DEPOSIT_AMOUNT } from "../lib/booking-rules";
 import { headFor } from "../lib/seo";
 import { ReadingModeToggle } from "../components/ReadingModeToggle";
 
@@ -23,7 +24,11 @@ type Msg =
 type Stage = "start" | "cut" | "color" | "done";
 
 const GREETING: Msg[] = [
-  { id: 0, from: "bot", text: "hey! I'm the booking bot ✂ I come to you — let's find your service." },
+  {
+    id: 0,
+    from: "bot",
+    text: "hey! I'm the booking bot ✂ I come to you — let's find your service.",
+  },
   { id: 1, from: "bot", text: "cut or color?" },
 ];
 
@@ -34,7 +39,8 @@ function BookPage() {
   const nextId = useRef(2);
 
   useEffect(() => {
-    if (messages.length > GREETING.length) endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    if (messages.length > GREETING.length)
+      endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages]);
 
   useEffect(() => {
@@ -43,18 +49,28 @@ function BookPage() {
   }, [stage]);
 
   const push = (...msgs: Array<{ from: Msg["from"]; text?: string; card?: Service }>) =>
-    setMessages((m) => [...m, ...msgs.map((msg) => ({ ...msg, id: nextId.current++ } as Msg))]);
+    setMessages((m) => [...m, ...msgs.map((msg) => ({ ...msg, id: nextId.current++ }) as Msg)]);
 
   const pickCut = () => {
-    push({ from: "user", text: "cut" }, { from: "bot", text: "love that for you. which cut are we doing?" });
+    push(
+      { from: "user", text: "cut" },
+      { from: "bot", text: "love that for you. which cut are we doing?" },
+    );
     setStage("cut");
   };
   const pickColor = () => {
-    push({ from: "user", text: "color" }, { from: "bot", text: "ooh, color day 🎨 have we colored together before?" });
+    push(
+      { from: "user", text: "color" },
+      { from: "bot", text: "ooh, color day 🎨 have we colored together before?" },
+    );
     setStage("color");
   };
   const pickService = (s: Service, userText: string) => {
-    push({ from: "user", text: userText }, { from: "bot", text: "say less. here's the deal:" }, { from: "bot", card: s });
+    push(
+      { from: "user", text: userText },
+      { from: "bot", text: "say less. here's the deal:" },
+      { from: "bot", card: s },
+    );
     setStage("done");
   };
   const reset = () => {
@@ -65,13 +81,22 @@ function BookPage() {
 
   const chips: { label: string; onClick: () => void }[] =
     stage === "start"
-      ? [{ label: "CUT ✂", onClick: pickCut }, { label: "COLOR 🎨", onClick: pickColor }]
+      ? [
+          { label: "CUT ✂", onClick: pickCut },
+          { label: "COLOR 🎨", onClick: pickColor },
+        ]
       : stage === "cut"
-        ? CUTS.map((s) => ({ label: `${s.name} · ${s.price} · ${s.duration}`, onClick: () => pickService(s, `${s.name}, please`) }))
+        ? CUTS.map((s) => ({
+            label: `${s.name} · ${s.price} · ${s.duration}`,
+            onClick: () => pickService(s, `${s.name}, please`),
+          }))
         : stage === "color"
           ? [
               { label: "first time", onClick: () => pickService(CONSULT, "first time with you") },
-              { label: "returning client", onClick: () => pickService(EXISTING, "returning client, you know the vibe") },
+              {
+                label: "returning client",
+                onClick: () => pickService(EXISTING, "returning client, you know the vibe"),
+              },
             ]
           : [];
 
@@ -101,15 +126,33 @@ function BookPage() {
         .service-card-body { color: var(--color-void, #f4efe6); opacity: 0.92; }
       `}</style>
 
-      <header className="sticky top-0 z-50 border-b" style={{ background: "var(--color-bone)", borderColor: "var(--color-ash)" }}>
+      <header
+        className="sticky top-0 z-50 border-b"
+        style={{ background: "var(--color-bone)", borderColor: "var(--color-ash)" }}
+      >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-5 py-3">
-          <Link to="/" className="text-sm font-black tracking-tight" style={{ fontFamily: "var(--font-display)", color: "var(--color-void)" }}>
+          <Link
+            to="/"
+            className="text-sm font-black tracking-tight"
+            style={{ fontFamily: "var(--font-display)", color: "var(--color-void)" }}
+          >
             ✂ POCKET STUDIO
           </Link>
-          <div className="flex items-center gap-4" style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}>
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full" style={{ background: "var(--color-go)" }} />
+          <div
+            className="flex items-center gap-4"
+            style={{ fontFamily: "var(--font-mono)", fontSize: 12 }}
+          >
+            <span
+              className="inline-block h-2 w-2 animate-pulse rounded-full"
+              style={{ background: "var(--color-go)" }}
+            />
             <ReadingModeToggle compact />
-            <Link to="/" hash="services" className="underline-offset-4 hover:underline" style={{ color: "var(--color-void)" }}>
+            <Link
+              to="/"
+              hash="services"
+              className="underline-offset-4 hover:underline"
+              style={{ color: "var(--color-void)" }}
+            >
               ← services
             </Link>
           </div>
@@ -117,17 +160,44 @@ function BookPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-5 py-12 sm:py-16">
-        <p style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.15em", color: "var(--color-lime)" }}>BOOK</p>
-        <h1 className="mt-2 text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl" style={{ fontFamily: "var(--font-display)" }}>
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: 12,
+            letterSpacing: "0.15em",
+            color: "var(--color-lime)",
+          }}
+        >
+          BOOK
+        </p>
+        <h1
+          className="mt-2 text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
           Chat your way in<span style={{ color: "var(--color-flush)" }}>.</span>
         </h1>
         <p className="mt-4 max-w-lg text-lg leading-relaxed" style={{ color: "var(--color-ash)" }}>
-          Two taps and you're booked. Every appointment is a house call — your couch, your mirror, your gossip.
+          Two taps and you're booked. Every appointment is a house call — your couch, your mirror,
+          your gossip.
         </p>
 
+        <PaymentBanner />
+
         <div className="mt-8 panel p-4 sm:p-6">
-          <div className="mb-4 flex items-center gap-2 border-b pb-3" style={{ borderColor: "var(--color-ash)", fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-ash)" }}>
-            <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--color-go)" }} />
+          <div
+            className="mb-4 flex items-center gap-2 border-b pb-3"
+            style={{
+              borderColor: "var(--color-ash)",
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.12em",
+              color: "var(--color-ash)",
+            }}
+          >
+            <span
+              className="inline-block h-2 w-2 rounded-full"
+              style={{ background: "var(--color-go)" }}
+            />
             BOOKING BOT · ONLINE
           </div>
 
@@ -136,7 +206,10 @@ function BookPage() {
               "card" in m ? (
                 <ServiceCard key={m.id} service={m.card} onReset={reset} />
               ) : (
-                <div key={m.id} className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end chat-user" : "self-start chat-bot"}`}>
+                <div
+                  key={m.id}
+                  className={`msg-in max-w-[85%] px-4 py-2.5 text-sm leading-relaxed ${m.from === "user" ? "self-end chat-user" : "self-start chat-bot"}`}
+                >
                   {m.text}
                 </div>
               ),
@@ -145,7 +218,12 @@ function BookPage() {
             {chips.length > 0 && (
               <div className="msg-in mt-1 flex flex-wrap gap-2 self-end">
                 {chips.map((c) => (
-                  <button key={c.label} onClick={c.onClick} className="chip rounded px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5" style={{ fontFamily: "var(--font-display)" }}>
+                  <button
+                    key={c.label}
+                    onClick={c.onClick}
+                    className="chip rounded px-4 py-2 text-xs font-bold uppercase tracking-wider transition hover:-translate-y-0.5"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
                     {c.label}
                   </button>
                 ))}
@@ -157,20 +235,51 @@ function BookPage() {
 
         <TestBookingPanel />
 
-        <p className="mt-6 text-sm" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
-          prefer the full calendar? <a href="https://cal.com/maneautoimation" target="_blank" rel="noreferrer" className="underline underline-offset-4" style={{ color: "var(--color-void)" }}>open cal.com →</a>
+        <p
+          className="mt-6 text-sm"
+          style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+        >
+          prefer the full calendar?{" "}
+          <a
+            href="https://cal.com/maneautoimation"
+            target="_blank"
+            rel="noreferrer"
+            className="underline underline-offset-4"
+            style={{ color: "var(--color-void)" }}
+          >
+            open cal.com →
+          </a>
           <br />
-          Calendar not showing a slot soon enough? Text <a href="sms:+14259182029" className="underline underline-offset-4" style={{ color: "var(--color-lime)" }}>425-918-2029</a>.
+          Calendar not showing a slot soon enough? Text{" "}
+          <a
+            href="sms:+14259182029"
+            className="underline underline-offset-4"
+            style={{ color: "var(--color-lime)" }}
+          >
+            425-918-2029
+          </a>
+          .
         </p>
       </main>
 
       <footer className="border-t px-5 py-8" style={{ borderColor: "var(--color-ash)" }}>
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 text-xs sm:flex-row sm:items-center" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>
-          <span>© {new Date().getFullYear()} Pocket Studio · MyKey Pocket (they/them) · Seattle</span>
+        <div
+          className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 text-xs sm:flex-row sm:items-center"
+          style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+        >
+          <span>
+            © {new Date().getFullYear()} Pocket Studio · MyKey Pocket (they/them) · Seattle
+          </span>
           <span className="flex gap-5">
-            <Link to="/" className="underline-offset-4 hover:underline">Home</Link>
-            <Link to="/terms" className="underline-offset-4 hover:underline">Terms</Link>
-            <Link to="/privacy" className="underline-offset-4 hover:underline">Privacy</Link>
+            <Link to="/" className="underline-offset-4 hover:underline">
+              Home
+            </Link>
+            <Link to="/terms" className="underline-offset-4 hover:underline">
+              Terms
+            </Link>
+            <Link to="/privacy" className="underline-offset-4 hover:underline">
+              Privacy
+            </Link>
           </span>
         </div>
       </footer>
@@ -179,19 +288,83 @@ function BookPage() {
 }
 
 function ServiceCard({ service, onReset }: { service: Service; onReset: () => void }) {
+  const [payMethod, setPayMethod] = useState<"card" | "later">("card");
   return (
     <div key={service.slug} className="msg-in self-start chat-bot p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-widest" style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}>service card</p>
-          <h3 className="mt-1 text-lg font-black service-card-title" style={{ fontFamily: "var(--font-display)" }}>{service.name}</h3>
-          <p className="mt-1 text-sm service-card-meta">{service.duration} · {service.price}</p>
+          <p
+            className="text-xs uppercase tracking-widest"
+            style={{ color: "var(--color-ash)", fontFamily: "var(--font-mono)" }}
+          >
+            service card
+          </p>
+          <h3
+            className="mt-1 text-lg font-black service-card-title"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            {service.name}
+          </h3>
+          <p className="mt-1 text-sm service-card-meta">
+            {service.duration} · {service.price}
+          </p>
         </div>
-        <button onClick={onReset} className="text-xs" style={{ color: "var(--color-flush)" }}>✕ reset</button>
+        <button onClick={onReset} className="text-xs" style={{ color: "var(--color-flush)" }}>
+          ✕ reset
+        </button>
       </div>
       <p className="mt-3 text-sm service-card-body">{service.detail}</p>
+
+      <div className="mt-4 rounded border p-3" style={{ borderColor: "var(--color-ash)" }}>
+        <p
+          className="text-xs"
+          style={{
+            fontFamily: "var(--font-mono)",
+            letterSpacing: "0.1em",
+            color: "var(--color-ash)",
+          }}
+        >
+          PAYMENT
+        </p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {(
+            [
+              { id: "card", label: `💳 card now — $${DEPOSIT_AMOUNT} deposit` },
+              { id: "later", label: "💵 pay at appointment" },
+            ] as const
+          ).map((opt) => (
+            <button
+              key={opt.id}
+              onClick={() => setPayMethod(opt.id)}
+              className="rounded px-3 py-1.5 text-xs font-bold transition"
+              style={{
+                fontFamily: "var(--font-display)",
+                border: "2px solid var(--color-ash)",
+                background: payMethod === opt.id ? "var(--color-lime)" : "transparent",
+                color: payMethod === opt.id ? "var(--color-void)" : "var(--color-void)",
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        {payMethod === "card" ? (
+          <StripeDepositButton service={service} />
+        ) : (
+          <p className="mt-2 text-xs" style={{ color: "var(--color-ash)" }}>
+            cool — payment collected at the chair. no card needed to book.
+          </p>
+        )}
+      </div>
+
       <div className="mt-3 flex flex-wrap gap-2">
-        <a href={`${CAL_BASE}${service.slug}`} target="_blank" rel="noreferrer" className="btn-primary inline-flex items-center rounded px-4 py-2 text-xs font-black" style={{ fontFamily: "var(--font-display)" }}>
+        <a
+          href={`${CAL_BASE}${service.slug}`}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-primary inline-flex items-center rounded px-4 py-2 text-xs font-black"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
           BOOK {service.name.toUpperCase()} →
         </a>
       </div>
@@ -199,8 +372,94 @@ function ServiceCard({ service, onReset }: { service: Service; onReset: () => vo
   );
 }
 
+function StripeDepositButton({ service }: { service: Service }) {
+  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+  const [error, setError] = useState("");
+  const pay = async () => {
+    setState("loading");
+    setError("");
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ serviceSlug: service.slug }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || `checkout failed (${res.status})`);
+      window.location.href = data.url;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+      setState("error");
+    }
+  };
+  return (
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={pay}
+        disabled={state === "loading"}
+        className="btn-primary inline-flex items-center rounded px-4 py-2 text-xs font-black transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+        style={{ fontFamily: "var(--font-display)" }}
+      >
+        {state === "loading" ? "opening stripe…" : `PAY $${DEPOSIT_AMOUNT} DEPOSIT →`}
+      </button>
+      {state === "error" && (
+        <p className="mt-1.5 text-xs" style={{ color: "var(--color-flush)" }}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function PaymentBanner() {
+  const [notice, setNotice] = useState<{ kind: "ok" | "cancel"; text: string } | null>(null);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("paid") === "1") {
+      setNotice({
+        kind: "ok",
+        text: "payment received — your deposit is confirmed. see you at the chair 💸",
+      });
+    } else if (params.get("payment") === "cancelled") {
+      setNotice({
+        kind: "cancel",
+        text: "payment cancelled — no charge. you can still book and pay at the appointment.",
+      });
+    }
+  }, []);
+  if (!notice) return null;
+  return (
+    <div
+      className="mb-6 flex items-start justify-between gap-3 rounded border-2 px-4 py-3 text-sm"
+      style={{
+        borderColor: notice.kind === "ok" ? "var(--color-lime)" : "var(--color-flush)",
+        background: notice.kind === "ok" ? "rgba(182,242,58,0.08)" : "rgba(198,59,56,0.08)",
+        color: "var(--color-void)",
+      }}
+    >
+      <span>{notice.text}</span>
+      <button
+        onClick={() => setNotice(null)}
+        className="text-xs"
+        style={{ color: "var(--color-ash)" }}
+      >
+        ✕
+      </button>
+    </div>
+  );
+}
+
 function TestBookingPanel() {
-  const [form, setForm] = useState({ serviceSlug: "buzz-cut", startISO: "", contact: "425-918-2029", channel: "sms" as "sms" | "email", address: "Capitol Hill, Seattle", isExistingClient: false, houseCall: true });
+  const [form, setForm] = useState({
+    serviceSlug: "buzz-cut",
+    startISO: "",
+    contact: "425-918-2029",
+    channel: "sms" as "sms" | "email",
+    address: "Capitol Hill, Seattle",
+    isExistingClient: false,
+    houseCall: true,
+  });
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -230,54 +489,123 @@ function TestBookingPanel() {
 
   return (
     <div className="mt-10 panel p-4 sm:p-6">
-      <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", color: "var(--color-violet-brand)" }}>TEST · RULES + REMINDERS</p>
-      <h2 className="mt-2 text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>Test booking guardrails</h2>
+      <p
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: 11,
+          letterSpacing: "0.12em",
+          color: "var(--color-violet-brand)",
+        }}
+      >
+        TEST · RULES + REMINDERS
+      </p>
+      <h2 className="mt-2 text-2xl font-black" style={{ fontFamily: "var(--font-display)" }}>
+        Test booking guardrails
+      </h2>
       <p className="mt-2 text-sm" style={{ color: "var(--color-ash)" }}>
-        Fake a booking and validate the full flow in one place: advance-notice rules, address gate, deposit reminder, confirmation/24h/2h reminders, and no-show policy.
+        Fake a booking and validate the full flow in one place: advance-notice rules, address gate,
+        deposit reminder, confirmation/24h/2h reminders, and no-show policy.
       </p>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+        <label
+          className="text-xs"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+        >
           Service
-          <select className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.serviceSlug} onChange={(e) => setForm({ ...form, serviceSlug: e.target.value })}>
+          <select
+            className="mt-1 w-full rounded px-3 py-2 text-sm"
+            value={form.serviceSlug}
+            onChange={(e) => setForm({ ...form, serviceSlug: e.target.value })}
+          >
             {SERVICES.map((s) => (
-              <option key={s.slug} value={s.slug}>{s.name}</option>
+              <option key={s.slug} value={s.slug}>
+                {s.name}
+              </option>
             ))}
           </select>
         </label>
-        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+        <label
+          className="text-xs"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+        >
           Start time (ISO)
-          <input className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.startISO} onChange={(e) => setForm({ ...form, startISO: e.target.value })} placeholder="2026-08-01T14:00:00" />
+          <input
+            className="mt-1 w-full rounded px-3 py-2 text-sm"
+            value={form.startISO}
+            onChange={(e) => setForm({ ...form, startISO: e.target.value })}
+            placeholder="2026-08-01T14:00:00"
+          />
         </label>
-        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+        <label
+          className="text-xs"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+        >
           Contact
-          <input className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.contact} onChange={(e) => setForm({ ...form, contact: e.target.value })} />
+          <input
+            className="mt-1 w-full rounded px-3 py-2 text-sm"
+            value={form.contact}
+            onChange={(e) => setForm({ ...form, contact: e.target.value })}
+          />
         </label>
-        <label className="text-xs" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+        <label
+          className="text-xs"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+        >
           Channel
-          <select className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value as any })}>
+          <select
+            className="mt-1 w-full rounded px-3 py-2 text-sm"
+            value={form.channel}
+            onChange={(e) => setForm({ ...form, channel: e.target.value as any })}
+          >
             <option value="sms">SMS</option>
             <option value="email">Email</option>
           </select>
         </label>
-        <label className="text-xs sm:col-span-2" style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}>
+        <label
+          className="text-xs sm:col-span-2"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-ash)" }}
+        >
           Address (house call)
-          <input className="mt-1 w-full rounded px-3 py-2 text-sm" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} />
+          <input
+            className="mt-1 w-full rounded px-3 py-2 text-sm"
+            value={form.address}
+            onChange={(e) => setForm({ ...form, address: e.target.value })}
+          />
         </label>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-3">
-        <button type="button" onClick={submit} disabled={loading} className="btn-primary rounded px-5 py-2 text-sm font-black transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50" style={{ fontFamily: "var(--font-display)" }}>
+        <button
+          type="button"
+          onClick={submit}
+          disabled={loading}
+          className="btn-primary rounded px-5 py-2 text-sm font-black transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
           {loading ? "running…" : "Run test booking"}
         </button>
-        <button type="button" onClick={runReminders} className="btn-secondary rounded px-5 py-2 text-sm font-black transition hover:-translate-y-0.5" style={{ fontFamily: "var(--font-display)" }}>
+        <button
+          type="button"
+          onClick={runReminders}
+          className="btn-secondary rounded px-5 py-2 text-sm font-black transition hover:-translate-y-0.5"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
           Process due reminders
         </button>
       </div>
 
       {result && (
-        <div className="mt-4 text-xs leading-relaxed" style={{ fontFamily: "var(--font-mono)", color: "var(--color-mist)" }}>
-          <pre className="whitespace-pre-wrap rounded border p-3" style={{ background: "rgba(0,0,0,0.25)", borderColor: "var(--color-ash)" }}>{JSON.stringify(result, null, 2)}</pre>
+        <div
+          className="mt-4 text-xs leading-relaxed"
+          style={{ fontFamily: "var(--font-mono)", color: "var(--color-mist)" }}
+        >
+          <pre
+            className="whitespace-pre-wrap rounded border p-3"
+            style={{ background: "rgba(0,0,0,0.25)", borderColor: "var(--color-ash)" }}
+          >
+            {JSON.stringify(result, null, 2)}
+          </pre>
         </div>
       )}
     </div>

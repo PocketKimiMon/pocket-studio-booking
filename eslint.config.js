@@ -6,7 +6,25 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["dist", ".output", ".vinxi", "tests/**/*.test.ts", "tests/**/*.test.tsx", "vitest.config.ts"] },
+  {
+    ignores: [
+      "dist",
+      ".output",
+      ".vinxi",
+      ".vercel",
+      ".netlify",
+      "data",
+      "archive",
+      "booking-archive",
+      "source-archives",
+      "shots",
+      ".worktrees",
+      "public",
+      "tests/**/*.test.ts",
+      "tests/**/*.test.tsx",
+      "vitest.config.ts",
+    ],
+  },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],

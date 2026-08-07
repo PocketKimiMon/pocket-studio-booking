@@ -13,7 +13,8 @@ export type Service = {
 
 export const CAL_BASE = "https://cal.com/maneautoimation/";
 
-/* book page still uses classic deposit CTA — keep exported symbol. */
+/* Legacy Stripe Payment Link — still valid for manual sharing; the booking
+   page now uses /api/stripe/checkout (hosted Checkout) instead. */
 export const STRIPE_DEPOSIT_LINK = "https://buy.stripe.com/eVqfZg2B26Nb3554NH9Zm05";
 
 export const SERVICES: Service[] = [

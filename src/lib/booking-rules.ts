@@ -117,7 +117,7 @@ export const RULES: BookingRule[] = [
     severity: "warn",
     enforce: () => ({
       pass: true,
-      message: `$${DEPOSIT_AMOUNT} deposit required — Cal.com handles payment`,
+      message: `$${DEPOSIT_AMOUNT} deposit required — paid by card at booking via Stripe`,
     }),
   },
   {

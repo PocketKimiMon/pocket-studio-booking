@@ -38,3 +38,6 @@ src/.tsr-tmp/
 .env*
 # Hermes desktop attachments (may contain local screenshots / transient state)
 .hermes/
+
+# Stripe payment records (customer data)
+data/

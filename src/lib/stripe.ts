@@ -1,5 +1,26 @@
 import { DEPOSIT_AMOUNT } from "./booking-rules";
-import type Stripe from "stripe";
+import StripeCtor from "stripe";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+/**
+ * Structural subset of the stripe-node client — avoids relying on the SDK's
+ * CJS `export =` typing under this repo's bundler-mode tsconfig.
+ */
+export type StripeClientLike = {
+  checkout: {
+    sessions: {
+      create: (params: Record<string, unknown>) => Promise<{ url: string | null; id: string }>;
+    };
+  };
+  webhooks: {
+    constructEvent: (
+      payload: string | Buffer,
+      signature: string,
+      secret: string,
+    ) => { type: string; data: { object: Record<string, unknown> } };
+  };
+};
 
 /**
  * Server-side Stripe helpers. The client never touches the secret key —
@@ -47,7 +68,7 @@ export function buildCheckoutParams(input: CheckoutInput, origin: string): Strip
 
   const description = input.startISO
     ? `${new Date(input.startISO).toLocaleString()} · ${input.contact ?? "client"}`
-    : input.contact ?? undefined;
+    : (input.contact ?? undefined);
 
   return {
     mode: "payment",
@@ -68,12 +89,10 @@ export function buildCheckoutParams(input: CheckoutInput, origin: string): Strip
 }
 
 /** Lazy Stripe client; null when STRIPE_SECRET_KEY is not configured. */
-export function getStripe(): Stripe | null {
+export function getStripe(): StripeClientLike | null {
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key) return null;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const StripeCtor = require("stripe") as typeof Stripe;
-  return new StripeCtor(key);
+  return new StripeCtor(key) as unknown as StripeClientLike;
 }
 
 export function isStripeConfigured(): boolean {
@@ -117,15 +136,13 @@ export function recordPayment(record: Omit<PaymentRecord, "id" | "paidAt">) {
   };
   memoryPayments.push(item);
   try {
-    const fs = require("node:fs") as typeof import("node:fs");
-    const path = require("node:path") as typeof import("node:path");
-    const dir = path.join(process.cwd(), "data");
-    fs.mkdirSync(dir, { recursive: true });
-    const file = path.join(dir, "payments.json");
-    const existing = fs.existsSync(file)
-      ? (JSON.parse(fs.readFileSync(file, "utf8")) as PaymentRecord[])
+    const dir = join(process.cwd(), "data");
+    mkdirSync(dir, { recursive: true });
+    const file = join(dir, "payments.json");
+    const existing = existsSync(file)
+      ? (JSON.parse(readFileSync(file, "utf8")) as PaymentRecord[])
       : [];
-    fs.writeFileSync(file, JSON.stringify([...existing, item], null, 2));
+    writeFileSync(file, JSON.stringify([...existing, item], null, 2));
   } catch {
     // fs unwritable (serverless) — in-memory record still counts.
   }
